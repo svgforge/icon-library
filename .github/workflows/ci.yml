@@ -1,0 +1,117 @@
+name: CI
+
+on:
+    push:
+        branches: ['main']
+    pull_request:
+
+permissions:
+    contents: read
+
+jobs:
+    php-tests:
+        name: PHP tests
+        runs-on: ubuntu-latest
+
+        services:
+            mysql:
+                image: mysql:8.4
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: wordpress_test
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=10
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: mysqli, mbstring
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install PHP dependencies
+              run: composer install --no-interaction --prefer-dist --no-progress
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 12
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install JS dependencies
+              run: pnpm install --frozen-lockfile
+
+            # Needed so build/block/block.json exists for the block registration in tests.
+            - name: Build block
+              run: pnpm run build
+
+            - name: Download WordPress core
+              run: |
+                  curl -sSL https://wordpress.org/latest.tar.gz -o /tmp/wp.tar.gz
+                  mkdir -p /tmp/wordpress
+                  tar -xzf /tmp/wp.tar.gz --strip-components=1 -C /tmp/wordpress
+
+            - name: Symlink plugin into WordPress
+              run: |
+                  mkdir -p /tmp/wordpress/wp-content/plugins
+                  ln -s "$GITHUB_WORKSPACE" /tmp/wordpress/wp-content/plugins/wp-iconizer
+
+            - name: Run PHPUnit
+              run: vendor/bin/phpunit --no-coverage
+              working-directory: /tmp/wordpress/wp-content/plugins/wp-iconizer
+              env:
+                  WP_TESTS_DB_NAME: wordpress_test
+                  WP_TESTS_DB_USER: root
+                  WP_TESTS_DB_PASSWORD: root
+                  WP_TESTS_DB_HOST: 127.0.0.1
+                  WP_TESTS_WP_ROOT: /tmp/wordpress/
+
+            - name: Pint lint
+              run: composer run lint
+              working-directory: /tmp/wordpress/wp-content/plugins/wp-iconizer
+
+    js-quality:
+        name: JS quality
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 12
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Lint JS
+              run: pnpm run lint:js
+
+            - name: Lint CSS
+              run: pnpm run lint:css
+
+            - name: Typecheck
+              run: pnpm run typecheck

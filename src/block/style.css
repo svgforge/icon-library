@@ -1,0 +1,24 @@
+.svg-fragment {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.svg-fragment__svg {
+	width: 1em;
+	height: 1em;
+	display: inline-block;
+}
+
+a.svg-fragment:hover {
+	opacity: 0.8;
+}
+
+.svg-fragment__placeholder {
+	color: #777;
+	font-style: italic;
+}
+
+.svg-fragment__error {
+	color: #a00;
+}

@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-iconizer/svg-fragment",
+	"version": "0.1.0",
+	"title": "SVG Fragment",
+	"category": "widgets",
+	"icon": "format-image",
+	"description": "Fügt ein <symbol> aus der Sprite-Datei ico.svg ein und kann verlinkt werden.",
+	"keywords": [ "svg", "icon", "sprite" ],
+	"textdomain": "wp-iconizer",
+	"supports": {
+		"html": false,
+		"align": [ "left", "center", "right" ],
+		"anchor": true,
+		"className": true
+	},
+	"attributes": {
+		"symbolId": {
+			"type": "string",
+			"default": ""
+		},
+		"url": {
+			"type": "string",
+			"default": ""
+		},
+		"opensInNewTab": {
+			"type": "boolean",
+			"default": false
+		},
+		"rel": {
+			"type": "string",
+			"default": ""
+		},
+		"label": {
+			"type": "string",
+			"default": ""
+		},
+		"fillColor": {
+			"type": "string",
+			"default": ""
+		},
+		"strokeColor": {
+			"type": "string",
+			"default": ""
+		},
+		"width": {
+			"type": "string",
+			"default": "48px"
+		},
+		"height": {
+			"type": "string",
+			"default": "48px"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
