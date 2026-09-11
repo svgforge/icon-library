@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - PHPUnit test suite: `phpunit.xml.dist`, `tests/bootstrap.php`, `tests/wp-tests-config.php` and tests for the sprite URL resolution, the SVG sanitizer and the block render callback (WP test suite via `wp-phpunit` + `yoast/phpunit-polyfills`).
+- Positioning for advanced theme developers in `README.md` and `readme.txt`, a comparison with WordPress 7.1's native SVG icon API, and `docs/roadmap.md` for the planned 7.1 integration.
 - CI workflow (`.github/workflows/ci.yml`): runs PHPUnit + Pint and the JS lint/typecheck checks on every pull request and push to `main`.
 - CodeQL workflow (`.github/workflows/codeql.yml`): JS/TypeScript analysis on PRs, `main` and weekly (PHP is not supported by CodeQL).
 - TypeScript migration: block sources are now `edit.tsx` and `index.tsx` with a strict `tsconfig.json` (`typecheck` script).
