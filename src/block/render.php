@@ -23,7 +23,9 @@ if ($symbol_id === '') {
 }
 
 // Sprite URL: constant, filter, or fallback.
-$sprite_base = function_exists('icon_library_sprite_url') ? icon_library_sprite_url() : '/ico.svg';
+$sprite_base = function_exists('icon_library_sprite_url')
+    ? icon_library_sprite_url()
+    : plugins_url('sprite.svg', dirname(__DIR__, 2) . '/icon-library.php');
 
 if (strpos($sprite_base, '#') === false) {
     $svg_href = esc_url(rtrim($sprite_base, '#') . '#' . $symbol_id);

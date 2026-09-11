@@ -12,7 +12,7 @@ SVG Icon Block: Fügt Icons aus einer SVG-Sprite-Datei (ico.svg) per <use> ein u
 
 == Description ==
 
-Der Icon Library Block lädt eine zentrale SVG-Sprite-Datei (`ico.svg`), stellt alle darin enthaltenen `symbol`-Elemente in einem komfortablen Picker dar und fügt das gewählte Icon als `<svg><use href="/ico.svg#symbol-id">` in deine Inhalte ein.
+Der Icon Library Block lädt eine zentrale SVG-Sprite-Datei (im Standard das gebündelte `sprite.svg`), stellt alle darin enthaltenen `symbol`-Elemente in einem komfortablen Picker dar und fügt das gewählte Icon als `<svg><use href="/wp-content/plugins/icon-library/sprite.svg#symbol-id">` in deine Inhalte ein.
 
 = Eigenschaften =
 
@@ -33,7 +33,7 @@ Die SVG-Sprite-Datei wird in dieser Reihenfolge aufgelöst (erste vorhandene Que
 2. Hochgeladene Datei aus Einstellungen → Icon Library (Backend-Upload).
 3. Konstante `ICON_LIBRARY_SPRITE_URL`.
 4. Filter `icon_library_sprite_url`.
-5. Fallback `/ico.svg` im Webserver-Root.
+5. Fallback: `sprite.svg` im Plugin-Verzeichnis.
 
 Theme-Datei (empfohlen, versionierbar mit dem Theme) in der `functions.php`:
 

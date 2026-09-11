@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Settings page (Settings → Icon Library) to upload an SVG sprite file (`ico.svg`/`.svgz`) as a central fragment library.
 - SVG sanitization on upload: removes scripts, `foreignObject`, inline event handlers, and `javascript:` links.
-- Sprite source resolution: theme constant > backend upload > `ICON_LIBRARY_SPRITE_URL` constant > `icon_library_sprite_url` filter > `/ico.svg` fallback.
+- Sprite source resolution: theme constant > backend upload > `ICON_LIBRARY_SPRITE_URL` constant > `icon_library_sprite_url` filter > plugin bundled `sprite.svg` fallback.
 - Symbol picker in the editor with a live preview of all `<symbol>` elements, group filter (ID prefix before `--`), and grid/list view toggle.
 - Link support for icons (new tab including `noopener`/`noreferrer`), aria-label handling, and automatic `rel` syncing.
 - Per-block fill/stroke colours and width/height with `px`/`em`/`rem`/`%` units.

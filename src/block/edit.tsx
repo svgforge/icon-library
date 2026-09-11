@@ -45,7 +45,9 @@ interface SpriteSymbol {
 	viewBox: string | null;
 }
 
-const SPRITE_URL = window.iconLibrarySettings?.spriteUrl || '/ico.svg';
+const SPRITE_URL =
+	window.iconLibrarySettings?.spriteUrl ||
+	'/wp-content/plugins/icon-library/sprite.svg';
 
 const parseSymbols = ( svgText: string ): SpriteSymbol[] => {
 	const parser = new window.DOMParser();
