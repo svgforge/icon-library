@@ -1,6 +1,6 @@
 declare global {
 	interface Window {
-		wpIconizerSettings?: {
+		iconLibrarySettings?: {
 			spriteUrl?: string;
 		};
 	}

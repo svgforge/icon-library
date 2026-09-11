@@ -18,12 +18,12 @@ $height = isset($attributes['height']) ? sanitize_text_field((string) $attribute
 $opens_in_new_tab = ! empty($attributes['opensInNewTab']);
 
 if ($symbol_id === '') {
-    echo '<div class="svg-fragment__placeholder">' . esc_html__('Select symbol …', 'wp-iconizer') . '</div>';
+    echo '<div class="svg-fragment__placeholder">' . esc_html__('Select symbol …', 'icon-library') . '</div>';
     return '';
 }
 
 // Sprite URL: constant, filter, or fallback.
-$sprite_base = function_exists('wp_iconizer_sprite_url') ? wp_iconizer_sprite_url() : '/ico.svg';
+$sprite_base = function_exists('icon_library_sprite_url') ? icon_library_sprite_url() : '/ico.svg';
 
 if (strpos($sprite_base, '#') === false) {
     $svg_href = esc_url(rtrim($sprite_base, '#') . '#' . $symbol_id);

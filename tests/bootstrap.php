@@ -4,7 +4,7 @@
  * PHPUnit bootstrap: loads Composer, the PHPUnit polyfills, the WordPress
  * test suite (wp-phpunit) and then the plugin under test.
  *
- * @package wp-iconizer
+ * @package icon-library
  */
 
 if (! file_exists($autoload = dirname(__DIR__) . '/vendor/autoload.php')) {
@@ -34,11 +34,11 @@ require_once "{$wp_tests_dir}/functions.php";
 /**
  * Manually loads the plugin being tested.
  */
-function _wp_iconizer_manually_load_plugin()
+function _icon_library_manually_load_plugin()
 {
-    require dirname(__DIR__) . '/wp-iconizer.php';
+    require dirname(__DIR__) . '/icon-library.php';
 }
-tests_add_filter('muplugins_loaded', '_wp_iconizer_manually_load_plugin');
+tests_add_filter('muplugins_loaded', '_icon_library_manually_load_plugin');
 
 // Starts up the WordPress testing environment.
 require "{$wp_tests_dir}/bootstrap.php";

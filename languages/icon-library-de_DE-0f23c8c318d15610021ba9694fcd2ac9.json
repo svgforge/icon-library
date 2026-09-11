@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-09-11 07:31+0200",
+    "translation-revision-date": "2026-09-11 09:31+0200",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/block\/index.js",
     "domain": "messages",
@@ -14,7 +14,7 @@
                 "Symbol w\u00e4hlen \u2026"
             ],
             "Could not load the icon sprite": [
-                "Konnte das Icon-Sprite nicht laden"
+                "Icon-Sprite konnte nicht geladen werden"
             ],
             "All": [
                 "Alle"
@@ -32,7 +32,7 @@
                 "Aria-Label (f\u00fcr Screenreader, wenn nicht verlinkt)"
             ],
             "Sets the aria-label on the SVG. For links the aria-label is set on the <a>.": [
-                "Setzt das aria-label auf dem SVG. Bei Links wird das aria-label am <a> gesetzt."
+                "Setzt das aria-label auf dem SVG. Bei Links wird das aria-label auf dem <a> gesetzt."
             ],
             "View": [
                 "Ansicht"

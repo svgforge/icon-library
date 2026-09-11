@@ -23,7 +23,7 @@ import {
 import type { BlockEditProps } from '@wordpress/blocks';
 import type { CSSProperties, SVGProps } from 'react';
 
-export type IconizerAttributes = {
+export type IconLibraryAttributes = {
 	symbolId: string;
 	url: string;
 	opensInNewTab: boolean;
@@ -45,7 +45,7 @@ interface SpriteSymbol {
 	viewBox: string | null;
 }
 
-const SPRITE_URL = window.wpIconizerSettings?.spriteUrl || '/ico.svg';
+const SPRITE_URL = window.iconLibrarySettings?.spriteUrl || '/ico.svg';
 
 const parseSymbols = ( svgText: string ): SpriteSymbol[] => {
 	const parser = new window.DOMParser();
@@ -63,7 +63,7 @@ export default function Edit( {
 	attributes,
 	setAttributes,
 	clientId,
-}: BlockEditProps< IconizerAttributes > ) {
+}: BlockEditProps< IconLibraryAttributes > ) {
 	const {
 		symbolId,
 		url,
@@ -101,7 +101,7 @@ export default function Edit( {
 			} catch {
 				if ( ! aborted ) {
 					setError(
-						__( 'Could not load the icon sprite', 'wp-iconizer' )
+						__( 'Could not load the icon sprite', 'icon-library' )
 					);
 				}
 			}
@@ -131,7 +131,7 @@ export default function Edit( {
 
 	const groupOptions = useMemo< SymbolOption[] >( () => {
 		const opts: SymbolOption[] = [
-			{ value: 'all', label: __( 'All', 'wp-iconizer' ) },
+			{ value: 'all', label: __( 'All', 'icon-library' ) },
 		];
 		[ ...groups.keys() ]
 			.filter( Boolean )
@@ -246,24 +246,24 @@ export default function Edit( {
 				<ToolbarGroup>
 					<ToolbarButton
 						icon="admin-links"
-						label={ __( 'Insert/edit link', 'wp-iconizer' ) }
+						label={ __( 'Insert/edit link', 'icon-library' ) }
 						onClick={ () => setIsLinkPickerOpen( ( v ) => ! v ) }
 					/>
 					{ url ? (
 						<ToolbarButton
 							icon="editor-unlink"
-							label={ __( 'Remove link', 'wp-iconizer' ) }
+							label={ __( 'Remove link', 'icon-library' ) }
 							onClick={ () => setAttributes( { url: '' } ) }
 						/>
 					) : null }
 				</ToolbarGroup>
 			</BlockControls>
 			<InspectorControls>
-				<PanelBody title={ __( 'SVG', 'wp-iconizer' ) }>
+				<PanelBody title={ __( 'SVG', 'icon-library' ) }>
 					<TextControl
 						label={ __(
 							'Aria label (for screen readers, when not linked)',
-							'wp-iconizer'
+							'icon-library'
 						) }
 						value={ label || '' }
 						onChange={ ( val ) =>
@@ -271,7 +271,7 @@ export default function Edit( {
 						}
 						help={ __(
 							'Sets the aria-label on the SVG. For links the aria-label is set on the <a>.',
-							'wp-iconizer'
+							'icon-library'
 						) }
 					/>
 					<Dropdown
@@ -298,7 +298,10 @@ export default function Edit( {
 								) : null }
 								<span className="svg-fragment__toggle-label">
 									{ symbolId ||
-										__( 'Select symbol …', 'wp-iconizer' ) }
+										__(
+											'Select symbol …',
+											'icon-library'
+										) }
 								</span>
 							</ToolbarButton>
 						) }
@@ -314,7 +317,7 @@ export default function Edit( {
 										/>
 									) }
 									<ToggleGroupControl
-										label={ __( 'View', 'wp-iconizer' ) }
+										label={ __( 'View', 'icon-library' ) }
 										value={ view }
 										hideLabelFromVision
 										onChange={ ( value ) =>
@@ -329,7 +332,7 @@ export default function Edit( {
 											value="grid"
 											label={ __(
 												'Grid',
-												'wp-iconizer'
+												'icon-library'
 											) }
 											icon={
 												<span className="dashicons dashicons-grid-view" />
@@ -339,7 +342,7 @@ export default function Edit( {
 											value="list"
 											label={ __(
 												'List',
-												'wp-iconizer'
+												'icon-library'
 											) }
 											icon={
 												<span className="dashicons dashicons-list-view" />
@@ -414,11 +417,11 @@ export default function Edit( {
 				</PanelBody>
 				{ /* Link settings moved to toolbar LinkControl */ }
 				<PanelBody
-					title={ __( 'Colors', 'wp-iconizer' ) }
+					title={ __( 'Colors', 'icon-library' ) }
 					initialOpen={ false }
 				>
 					<p className="svg-fragment__label">
-						{ __( 'Fill color (fill)', 'wp-iconizer' ) }
+						{ __( 'Fill color (fill)', 'icon-library' ) }
 					</p>
 					<ColorPalette
 						value={ fillColor || '' }
@@ -427,7 +430,7 @@ export default function Edit( {
 						}
 					/>
 					<p className="svg-fragment__label">
-						{ __( 'Stroke color (stroke)', 'wp-iconizer' ) }
+						{ __( 'Stroke color (stroke)', 'icon-library' ) }
 					</p>
 					<ColorPalette
 						value={ strokeColor || '' }
@@ -437,7 +440,7 @@ export default function Edit( {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Size', 'wp-iconizer' ) }
+					title={ __( 'Size', 'icon-library' ) }
 					initialOpen={ false }
 				>
 					<div
@@ -448,7 +451,7 @@ export default function Edit( {
 						} }
 					>
 						<TextControl
-							label={ __( 'Width', 'wp-iconizer' ) }
+							label={ __( 'Width', 'icon-library' ) }
 							value={ widthNum }
 							onChange={ ( val ) => {
 								const num = val.replace( /[^0-9.]/g, '' );
@@ -459,7 +462,7 @@ export default function Edit( {
 							} }
 						/>
 						<SelectControl
-							label={ __( 'Unit', 'wp-iconizer' ) }
+							label={ __( 'Unit', 'icon-library' ) }
 							value={ widthUnit }
 							options={ unitOptions }
 							onChange={ ( unit ) => {
@@ -469,7 +472,7 @@ export default function Edit( {
 							} }
 						/>
 						<TextControl
-							label={ __( 'Height', 'wp-iconizer' ) }
+							label={ __( 'Height', 'icon-library' ) }
 							value={ heightNum }
 							onChange={ ( val ) => {
 								const num = val.replace( /[^0-9.]/g, '' );
@@ -481,7 +484,7 @@ export default function Edit( {
 							} }
 						/>
 						<SelectControl
-							label={ __( 'Unit', 'wp-iconizer' ) }
+							label={ __( 'Unit', 'icon-library' ) }
 							value={ heightUnit }
 							options={ unitOptions }
 							onChange={ ( unit ) => {
@@ -566,7 +569,7 @@ export default function Edit( {
 					</div>
 				) : (
 					<div className="svg-fragment__placeholder">
-						{ __( 'Select symbol …', 'wp-iconizer' ) }
+						{ __( 'Select symbol …', 'icon-library' ) }
 					</div>
 				) }
 			</div>

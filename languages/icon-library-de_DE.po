@@ -1,33 +1,33 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Iconizer 0.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-iconizer\n"
+"Project-Id-Version: Icon Library 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/icon-library\n"
 "Last-Translator: svgforge <https://github.com/svgforge>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-11T07:30:40+02:00\n"
-"PO-Revision-Date: 2026-09-11 07:31+0200\n"
+"POT-Creation-Date: 2026-09-11T09:30:25+02:00\n"
+"PO-Revision-Date: 2026-09-11 09:31+0200\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Domain: wp-iconizer\n"
+"X-Domain: icon-library\n"
 
 #. Plugin Name of the plugin
-#: wp-iconizer.php
+#: icon-library.php
 #: src/admin/admin.php:49
 #: src/admin/admin.php:50
 #: src/admin/admin.php:259
-msgid "WP Iconizer"
-msgstr "WP Iconizer"
+msgid "Icon Library"
+msgstr "Icon Library"
 
 #. Description of the plugin
-#: wp-iconizer.php
+#: icon-library.php
 msgid "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them."
 msgstr "Gutenberg-Block, der SVG-Icons aus einer Sprite-Datei (ico.svg) per <use> einfügt und verlinkt."
 
 #. Author of the plugin
-#: wp-iconizer.php
+#: icon-library.php
 msgid "svgforge"
 msgstr "svgforge"
 
@@ -41,8 +41,8 @@ msgid "Upload (Settings)"
 msgstr "Upload (Einstellungen)"
 
 #: src/admin/admin.php:240
-msgid "Filter wp_iconizer_sprite_url"
-msgstr "Filter wp_iconizer_sprite_url"
+msgid "Filter icon_library_sprite_url"
+msgstr "Filter icon_library_sprite_url"
 
 #: src/admin/admin.php:242
 msgid "Default (sprite.svg bundled with the plugin)"

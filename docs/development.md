@@ -20,11 +20,11 @@ Requirements: Node.js LTS (>= 20.19, recommended 24 — see `.nvmrc`) and [pnpm]
 
 PHPUnit unit tests run against the [WordPress test suite](https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/) (`wp-phpunit`) with the maintained [yoast/phpunit-polyfills](https://github.com/Yoast/PHPUnit-Polyfills). Test cases live in `tests/` (`tests/wp-tests-config.php` holds DB + core defaults, overridable via `WP_TESTS_DB_NAME`, `WP_TESTS_DB_USER`, `WP_TESTS_DB_PASSWORD`, `WP_TESTS_DB_HOST`, `WP_TESTS_WP_ROOT`).
 
-The test suite needs a MySQL database (default `wordpress_test`) and a WordPress core checkout with the plugin available under `wp-content/plugins/wp-iconizer`. On this project's ddev site (`jdfse`), the plugin is symlinked into `web/app/plugins`, so:
+The test suite needs a MySQL database (default `wordpress_test`) and a WordPress core checkout with the plugin available under `wp-content/plugins/icon-library`. On this project's ddev site (`jdfse`), the plugin is symlinked into `web/app/plugins`, so:
 
 ```bash
 cd ../jdfse && ddev mysql -e 'CREATE DATABASE IF NOT EXISTS wordpress_test'
-ddev exec bash -c 'cd /var/www/html/web/app/plugins/wp-iconizer && php vendor/bin/phpunit --no-coverage'
+ddev exec bash -c 'cd /var/www/html/web/app/plugins/icon-library && php vendor/bin/phpunit --no-coverage'
 ```
 
 In CI, point the environment variables at the service MySQL and a WP core checkout with the plugin installed there.
@@ -40,8 +40,8 @@ See [docs/release.md](release.md).
 ## Structure
 
 ```
-wp-iconizer/
-├── wp-iconizer.php        Plugin bootstrap (block registration, sprite URL, i18n)
+icon-library/
+├── icon-library.php      Plugin bootstrap (block registration, sprite URL, i18n)
 ├── docs/                  Documentation (this directory)
 ├── src/
 │   ├── admin/admin.php    Settings page (SVG upload), not part of the build

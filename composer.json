@@ -1,6 +1,6 @@
 {
-	"name": "svgforge/wp-iconizer",
-	"description": "Gutenberg-Block, der SVG-Icons aus einer Sprite-Datei (ico.svg) per <use> einfügt und verlinkt.",
+	"name": "svgforge/icon-library",
+	"description": "Gutenberg-Block, der SVG-Icons aus einer zentralen Sprite-Datei (ico.svg) per <use> einfügt und verlinkt.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"keywords": [

@@ -12,7 +12,7 @@
 	failOnRisky="true"
 	verbose="false">
 	<testsuites>
-		<testsuite name="WP Iconizer">
+		<testsuite name="Icon Library">
 			<directory prefix="test-" suffix=".php">tests</directory>
 		</testsuite>
 	</testsuites>

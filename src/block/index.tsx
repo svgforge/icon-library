@@ -2,7 +2,7 @@ import { registerBlockType } from '@wordpress/blocks';
 import type { BlockConfiguration } from '@wordpress/blocks';
 import metadata from './block.json';
 import edit from './edit';
-import type { IconizerAttributes } from './edit';
+import type { IconLibraryAttributes } from './edit';
 import { ReactComponent as icon } from './icon.svg';
 import './style.css';
 
@@ -12,4 +12,4 @@ registerBlockType( metadata.name, {
 	icon,
 	edit,
 	save: () => null,
-} as unknown as BlockConfiguration< IconizerAttributes > );
+} as unknown as BlockConfiguration< IconLibraryAttributes > );

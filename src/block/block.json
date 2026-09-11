@@ -1,14 +1,14 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "wp-iconizer/svg-fragment",
+	"name": "icon-library/svg-fragment",
 	"version": "0.1.0",
 	"title": "SVG Fragment",
 	"category": "widgets",
 	"icon": "format-image",
 	"description": "Inserts a <symbol> from the sprite file and can be linked.",
 	"keywords": [ "svg", "icon", "sprite" ],
-	"textdomain": "wp-iconizer",
+	"textdomain": "icon-library",
 	"supports": {
 		"html": false,
 		"align": [ "left", "center", "right" ],

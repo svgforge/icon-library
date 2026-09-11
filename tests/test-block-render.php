@@ -3,17 +3,17 @@
 /**
  * Tests for the server-side block rendering (src/block/render.php).
  *
- * @package wp-iconizer
+ * @package icon-library
  */
 
 /**
- * Tests for the WP Iconizer "SVG Fragment" block render callback.
+ * Tests for the Icon Library "SVG Fragment" block render callback.
  */
-final class Test_WP_Iconizer_Block_Render extends WP_UnitTestCase
+final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
 {
     public function test_block_is_registered(): void
     {
-        $this->assertInstanceOf('WP_Block_Type', $block = WP_Block_Type_Registry::get_instance()->get_registered('wp-iconizer/svg-fragment'));
+        $this->assertInstanceOf('WP_Block_Type', $block = WP_Block_Type_Registry::get_instance()->get_registered('icon-library/svg-fragment'));
         $this->assertNotNull($block->render_callback);
     }
 
@@ -23,7 +23,7 @@ final class Test_WP_Iconizer_Block_Render extends WP_UnitTestCase
     private function render_block_html(array $attrs): string
     {
         return render_block([
-            'blockName' => 'wp-iconizer/svg-fragment',
+            'blockName' => 'icon-library/svg-fragment',
             'attrs' => $attrs,
             'innerBlocks' => [],
             'innerHTML' => '',

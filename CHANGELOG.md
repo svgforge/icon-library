@@ -14,9 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeScript migration: block sources are now `edit.tsx` and `index.tsx` with a strict `tsconfig.json` (`typecheck` script).
 - `eslint.config.js` flat config extending the WordPress default (allows the experimental `ToggleGroupControl` imports).
 - Manual type shims for untyped WP packages and global declarations (`src/ambient.d.ts`, `src/global.d.ts`, `src/types/`).
-- Full internationalization: all translatable strings are English source strings, a `languages/` directory ships the template `wp-iconizer.pot` with German (`de_DE`) translations for the settings page and the block editor (`wp-iconizer-de_DE.po`, `.mo`, `.json`). `AGENTS.md` documents the English-only policy.
+- Full internationalization: all translatable strings are English source strings, a `languages/` directory ships the template `icon-library.pot` with German (`de_DE`) translations for the settings page and the block editor (`icon-library-de_DE.po`, `.mo`, `.json`). `AGENTS.md` documents the English-only policy.
 
 ### Changed
+- Renamed the plugin from **WP Iconizer** to **Icon Library** (slug `icon-library`): plugin file `icon-library.php`, text domain `icon-library`, block namespace `icon-library/svg-fragment`, PHP function/constant/filter prefixes `icon_library_*` / `ICON_LIBRARY_*` / `icon_library_sprite_url`, settings menu "Icon Library", upload directory `icon-library/`, npm/composer package names and the `languages/` files. GitHub repo renamed to `svgforge/icon-library`.
 - Fallback sprite: the plugin now ships a default `sprite.svg` and uses it instead of the web server root `/ico.svg`.
 - Replaced deprecated `ButtonGroup` with `ToggleGroupControl`/`ToggleGroupControlOptionIcon` for the grid/list view toggle.
 - Removed deprecated `__nextHasNoMarginBottom` prop; the margin is now reset via CSS.
@@ -30,9 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-09-10
 
 ### Added
-- Settings page (Settings → WP Iconizer) to upload an SVG sprite file (`ico.svg`/`.svgz`) as a central fragment library.
+- Settings page (Settings → Icon Library) to upload an SVG sprite file (`ico.svg`/`.svgz`) as a central fragment library.
 - SVG sanitization on upload: removes scripts, `foreignObject`, inline event handlers, and `javascript:` links.
-- Sprite source resolution: theme constant > backend upload > `WP_ICONIZER_SPRITE_URL` constant > `wp_iconizer_sprite_url` filter > `/ico.svg` fallback.
+- Sprite source resolution: theme constant > backend upload > `ICON_LIBRARY_SPRITE_URL` constant > `icon_library_sprite_url` filter > `/ico.svg` fallback.
 - Symbol picker in the editor with a live preview of all `<symbol>` elements, group filter (ID prefix before `--`), and grid/list view toggle.
 - Link support for icons (new tab including `noopener`/`noreferrer`), aria-label handling, and automatic `rel` syncing.
 - Per-block fill/stroke colours and width/height with `px`/`em`/`rem`/`%` units.

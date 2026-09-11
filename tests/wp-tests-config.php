@@ -1,19 +1,19 @@
 <?php
 
 /**
- * WordPress tests configuration for WP Iconizer.
+ * WordPress tests configuration for Icon Library.
  *
  * Environment variables override the ddev-compatible defaults.
  *
- * @package wp-iconizer
+ * @package icon-library
  */
 
 $table_prefix = 'wptests_';
 
-define('WP_TESTS_DOMAIN', getenv('WP_TESTS_DOMAIN') ?: 'wp-iconizer.test');
+define('WP_TESTS_DOMAIN', getenv('WP_TESTS_DOMAIN') ?: 'icon-library.test');
 define('WP_TESTS_EMAIL', 'admin@example.test');
-define('WP_TESTS_TITLE', 'WP Iconizer Tests');
-define('WP_TESTS_NETWORK_TITLE', 'WP Iconizer Tests Network');
+define('WP_TESTS_TITLE', 'Icon Library Tests');
+define('WP_TESTS_NETWORK_TITLE', 'Icon Library Tests Network');
 define('WP_TESTS_SUBDOMAIN_INSTALL', true);
 define('WP_PHP_BINARY', getenv('WP_PHP_BINARY') ?: PHP_BINARY);
 $base = '/';
