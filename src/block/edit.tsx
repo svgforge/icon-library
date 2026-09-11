@@ -101,7 +101,7 @@ export default function Edit( {
 			} catch {
 				if ( ! aborted ) {
 					setError(
-						__( 'Konnte ico.svg nicht laden', 'wp-iconizer' )
+						__( 'Could not load the icon sprite', 'wp-iconizer' )
 					);
 				}
 			}
@@ -131,7 +131,7 @@ export default function Edit( {
 
 	const groupOptions = useMemo< SymbolOption[] >( () => {
 		const opts: SymbolOption[] = [
-			{ value: 'all', label: __( 'Alle', 'wp-iconizer' ) },
+			{ value: 'all', label: __( 'All', 'wp-iconizer' ) },
 		];
 		[ ...groups.keys() ]
 			.filter( Boolean )
@@ -246,16 +246,13 @@ export default function Edit( {
 				<ToolbarGroup>
 					<ToolbarButton
 						icon="admin-links"
-						label={ __(
-							'Link einfügen/bearbeiten',
-							'wp-iconizer'
-						) }
+						label={ __( 'Insert/edit link', 'wp-iconizer' ) }
 						onClick={ () => setIsLinkPickerOpen( ( v ) => ! v ) }
 					/>
 					{ url ? (
 						<ToolbarButton
 							icon="editor-unlink"
-							label={ __( 'Link entfernen', 'wp-iconizer' ) }
+							label={ __( 'Remove link', 'wp-iconizer' ) }
 							onClick={ () => setAttributes( { url: '' } ) }
 						/>
 					) : null }
@@ -265,7 +262,7 @@ export default function Edit( {
 				<PanelBody title={ __( 'SVG', 'wp-iconizer' ) }>
 					<TextControl
 						label={ __(
-							'Aria-Label (für Screenreader, wenn nicht verlinkt)',
+							'Aria label (for screen readers, when not linked)',
 							'wp-iconizer'
 						) }
 						value={ label || '' }
@@ -273,7 +270,7 @@ export default function Edit( {
 							setAttributes( { label: val || '' } )
 						}
 						help={ __(
-							'Setzt aria-label auf dem SVG. Bei Links wird das aria-label am <a> gesetzt.',
+							'Sets the aria-label on the SVG. For links the aria-label is set on the <a>.',
 							'wp-iconizer'
 						) }
 					/>
@@ -301,7 +298,7 @@ export default function Edit( {
 								) : null }
 								<span className="svg-fragment__toggle-label">
 									{ symbolId ||
-										__( 'Symbol wählen …', 'wp-iconizer' ) }
+										__( 'Select symbol …', 'wp-iconizer' ) }
 								</span>
 							</ToolbarButton>
 						) }
@@ -317,7 +314,7 @@ export default function Edit( {
 										/>
 									) }
 									<ToggleGroupControl
-										label={ __( 'Ansicht', 'wp-iconizer' ) }
+										label={ __( 'View', 'wp-iconizer' ) }
 										value={ view }
 										hideLabelFromVision
 										onChange={ ( value ) =>
@@ -331,7 +328,7 @@ export default function Edit( {
 										<ToggleGroupControlOptionIcon
 											value="grid"
 											label={ __(
-												'Raster',
+												'Grid',
 												'wp-iconizer'
 											) }
 											icon={
@@ -341,7 +338,7 @@ export default function Edit( {
 										<ToggleGroupControlOptionIcon
 											value="list"
 											label={ __(
-												'Liste',
+												'List',
 												'wp-iconizer'
 											) }
 											icon={
@@ -417,11 +414,11 @@ export default function Edit( {
 				</PanelBody>
 				{ /* Link settings moved to toolbar LinkControl */ }
 				<PanelBody
-					title={ __( 'Farben', 'wp-iconizer' ) }
+					title={ __( 'Colors', 'wp-iconizer' ) }
 					initialOpen={ false }
 				>
 					<p className="svg-fragment__label">
-						{ __( 'Füllfarbe (fill)', 'wp-iconizer' ) }
+						{ __( 'Fill color (fill)', 'wp-iconizer' ) }
 					</p>
 					<ColorPalette
 						value={ fillColor || '' }
@@ -430,7 +427,7 @@ export default function Edit( {
 						}
 					/>
 					<p className="svg-fragment__label">
-						{ __( 'Linienfarbe (stroke)', 'wp-iconizer' ) }
+						{ __( 'Stroke color (stroke)', 'wp-iconizer' ) }
 					</p>
 					<ColorPalette
 						value={ strokeColor || '' }
@@ -440,7 +437,7 @@ export default function Edit( {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Größe', 'wp-iconizer' ) }
+					title={ __( 'Size', 'wp-iconizer' ) }
 					initialOpen={ false }
 				>
 					<div
@@ -451,7 +448,7 @@ export default function Edit( {
 						} }
 					>
 						<TextControl
-							label={ __( 'Breite', 'wp-iconizer' ) }
+							label={ __( 'Width', 'wp-iconizer' ) }
 							value={ widthNum }
 							onChange={ ( val ) => {
 								const num = val.replace( /[^0-9.]/g, '' );
@@ -462,7 +459,7 @@ export default function Edit( {
 							} }
 						/>
 						<SelectControl
-							label={ __( 'Einheit', 'wp-iconizer' ) }
+							label={ __( 'Unit', 'wp-iconizer' ) }
 							value={ widthUnit }
 							options={ unitOptions }
 							onChange={ ( unit ) => {
@@ -472,7 +469,7 @@ export default function Edit( {
 							} }
 						/>
 						<TextControl
-							label={ __( 'Höhe', 'wp-iconizer' ) }
+							label={ __( 'Height', 'wp-iconizer' ) }
 							value={ heightNum }
 							onChange={ ( val ) => {
 								const num = val.replace( /[^0-9.]/g, '' );
@@ -484,7 +481,7 @@ export default function Edit( {
 							} }
 						/>
 						<SelectControl
-							label={ __( 'Einheit', 'wp-iconizer' ) }
+							label={ __( 'Unit', 'wp-iconizer' ) }
 							value={ heightUnit }
 							options={ unitOptions }
 							onChange={ ( unit ) => {
@@ -569,7 +566,7 @@ export default function Edit( {
 					</div>
 				) : (
 					<div className="svg-fragment__placeholder">
-						{ __( 'Symbol wählen …', 'wp-iconizer' ) }
+						{ __( 'Select symbol …', 'wp-iconizer' ) }
 					</div>
 				) }
 			</div>

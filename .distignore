@@ -5,11 +5,11 @@
 /.git
 /node_modules
 /vendor
-/src
 
 /.gitignore
 /.gitattributes
 /.distignore
+/AGENTS.md
 /package.json
 /package-lock.json
 /pnpm-lock.yaml
@@ -24,6 +24,6 @@
 /tests
 /phpunit.xml.dist
 /.phpunit.result.cache
-/screen.png
+/docs
 /.editorconfig
 /.nvmrc

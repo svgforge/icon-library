@@ -1,0 +1,159 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Iconizer 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-iconizer\n"
+"Last-Translator: svgforge <https://github.com/svgforge>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-11T07:30:40+02:00\n"
+"PO-Revision-Date: 2026-09-11 07:31+0200\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: wp-iconizer\n"
+
+#. Plugin Name of the plugin
+#: wp-iconizer.php
+#: src/admin/admin.php:49
+#: src/admin/admin.php:50
+#: src/admin/admin.php:259
+msgid "WP Iconizer"
+msgstr "WP Iconizer"
+
+#. Description of the plugin
+#: wp-iconizer.php
+msgid "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them."
+msgstr "Gutenberg-Block, der SVG-Icons aus einer Sprite-Datei (ico.svg) per <use> einfügt und verlinkt."
+
+#. Author of the plugin
+#: wp-iconizer.php
+msgid "svgforge"
+msgstr "svgforge"
+
+#: src/admin/admin.php:119
+#: src/admin/admin.php:208
+msgid "Sorry, you are not allowed to perform this action."
+msgstr "Du hast keine Berechtigung für diese Aktion."
+
+#: src/admin/admin.php:238
+msgid "Upload (Settings)"
+msgstr "Upload (Einstellungen)"
+
+#: src/admin/admin.php:240
+msgid "Filter wp_iconizer_sprite_url"
+msgstr "Filter wp_iconizer_sprite_url"
+
+#: src/admin/admin.php:242
+msgid "Default (sprite.svg bundled with the plugin)"
+msgstr "Standard (sprite.svg im Plugin)"
+
+#: src/admin/admin.php:246
+msgid "The SVG sprite file was uploaded and is now being used."
+msgstr "Die SVG-Sprite-Datei wurde hochgeladen und wird jetzt verwendet."
+
+#: src/admin/admin.php:247
+msgid "The uploaded SVG sprite file was removed."
+msgstr "Die hochgeladene SVG-Sprite-Datei wurde entfernt."
+
+#: src/admin/admin.php:248
+msgid "Only .svg or .svgz files can be uploaded."
+msgstr "Nur .svg- oder .svgz-Dateien können hochgeladen werden."
+
+#: src/admin/admin.php:249
+msgid "The file could not be read."
+msgstr "Die Datei konnte nicht gelesen werden."
+
+#: src/admin/admin.php:250
+msgid "The file is not a valid SVG file."
+msgstr "Die Datei ist keine gültige SVG-Datei."
+
+#: src/admin/admin.php:251
+msgid "The file could not be written."
+msgstr "Die Datei konnte nicht geschrieben werden."
+
+#: src/admin/admin.php:267
+msgid "SVG fragment library"
+msgstr "SVG-Fragment-Bibliothek"
+
+#: src/admin/admin.php:269
+msgid "Upload an SVG sprite file that serves as the central icon library for the SVG Fragment block."
+msgstr "Lade eine SVG-Sprite-Datei hoch, die als zentrale Symbol-Bibliothek für den Block „SVG Fragment“ dient."
+
+#: src/admin/admin.php:270
+msgid "Each icon is a <symbol id=\"my-icon\" viewBox=\"0 0 24 24\">…</symbol> element."
+msgstr "Jedes Icon ist ein <symbol id=\"mein-icon\" viewBox=\"0 0 24 24\">…</symbol>-Element."
+
+#: src/admin/admin.php:276
+msgid "Active sprite file"
+msgstr "Aktive Sprite-Datei"
+
+#. translators: %s: Source of the sprite URL (constant, filter, upload, default).
+#: src/admin/admin.php:283
+#, php-format
+msgid "Source: %s"
+msgstr "Quelle: %s"
+
+#: src/admin/admin.php:292
+msgid "Uploaded file"
+msgstr "Hochgeladene Datei"
+
+#. translators: %1$d: Number of symbol elements, %2$s: Date of the upload.
+#: src/admin/admin.php:300
+#, php-format
+msgid "(%1$d symbols, uploaded on %2$s)"
+msgstr "(%1$d Symbole, hochgeladen am %2$s)"
+
+#: src/admin/admin.php:311
+msgid "Remove uploaded file"
+msgstr "Hochgeladene Datei entfernen"
+
+#: src/admin/admin.php:320
+msgid "Upload new file"
+msgstr "Neue Datei hochladen"
+
+#: src/admin/admin.php:322
+msgid "An existing uploaded file is replaced by a new upload."
+msgstr "Eine bestehende hochgeladene Datei wird beim Upload ersetzt."
+
+#: src/admin/admin.php:331
+msgid "SVG file (ico.svg)"
+msgstr "SVG-Datei (ico.svg)"
+
+#: src/admin/admin.php:335
+msgid "Only .svg and .svgz files are accepted. The content is cleaned of scripts, event handlers and javascript: links on upload."
+msgstr "Nur .svg- und .svgz-Dateien werden akzeptiert. Der Inhalt wird beim Upload von Skripten, Event-Handlern und javascript:-Links bereinigt."
+
+#: src/admin/admin.php:343
+msgid "Upload SVG sprite"
+msgstr "SVG-Sprite hochladen"
+
+#: src/block/render.php:21
+#: build/block/index.js:1
+msgid "Select symbol …"
+msgstr "Symbol wählen …"
+
+#: src/block/block.json
+msgctxt "block title"
+msgid "SVG Fragment"
+msgstr "SVG Fragment"
+
+#: src/block/block.json
+msgctxt "block description"
+msgid "Inserts a <symbol> from the sprite file and can be linked."
+msgstr "Fügt ein <symbol> aus der Sprite-Datei ein und kann verlinkt werden."
+
+#: src/block/block.json
+msgctxt "block keyword"
+msgid "svg"
+msgstr "svg"
+
+#: src/block/block.json
+msgctxt "block keyword"
+msgid "icon"
+msgstr "icon"
+
+#: src/block/block.json
+msgctxt "block keyword"
+msgid "sprite"
+msgstr "sprite"

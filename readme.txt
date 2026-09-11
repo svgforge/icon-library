@@ -68,6 +68,10 @@ Aus der zentralen Sprite-Datei `ico.svg`. Jedes Icon ist ein `<symbol id="mein-i
 
 Ja. Das Frontend-Markup wird serverseitig in `render.php` erzeugt; die Built-JS wird nur im Editor gebraucht.
 
+== Screenshots ==
+
+1. Symbol-Picker im Gutenberg-Editor mit Live-Vorschau aller Icons aus der Sprite-Datei.
+
 == Changelog ==
 
 = 0.1.0 =

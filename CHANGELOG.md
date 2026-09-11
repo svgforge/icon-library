@@ -14,13 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeScript migration: block sources are now `edit.tsx` and `index.tsx` with a strict `tsconfig.json` (`typecheck` script).
 - `eslint.config.js` flat config extending the WordPress default (allows the experimental `ToggleGroupControl` imports).
 - Manual type shims for untyped WP packages and global declarations (`src/ambient.d.ts`, `src/global.d.ts`, `src/types/`).
+- Full internationalization: all translatable strings are English source strings, a `languages/` directory ships the template `wp-iconizer.pot` with German (`de_DE`) translations for the settings page and the block editor (`wp-iconizer-de_DE.po`, `.mo`, `.json`). `AGENTS.md` documents the English-only policy.
 
 ### Changed
 - Fallback sprite: the plugin now ships a default `sprite.svg` and uses it instead of the web server root `/ico.svg`.
 - Replaced deprecated `ButtonGroup` with `ToggleGroupControl`/`ToggleGroupControlOptionIcon` for the grid/list view toggle.
 - Removed deprecated `__nextHasNoMarginBottom` prop; the margin is now reset via CSS.
 - All code comments and the README are in English.
-- README: Composer installation now documents the WP Packages repository (`wp-plugin/*`) instead of WPackagist; added a svgforge-cli hint for generating the sprite.
+- README: Composer installation now documents the WP Packages repository (`wp-plugin/*`) instead of WPackagist; added a svgforge-cli hint for generating the sprite; added a Translations section with the `make-pot`/`make-mo`/`make-json` workflow.
+- Documentation restructured: README reduced to a lean overview; detailed topics moved into `docs/` (`developer`/maintenance guide, translations, release + wp.org, Composer installation) and `screen.png` moved to `docs/`. The sprite file configuration stays in the README.
 
 ### Fixed
 - `pnpm format` failing on the invalid YAML in `.github/workflows/release.yml` (tab indentation), rewrote the workflow.

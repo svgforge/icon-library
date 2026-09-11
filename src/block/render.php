@@ -18,7 +18,7 @@ $height = isset($attributes['height']) ? sanitize_text_field((string) $attribute
 $opens_in_new_tab = ! empty($attributes['opensInNewTab']);
 
 if ($symbol_id === '') {
-    echo '<div class="svg-fragment__placeholder">' . esc_html__('Symbol wählen …', 'wp-iconizer') . '</div>';
+    echo '<div class="svg-fragment__placeholder">' . esc_html__('Select symbol …', 'wp-iconizer') . '</div>';
     return '';
 }
 
