@@ -5,11 +5,11 @@
 /.git
 /node_modules
 /vendor
-/src
 
 /.gitignore
 /.gitattributes
 /.distignore
+/AGENTS.md
 /package.json
 /package-lock.json
 /pnpm-lock.yaml

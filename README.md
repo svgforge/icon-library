@@ -114,6 +114,27 @@ ddev exec bash -c 'cd /var/www/html/web/app/plugins/wp-iconizer && php vendor/bi
 
 In CI, point the environment variables at the service MySQL and a WP core checkout with the plugin installed there.
 
+## Translations
+
+User-facing strings are written in English and shipped through the text domain `wp-iconizer`. Translation files live in `languages/`: the source template `wp-iconizer.pot`, per-locale `wp-iconizer-*.po`/`.mo` and the Jed-style `.json` files that translate the block editor strings.
+
+`de_DE` is bundled; `load_plugin_textdomain()` is hooked on `init` in `wp-iconizer.php`. To add or update a locale, rebuild the block and extract first (the POT includes the compiled `build/block/index.js`):
+
+```bash
+pnpm run build
+
+# via WP-CLI / ddev (i18n-command), from the plugin root:
+wp i18n make-pot . languages/wp-iconizer.pot --slug=wp-iconizer --ignore-domain \
+    --exclude="node_modules/**,vendor/**,tests/**,.github/**,languages/**" \
+    --include="src/**,wp-iconizer.php,build/block/index.js"
+
+# fill in languages/wp-iconizer-<locale>.po (German: wp-iconizer-de_DE.po), then:
+wp i18n make-mo languages
+wp i18n make-json languages/wp-iconizer-<locale>.po languages --pretty-print
+```
+
+Commit the generated `.pot`, `.po`, `.mo` and `.json` files.
+
 ## Sprite file configuration
 
 ### Generating a sprite with svgforge-cli

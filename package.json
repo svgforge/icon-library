@@ -1,7 +1,7 @@
 {
 	"name": "wp-iconizer",
 	"version": "0.1.0",
-	"description": "Gutenberg-Block, der SVG-Icons aus einer Sprite-Datei (ico.svg) per <use> einfügt und verlinkt.",
+	"description": "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.",
 	"author": "svgforge",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",

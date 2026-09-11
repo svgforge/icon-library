@@ -6,7 +6,7 @@
 	"title": "SVG Fragment",
 	"category": "widgets",
 	"icon": "format-image",
-	"description": "Fügt ein <symbol> aus der Sprite-Datei ico.svg ein und kann verlinkt werden.",
+	"description": "Inserts a <symbol> from the sprite file and can be linked.",
 	"keywords": [ "svg", "icon", "sprite" ],
 	"textdomain": "wp-iconizer",
 	"supports": {

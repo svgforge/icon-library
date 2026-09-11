@@ -116,7 +116,7 @@ function wp_iconizer_sanitize_svg($svg)
 function wp_iconizer_handle_sprite_upload()
 {
     if (! current_user_can('manage_options')) {
-        wp_die(esc_html__('Du hast keine Berechtigung für diese Aktion.', 'wp-iconizer'));
+        wp_die(esc_html__('Sorry, you are not allowed to perform this action.', 'wp-iconizer'));
     }
 
     check_admin_referer('wp_iconizer_upload_sprite');
@@ -205,7 +205,7 @@ add_action('admin_post_wp_iconizer_upload_sprite', 'wp_iconizer_handle_sprite_up
 function wp_iconizer_handle_sprite_delete()
 {
     if (! current_user_can('manage_options')) {
-        wp_die(esc_html__('Du hast keine Berechtigung für diese Aktion.', 'wp-iconizer'));
+        wp_die(esc_html__('Sorry, you are not allowed to perform this action.', 'wp-iconizer'));
     }
 
     check_admin_referer('wp_iconizer_delete_sprite');
@@ -235,20 +235,20 @@ function wp_iconizer_settings_page()
     $uploaded = wp_iconizer_uploaded_sprite_data();
 
     if ($uploaded !== []) {
-        $source_label = __('Upload (Einstellungen)', 'wp-iconizer');
+        $source_label = __('Upload (Settings)', 'wp-iconizer');
     } elseif ((string) apply_filters('wp_iconizer_sprite_url', '') !== '') {
         $source_label = __('Filter wp_iconizer_sprite_url', 'wp-iconizer');
     } else {
-        $source_label = __('Standard (sprite.svg im Plugin)', 'wp-iconizer');
+        $source_label = __('Default (sprite.svg bundled with the plugin)', 'wp-iconizer');
     }
 
     $messages = [
-        'uploaded' => ['success', __('Die SVG-Sprite-Datei wurde hochgeladen und wird jetzt verwendet.', 'wp-iconizer')],
-        'deleted' => ['success', __('Die hochgeladene SVG-Sprite-Datei wurde entfernt.', 'wp-iconizer')],
-        'error_type' => ['error', __('Nur .svg- oder .svgz-Dateien können hochgeladen werden.', 'wp-iconizer')],
-        'error_upload' => ['error', __('Die Datei konnte nicht gelesen werden.', 'wp-iconizer')],
-        'error_invalid' => ['error', __('Die Datei ist keine gültige SVG-Datei.', 'wp-iconizer')],
-        'error_write' => ['error', __('Die Datei konnte nicht geschrieben werden.', 'wp-iconizer')],
+        'uploaded' => ['success', __('The SVG sprite file was uploaded and is now being used.', 'wp-iconizer')],
+        'deleted' => ['success', __('The uploaded SVG sprite file was removed.', 'wp-iconizer')],
+        'error_type' => ['error', __('Only .svg or .svgz files can be uploaded.', 'wp-iconizer')],
+        'error_upload' => ['error', __('The file could not be read.', 'wp-iconizer')],
+        'error_invalid' => ['error', __('The file is not a valid SVG file.', 'wp-iconizer')],
+        'error_write' => ['error', __('The file could not be written.', 'wp-iconizer')],
     ];
 
     $message = isset($_GET['wp_iconizer_message'], $messages[$_GET['wp_iconizer_message']])
@@ -264,23 +264,23 @@ function wp_iconizer_settings_page()
             </div>
         <?php endif; ?>
 
-        <h2 style="margin-bottom:0"><?php echo esc_html__('SVG-Fragment-Library', 'wp-iconizer'); ?></h2>
+        <h2 style="margin-bottom:0"><?php echo esc_html__('SVG fragment library', 'wp-iconizer'); ?></h2>
         <p class="description" style="margin-top:.5em">
-            <?php echo esc_html__('Lade eine SVG-Sprite-Datei hoch, die als zentrale Symbol-Bibliothek für den Block „SVG Fragment“ dient.', 'wp-iconizer'); ?>
-            <?php echo esc_html__('Jedes Icon ist ein <symbol id="mein-icon" viewBox="0 0 24 24">…</symbol>-Element.', 'wp-iconizer'); ?>
+            <?php echo esc_html__('Upload an SVG sprite file that serves as the central icon library for the SVG Fragment block.', 'wp-iconizer'); ?>
+            <?php echo esc_html__('Each icon is a <symbol id="my-icon" viewBox="0 0 24 24">…</symbol> element.', 'wp-iconizer'); ?>
         </p>
 
         <table class="form-table" role="presentation">
             <tbody>
                 <tr>
-                    <th scope="row"><?php echo esc_html__('Aktive Sprite-Datei', 'wp-iconizer'); ?></th>
+                    <th scope="row"><?php echo esc_html__('Active sprite file', 'wp-iconizer'); ?></th>
                     <td>
                         <code><?php echo esc_html($sprite_url); ?></code>
                         <p class="description">
                             <?php
                             echo esc_html(sprintf(
-                                /* translators: %s: Quelle der Sprite-URL (Konstante, Filter, Upload, Standard). */
-                                __('Quelle: %s', 'wp-iconizer'),
+                                /* translators: %s: Source of the sprite URL (constant, filter, upload, default). */
+                                __('Source: %s', 'wp-iconizer'),
                                 $source_label,
                             ));
     ?>
@@ -289,15 +289,15 @@ function wp_iconizer_settings_page()
                 </tr>
                 <?php if ($uploaded !== []) : ?>
                     <tr>
-                        <th scope="row"><?php echo esc_html__('Hochgeladene Datei', 'wp-iconizer'); ?></th>
+                        <th scope="row"><?php echo esc_html__('Uploaded file', 'wp-iconizer'); ?></th>
                         <td>
                             <p style="margin:0">
                                 <?php echo esc_html($uploaded['name']); ?>
                                 <span class="description">
                                     <?php
             echo esc_html(sprintf(
-                /* translators: %1$d: Anzahl der Symbol-Elemente, %2$s: Datum des Uploads. */
-                __('(%1$d Symbole, hochgeladen am %2$s)', 'wp-iconizer'),
+                /* translators: %1$d: Number of symbol elements, %2$s: Date of the upload. */
+                __('(%1$d symbols, uploaded on %2$s)', 'wp-iconizer'),
                 (int) $uploaded['symbols'],
                 wp_date(get_option('date_format'), (int) $uploaded['time']),
             ));
@@ -308,7 +308,7 @@ function wp_iconizer_settings_page()
                                 <?php wp_nonce_field('wp_iconizer_delete_sprite'); ?>
                                 <input type="hidden" name="action" value="wp_iconizer_delete_sprite">
                                 <button type="submit" class="button button-secondary">
-                                    <?php echo esc_html__('Hochgeladene Datei entfernen', 'wp-iconizer'); ?>
+                                    <?php echo esc_html__('Remove uploaded file', 'wp-iconizer'); ?>
                                 </button>
                             </form>
                         </td>
@@ -317,9 +317,9 @@ function wp_iconizer_settings_page()
             </tbody>
         </table>
 
-        <h2 style="margin-bottom:0"><?php echo esc_html__('Neue Datei hochladen', 'wp-iconizer'); ?></h2>
+        <h2 style="margin-bottom:0"><?php echo esc_html__('Upload new file', 'wp-iconizer'); ?></h2>
         <p class="description" style="margin-top:.5em">
-            <?php echo esc_html__('Eine bestehende hochgeladene Datei wird beim Upload ersetzt.', 'wp-iconizer'); ?>
+            <?php echo esc_html__('An existing uploaded file is replaced by a new upload.', 'wp-iconizer'); ?>
         </p>
 
         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" enctype="multipart/form-data" class="wp-iconizer-upload">
@@ -328,11 +328,11 @@ function wp_iconizer_settings_page()
             <table class="form-table" role="presentation">
                 <tbody>
                     <tr>
-                        <th scope="row"><?php echo esc_html__('SVG-Datei (ico.svg)', 'wp-iconizer'); ?></th>
+                        <th scope="row"><?php echo esc_html__('SVG file (ico.svg)', 'wp-iconizer'); ?></th>
                         <td>
                             <input type="file" name="wp_iconizer_sprite" accept=".svg,.svgz,image/svg+xml" required>
                             <p class="description">
-                                <?php echo esc_html__('Nur .svg- und .svgz-Dateien werden akzeptiert. Der Inhalt wird beim Upload von Skripten, Event-Handlern und javascript:-Links bereinigt.', 'wp-iconizer'); ?>
+                                <?php echo esc_html__('Only .svg and .svgz files are accepted. The content is cleaned of scripts, event handlers and javascript: links on upload.', 'wp-iconizer'); ?>
                             </p>
                         </td>
                     </tr>
@@ -340,7 +340,7 @@ function wp_iconizer_settings_page()
             </table>
             <p class="submit">
                 <button type="submit" class="button button-primary">
-                    <?php echo esc_html__('SVG-Sprite hochladen', 'wp-iconizer'); ?>
+                    <?php echo esc_html__('Upload SVG sprite', 'wp-iconizer'); ?>
                 </button>
             </p>
         </form>
