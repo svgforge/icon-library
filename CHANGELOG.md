@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed deprecated `__nextHasNoMarginBottom` prop; the margin is now reset via CSS.
 - All code comments and the README are in English.
 - README: Composer installation now documents the WP Packages repository (`wp-plugin/*`) instead of WPackagist; added a svgforge-cli hint for generating the sprite; added a Translations section with the `make-pot`/`make-mo`/`make-json` workflow.
+- Documentation restructured: README reduced to a lean overview; detailed topics moved into `docs/` (`developer`/maintenance guide, translations, release + wp.org, Composer installation) and `screen.png` moved to `docs/`. The sprite file configuration stays in the README.
 
 ### Fixed
 - `pnpm format` failing on the invalid YAML in `.github/workflows/release.yml` (tab indentation), rewrote the workflow.

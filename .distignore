@@ -24,6 +24,6 @@
 /tests
 /phpunit.xml.dist
 /.phpunit.result.cache
-/screen.png
+/docs
 /.editorconfig
 /.nvmrc
