@@ -1,0 +1,15 @@
+# Dependencies and build output
+/node_modules/
+/build/
+/vendor/
+
+# Release artifacts and misc
+*.zip
+*.log
+.DS_Store
+.phpunit.result.cache
+
+# Local agent/editor tooling
+.agents/
+skills-lock.json
+.vscode/

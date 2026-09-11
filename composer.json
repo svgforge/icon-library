@@ -1,0 +1,43 @@
+{
+	"name": "svgforge/icon-library",
+	"description": "Gutenberg block that inserts SVG icons from a central sprite file (ico.svg) via <use> and links them.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"gutenberg",
+		"block",
+		"svg",
+		"icons"
+	],
+	"require": {
+		"php": ">=8.3",
+		"composer/installers": "^2.0"
+	},
+	"require-dev": {
+		"laravel/pint": "^1.32",
+		"php-stubs/wordpress-stubs": "^7.1",
+		"phpunit/phpunit": "^9.6",
+		"wp-phpunit/wp-phpunit": "^6.6",
+		"yoast/phpunit-polyfills": "^4.0"
+	},
+	"extra": {
+		"installer-paths": {
+			"wp-content/plugins/{$name}/": [
+				"type:wordpress-plugin"
+			]
+		}
+	},
+	"scripts": {
+		"lint": "pint --test",
+		"lint:fix": "pint",
+		"test": "@php vendor/bin/phpunit"
+	},
+	"config": {
+		"sort-packages": true,
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	}
+}

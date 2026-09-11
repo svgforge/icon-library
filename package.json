@@ -1,0 +1,33 @@
+{
+	"name": "icon-library",
+	"version": "0.1.0",
+	"description": "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.",
+	"author": "svgforge",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"packageManager": "pnpm@12.3.4",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"typecheck": "tsc --noEmit",
+		"check-engines": "wp-scripts check-engines",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"dependencies": {
+		"@wordpress/block-editor": "^17.1.0",
+		"@wordpress/blocks": "^16.0.0",
+		"@wordpress/components": "^40.1.0",
+		"@wordpress/data": "^10.55.0",
+		"@wordpress/element": "^8.7.0",
+		"@wordpress/i18n": "^6.28.0"
+	},
+	"devDependencies": {
+		"@types/react": "^18.3.31",
+		"@types/react-dom": "^18.3.7",
+		"@wordpress/scripts": "^35.0.0",
+		"typescript": "^5.9.3"
+	}
+}
