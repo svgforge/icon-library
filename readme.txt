@@ -8,94 +8,94 @@ Stable tag: 0.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-SVG Fragment Block: fügt Icons aus einer eigenen SVG-Sprite-Datei (ico.svg) per <use> ein und verlinkt sie. Für Anwender, die die Sprite-Datei mit CLI-Tools wie svgforge selbst pflegen und volle Kontrolle über das gerenderte SVG wollen.
+SVG Fragment Block: inserts icons from your own SVG sprite file (ico.svg) via <use> and can link them. For users who maintain the sprite file themselves with CLI tools such as svgforge and want full control over the rendered SVG.
 
 == Description ==
 
-Der Icon Library Block lädt eine zentrale SVG-Sprite-Datei (im Standard das gebündelte `sprite.svg`), stellt alle darin enthaltenen `symbol`-Elemente in einem komfortablen Picker dar und fügt das gewählte Icon als `<svg><use href="/wp-content/plugins/icon-library/sprite.svg#symbol-id">` in deine Inhalte ein.
+The Icon Library Block loads a central SVG sprite file (by default the bundled `sprite.svg`), shows all contained `<symbol>` elements in a convenient picker and inserts the selected icon as `<svg><use href="/wp-content/plugins/icon-library/sprite.svg#symbol-id">` into your content.
 
-= Für wen ist dieses Plugin? =
+= Who is this plugin for? =
 
-Dieses Plugin richtet sich in erster Linie an fortgeschrittene Theme- und Plugin-Entwickler. Es verschafft dir keinen codefreien Icon-Manager: Jedes Icon muss zuerst als `<symbol>` in einer Sprite-Datei existieren, die du besitzt, baust und versionierst.
+This plugin is primarily aimed at advanced theme and plugin developers. It does not give you a code-free icon manager: every icon must first exist as a `<symbol>` in a sprite file that you own, build and version.
 
-Seit WordPress 7.1 bringt Core ein eigenes Icon-System mit (`wp_register_icon_collection()`, `wp_register_icon()`, `wp_get_icon()`): Icons erscheinen damit automatisch im Picker des nativen Icon-Blocks und in der REST-API und lassen sich in PHP direkt ausgeben. Wenn du nur wenige Icons brauchst und sie per Code registrieren kannst, nutze besser Core — dieses Plugin ist dann unnötig.
+Since WordPress 7.1, core ships its own icon system (`wp_register_icon_collection()`, `wp_register_icon()`, `wp_get_icon()`): icons then automatically appear in the native Icon block's picker and in the REST API, and can be rendered directly in PHP. If you only need a few icons and can register them in code, use core instead — this plugin is then unnecessary.
 
-Der Fragment-Ansatz hat Vorteile, wenn du eine echte Sprite-Pipeline betreibst:
+The fragment approach has advantages when you run a real sprite pipeline:
 
-* Volles SVG über `<use>`: Stroke-Icons, Farbverläufe, `currentColor`, Inline-Styles und individuelle `viewBox`-Werte bleiben erhalten. Der Sanitizer von WordPress 7.1 erlaubt nur `<svg>`, `<path>` und `<polygon>` (ohne `stroke` und Inline-Styles) und zerstört dadurch viele stroke-basierte Icon-Sets.
-* Bestehende Sprites wiederverwenden: Sprite hochladen (oder mit einem CLI-Tool wie svgforge erzeugen) — kein PHP-Code pro Icon nötig.
-* Eine Datei: Die Sprite ist eine einzelne, cachebare Datei, die im Theme-Repo liegt und per Git versioniert wird.
-* Kontrolle pro Block: Füll- und Linienfarbe, Breite/Höhe mit Einheiten, Links samt `rel`-Handling und Aria-Labels — pro Icon-Instanz, ohne Stylesheet.
-* Läuft auch auf WordPress vor 7.1 (ab 6.6).
+* Full SVG via `<use>`: stroke-based icons, gradients, `currentColor`, inline styles and custom `viewBox` values survive. WordPress 7.1's sanitizer only allows `<svg>`, `<path>` and `<polygon>` (no `stroke`, no inline styles) and therefore breaks many stroke-based icon sets.
+* Reuse existing sprites: upload a sprite (or generate one with a CLI tool like svgforge) — no per-icon PHP code required.
+* One file: the sprite is a single cacheable file that lives in the theme repo and is versioned with Git.
+* Control per block: fill and stroke colours, width/height with units, links with `rel` handling and aria-labels — per icon instance, without touching a stylesheet.
+* Also runs on WordPress versions before 7.1 (from 6.6).
 
-Nachteile, die du kennen solltest:
+Limitations you should know about:
 
-* Zum Hinzufügen oder Ändern von Icons musst du die Sprite-Datei neu erzeugen — typischerweise mit einem CLI-Tool wie svgforge. Einen Icon-Editor im Browser oder eine Verwaltungsoberfläche gibt es nicht.
-* Die Icons liegen als Block im Inhalt. Für ein simples `wp_get_icon()`-Helferchen in der Theme-PHP gibt es keinen Ersatz — dafür ist der native 7.1-Ansatz gedacht.
+* To add or change icons you have to rebuild the sprite file — typically with a CLI tool such as svgforge. There is no in-browser icon editor or management UI.
+* The icons live in your content as a block. There is no replacement for the simple `wp_get_icon()` helper in theme PHP — that is what the native 7.1 approach is for.
 
-= Eigenschaften =
+= Features =
 
-* Einstellungsseite (Einstellungen → Icon Library) zum Hochladen der SVG-Sprite-Datei inkl. Bereinigung von Skripten und Event-Handlern.
-* Theme-Datei über `ICON_LIBRARY_SPRITE_FILE` als versionierbare Quelle – hat Vorrang, solange die Datei existiert; sonst greift der Backend-Upload.
-* Symbol-Picker im Editor mit Live-Vorschau aller Icons aus der Sprite.
-* Icons verlinkbar (neuer Tab + rel-Attribute inkl. noopener/noreferrer).
-* Aria-Label für Screenreader, verlinkte Icons automatisch per Link beschriftet.
-* Füll- und Linienfarbe als auch Breite/Höhe pro Block konfigurierbar (px, em, rem, %).
-* Vollständig dynamisch gerendert (render.php) mit `get_block_wrapper_attributes()`.
-* Block-Supports: Ausrichtung, Anker, zusätzliche CSS-Klassen.
+* Settings page (Settings → Icon Library) to upload the SVG sprite file, including sanitization of scripts and event handlers.
+* Theme file via `ICON_LIBRARY_SPRITE_FILE` as a versionable source – takes priority as long as the file exists; otherwise the backend upload is used.
+* Symbol picker in the editor with a live preview of all icons from the sprite.
+* Icons can be linked (new tab + rel attributes including noopener/noreferrer).
+* Aria-label for screen readers; linked icons are automatically labelled via the link.
+* Fill and stroke colour as well as width/height per block (px, em, rem, %).
+* Fully dynamic server-side rendering (render.php) with `get_block_wrapper_attributes()`.
+* Block supports: alignment, anchor, additional CSS classes.
 
-= Sprite-Datei konfigurieren =
+= Configure the sprite file =
 
-Die SVG-Sprite-Datei wird in dieser Reihenfolge aufgelöst (erste vorhandene Quelle gewinnt):
+The SVG sprite file is resolved in this order (first existing source wins):
 
-1. Theme-Datei `ICON_LIBRARY_SPRITE_FILE` – wenn gesetzt und die Datei existiert (hat Vorrang).
-2. Hochgeladene Datei aus Einstellungen → Icon Library (Backend-Upload).
-3. Konstante `ICON_LIBRARY_SPRITE_URL`.
+1. Theme file `ICON_LIBRARY_SPRITE_FILE` – when set and the file exists (has priority).
+2. Uploaded file from Settings → Icon Library (backend upload).
+3. Constant `ICON_LIBRARY_SPRITE_URL`.
 4. Filter `icon_library_sprite_url`.
-5. Fallback: `sprite.svg` im Plugin-Verzeichnis.
+5. Fallback: `sprite.svg` in the plugin directory.
 
-Theme-Datei (empfohlen, versionierbar mit dem Theme) in der `functions.php`:
+Theme file (recommended, versionable with the theme) in the theme's `functions.php`:
 
     define( 'ICON_LIBRARY_SPRITE_FILE', get_stylesheet_directory() . '/assets/ico.svg' );
 
-Die Datei muss lesbar sein und innerhalb von `WP_CONTENT_DIR` oder `ABSPATH` liegen. Ist sie nicht vorhanden, greift automatisch die nächste Quelle.
+The file must be readable and lie within `WP_CONTENT_DIR` or `ABSPATH`. If it does not exist, the next source is used automatically.
 
-Weitere Overrides:
+Further overrides:
 
     define( 'ICON_LIBRARY_SPRITE_URL', 'https://cdn.example.com/icons/ico.svg' );
 
-oders
+or
 
     add_filter( 'icon_library_sprite_url', function () {
-        return '/wp-content/themes/mein-theme/assets/ico.svg';
+        return '/wp-content/themes/my-theme/assets/ico.svg';
     } );
 
 == Installation ==
 
-1. Lade den Plugin-Ordner in `/wp-content/plugins/` hoch (oder installiere die ZIP über Plugins → Installieren).
-2. Aktiviere das Plugin unter „Plugins“.
-3. Lade die Sprite-Datei (`ico.svg` mit `<symbol id="...">`-Elementen) über **Einstellungen → Icon Library** hoch oder lege sie als Theme-Datei (`ICON_LIBRARY_SPRITE_FILE`) bzw. an der konfigurierten URL ab.
-4. Füge im Editor den Block „SVG Fragment“ hinzu und wähle ein Icon.
+1. Upload the plugin folder to `/wp-content/plugins/` (or install the ZIP via Plugins → Add New).
+2. Activate the plugin under "Plugins".
+3. Upload the sprite file (`ico.svg` with `<symbol id="...">` elements) via **Settings → Icon Library** or place it as a theme file (`ICON_LIBRARY_SPRITE_FILE`) or at the configured URL.
+4. In the editor, add the "SVG Fragment" block and choose an icon.
 
 == Frequently Asked Questions ==
 
-= Woher kommen die Icons? =
+= Where do the icons come from? =
 
-Aus der zentralen Sprite-Datei `ico.svg`. Jedes Icon ist ein `<symbol id="mein-icon" viewBox="0 0 24 24">…</symbol>-Element. Die Datei wird serverseitig gerendert und im Editor per `fetch` geladen.
+From the central sprite file `ico.svg`. Each icon is a `<symbol id="my-icon" viewBox="0 0 24 24">…</symbol>` element. The file is rendered server-side and loaded via `fetch` in the editor.
 
-= Warum nicht einfach die nativen SVG-Icons von WordPress 7.1 nutzen? =
+= Why not simply use the native SVG icons of WordPress 7.1? =
 
-WordPress 7.1 bietet mit `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` ein natives Icon-System — das reicht, wenn du wenige Icons direkt in Code registrierst. Dieses Plugin ergänzt das dort, wo eine zentrale SVG-Sprite zum Einsatz kommt: volle SVG-Freiheit (auch Stroke-Icons), bestehende Sprites ohne PHP-Code pro Icon, eine cachebare Datei und Block-Styling pro Instanz. Eine Integration in den nativen 7.1-Ansatz ist geplant, sodass dieselbe Sprite künftig auch den nativen Icon-Block speisen kann (siehe Changelog).
+WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Integration with the native 7.1 approach is planned so that the same sprite can also feed the native Icon block in the future (see Changelog).
 
-= Funktioniert das auch ohne JS im Frontend? =
+= Does it work without JS in the frontend? =
 
-Ja. Das Frontend-Markup wird serverseitig in `render.php` erzeugt; die Built-JS wird nur im Editor gebraucht.
+Yes. The frontend markup is generated server-side in `render.php`; the built JS is only needed in the editor.
 
 == Screenshots ==
 
-1. Symbol-Picker im Gutenberg-Editor mit Live-Vorschau aller Icons aus der Sprite-Datei.
+1. Symbol picker in the Gutenberg editor with a live preview of all icons from the sprite file.
 
 == Changelog ==
 
 = 0.1.0 =
-* Initiale Veröffentlichung.
+* Initial release.
