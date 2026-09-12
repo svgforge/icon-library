@@ -5,6 +5,17 @@
 	overflow-x: clip;
 }
 
+.svg-fragment__modal .svg-fragment__picker {
+	width: 100%;
+	max-width: 100%;
+	padding: 0;
+}
+
+.svg-fragment__modal .svg-fragment__picker-list {
+	max-height: 60vh;
+	overflow-y: auto;
+}
+
 .svg-fragment__picker-toolbar {
 	display: flex;
 	align-items: center;
@@ -105,4 +116,11 @@
 
 .svg-fragment__toggle-label {
 	font-size: 12px;
+}
+
+.svg-fragment__size-presets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 12px;
 }

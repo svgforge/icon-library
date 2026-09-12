@@ -6,22 +6,32 @@ import {
 	BlockControls,
 	useBlockProps,
 	LinkControl,
+	useSetting,
 } from '@wordpress/block-editor';
 import { useDispatch } from '@wordpress/data';
 import {
 	PanelBody,
 	ColorPalette,
-	Dropdown,
+	Modal,
 	ToolbarGroup,
 	ToolbarButton,
 	Popover,
 	SelectControl,
 	TextControl,
+	Button,
+	ButtonGroup,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 } from '@wordpress/components';
 import type { BlockEditProps } from '@wordpress/blocks';
 import type { CSSProperties, SVGProps } from 'react';
+import {
+	isDimensionPresetActive,
+	parseLength,
+	toDimensionPresetEntries,
+	UNIT_OPTIONS,
+} from './icon-sizes';
+import { parseSymbols, type SpriteSymbol } from './icon-colors';
 
 export type IconLibraryAttributes = {
 	symbolId: string;
@@ -40,26 +50,9 @@ interface SymbolOption {
 	value: string;
 }
 
-interface SpriteSymbol {
-	id: string;
-	viewBox: string | null;
-}
-
 const SPRITE_URL =
 	window.iconLibrarySettings?.spriteUrl ||
 	'/wp-content/plugins/icon-library/sprite.svg';
-
-const parseSymbols = ( svgText: string ): SpriteSymbol[] => {
-	const parser = new window.DOMParser();
-	const doc = parser.parseFromString( svgText, 'image/svg+xml' );
-	const symbols = Array.from( doc.getElementsByTagName( 'symbol' ) );
-	return symbols
-		.map( ( s ) => ( {
-			id: s.getAttribute( 'id' ),
-			viewBox: s.getAttribute( 'viewBox' ),
-		} ) )
-		.filter( ( s ): s is SpriteSymbol => !! s.id );
-};
 
 export default function Edit( {
 	attributes,
@@ -80,7 +73,20 @@ export default function Edit( {
 	const [ symbols, setSymbols ] = useState< SpriteSymbol[] >( [] );
 	const [ error, setError ] = useState( '' );
 	const [ isLinkPickerOpen, setIsLinkPickerOpen ] = useState( false );
+	const [ isIconPickerOpen, setIsIconPickerOpen ] = useState( false );
 	const [ reload, setReload ] = useState( 0 );
+
+	const colorCustom = useSetting( 'color.custom' );
+	const colorPalette = useSetting( 'color.palette' );
+	const colorsEnabled =
+		colorCustom !== false &&
+		Array.isArray( colorPalette ) &&
+		colorPalette.length > 0;
+	const dimensionSizes = useSetting( 'dimensions.dimensionSizes' );
+	const widthSetting = useSetting( 'dimensions.width' );
+	const heightSetting = useSetting( 'dimensions.height' );
+	const selectedSymbol = symbols.find( ( s ) => s.id === symbolId );
+	const showColorPanel = ! ( selectedSymbol?.colored ?? false );
 
 	useEffect( () => {
 		let aborted = false;
@@ -210,31 +216,17 @@ export default function Edit( {
 		</svg>
 	);
 
-	const parseLength = (
-		value: string,
-		fallbackUnit = 'px'
-	): { num: string; unit: string } => {
-		if ( ! value ) {
-			return { num: '', unit: fallbackUnit };
-		}
-		const match = String( value ).match(
-			/^(\d+(?:\.\d+)?)(px|em|rem|%)?$/
-		);
-		if ( ! match ) {
-			return { num: '', unit: fallbackUnit };
-		}
-		return { num: match[ 1 ], unit: match[ 2 ] || fallbackUnit };
-	};
-
 	const { num: widthNum, unit: widthUnit } = parseLength( width, 'px' );
 	const { num: heightNum, unit: heightUnit } = parseLength( height, 'px' );
 
-	const unitOptions: Array< { value: string; label: string } > = [
-		{ value: 'px', label: 'px' },
-		{ value: 'em', label: 'em' },
-		{ value: 'rem', label: 'rem' },
-		{ value: '%', label: '%' },
-	];
+	const dimensionPresetEntries = toDimensionPresetEntries( dimensionSizes );
+
+	const customWidthEnabled = widthSetting !== false;
+	const customHeightEnabled = heightSetting !== false;
+	const showSizePanel =
+		dimensionPresetEntries.length > 0 ||
+		customWidthEnabled ||
+		customHeightEnabled;
 
 	const { selectBlock } = useDispatch( 'core/block-editor' );
 	const blockProps = useBlockProps( {
@@ -246,6 +238,14 @@ export default function Edit( {
 		<>
 			<BlockControls group="inline">
 				<ToolbarGroup>
+					<ToolbarButton
+						onClick={ () => {
+							setReload( ( t ) => t + 1 );
+							setIsIconPickerOpen( true );
+						} }
+					>
+						{ __( 'Replace', 'icon-library' ) }
+					</ToolbarButton>
 					<ToolbarButton
 						icon="admin-links"
 						label={ __( 'Insert/edit link', 'icon-library' ) }
@@ -276,228 +276,275 @@ export default function Edit( {
 							'icon-library'
 						) }
 					/>
-					<Dropdown
-						renderToggle={ ( { isOpen, onToggle } ) => (
-							<ToolbarButton
-								onClick={ () => {
-									if ( ! isOpen ) {
-										setReload( ( t ) => t + 1 );
-									}
-									onToggle();
-								} }
-								aria-expanded={ isOpen }
-								className="svg-fragment__toggle"
-							>
-								{ symbolId ? (
-									<svg
-										className="svg-fragment__toggle-icon"
-										aria-hidden="true"
-									>
-										<use
-											href={ `${ SPRITE_URL }#${ symbolId }` }
-										/>
-									</svg>
-								) : null }
-								<span className="svg-fragment__toggle-label">
-									{ symbolId ||
-										__(
-											'Select symbol …',
-											'icon-library'
-										) }
-								</span>
-							</ToolbarButton>
-						) }
-						renderContent={ () => (
-							<div className="svg-fragment__picker">
-								<div className="svg-fragment__picker-toolbar">
-									{ groupOptions.length > 1 && (
-										<SelectControl
-											className="svg-fragment__group-select"
-											value={ activeGroup }
-											options={ groupOptions }
-											onChange={ setActiveGroup }
-										/>
+				</PanelBody>
+				{ /* Link settings moved to toolbar LinkControl */ }
+				{ colorsEnabled && (
+					<PanelBody
+						title={ __( 'Colors', 'icon-library' ) }
+						initialOpen={ false }
+					>
+						{ showColorPanel ? (
+							<>
+								<p className="svg-fragment__label">
+									{ __(
+										'Fill color (fill)',
+										'icon-library'
 									) }
-									<ToggleGroupControl
-										label={ __( 'View', 'icon-library' ) }
-										value={ view }
-										hideLabelFromVision
-										onChange={ ( value ) =>
-											setView(
-												value === 'list'
-													? 'list'
-													: 'grid'
-											)
-										}
-									>
-										<ToggleGroupControlOptionIcon
-											value="grid"
-											label={ __(
-												'Grid',
-												'icon-library'
-											) }
-											icon={
-												<span className="dashicons dashicons-grid-view" />
-											}
-										/>
-										<ToggleGroupControlOptionIcon
-											value="list"
-											label={ __(
-												'List',
-												'icon-library'
-											) }
-											icon={
-												<span className="dashicons dashicons-list-view" />
-											}
-										/>
-									</ToggleGroupControl>
-								</div>
-								<div
-									className={ `svg-fragment__picker-list svg-fragment__picker-list--${ view }` }
-								>
-									{ filteredOptions.map( ( opt ) => {
-										if ( view === 'grid' ) {
-											return (
-												<button
-													key={ opt.value }
-													type="button"
-													className="svg-fragment__picker-item svg-fragment__picker-item--grid"
-													data-tip={ opt.label }
-													onClick={ () =>
-														setAttributes( {
-															symbolId: opt.value,
-														} )
-													}
-												>
-													<svg
-														className="svg-fragment__picker-icon"
-														aria-hidden="true"
-													>
-														{ opt.value ? (
-															<use
-																href={ `${ SPRITE_URL }#${ opt.value }` }
-															/>
-														) : null }
-													</svg>
-													<span className="screen-reader-text">
-														{ opt.label }
-													</span>
-												</button>
-											);
-										}
-										return (
-											<button
-												key={ opt.value }
-												type="button"
-												className="svg-fragment__picker-item"
+								</p>
+								<ColorPalette
+									value={ fillColor || '' }
+									onChange={ ( value ) =>
+										setAttributes( {
+											fillColor: value || '',
+										} )
+									}
+								/>
+								<p className="svg-fragment__label">
+									{ __(
+										'Stroke color (stroke)',
+										'icon-library'
+									) }
+								</p>
+								<ColorPalette
+									value={ strokeColor || '' }
+									onChange={ ( value ) =>
+										setAttributes( {
+											strokeColor: value || '',
+										} )
+									}
+								/>
+							</>
+						) : (
+							<p className="svg-fragment__label">
+								{ __(
+									'This icon already contains its own colors and cannot be recolored.',
+									'icon-library'
+								) }
+							</p>
+						) }
+					</PanelBody>
+				) }
+				{ showSizePanel && (
+					<PanelBody
+						title={ __( 'Size', 'icon-library' ) }
+						initialOpen={ false }
+					>
+						{ dimensionPresetEntries.length > 0 && (
+							<>
+								<p className="svg-fragment__label">
+									{ __( 'Preset sizes', 'icon-library' ) }
+								</p>
+								<ButtonGroup className="svg-fragment__size-presets">
+									{ dimensionPresetEntries.map(
+										( preset ) => (
+											<Button
+												key={
+													preset.slug ?? preset.size
+												}
+												variant="secondary"
+												isPressed={ isDimensionPresetActive(
+													width,
+													height,
+													preset.size
+												) }
 												onClick={ () =>
 													setAttributes( {
-														symbolId: opt.value,
+														width: preset.size,
+														height: preset.size,
 													} )
 												}
 											>
-												<svg
-													className="svg-fragment__picker-icon"
-													aria-hidden="true"
-												>
-													{ opt.value ? (
-														<use
-															href={ `${ SPRITE_URL }#${ opt.value }` }
-														/>
-													) : null }
-												</svg>
-												<span className="svg-fragment__picker-label">
-													{ opt.label }
-												</span>
-											</button>
-										);
-									} ) }
-								</div>
+												{ preset.name || preset.size }
+											</Button>
+										)
+									) }
+								</ButtonGroup>
+							</>
+						) }
+						{ ( customWidthEnabled || customHeightEnabled ) && (
+							<div
+								style={ {
+									display: 'grid',
+									gridTemplateColumns: '1fr 88px',
+									gap: 8,
+								} }
+							>
+								{ customWidthEnabled && (
+									<TextControl
+										label={ __( 'Width', 'icon-library' ) }
+										value={ widthNum }
+										onChange={ ( val ) => {
+											const num = val.replace(
+												/[^0-9.]/g,
+												''
+											);
+											setAttributes( {
+												width:
+													( num || '48' ) +
+													( widthUnit || 'px' ),
+											} );
+										} }
+									/>
+								) }
+								{ customWidthEnabled && (
+									<SelectControl
+										label={ __( 'Unit', 'icon-library' ) }
+										value={ widthUnit }
+										options={ UNIT_OPTIONS }
+										onChange={ ( unit ) => {
+											setAttributes( {
+												width:
+													( widthNum || '48' ) + unit,
+											} );
+										} }
+									/>
+								) }
+								{ customHeightEnabled && (
+									<TextControl
+										label={ __( 'Height', 'icon-library' ) }
+										value={ heightNum }
+										onChange={ ( val ) => {
+											const num = val.replace(
+												/[^0-9.]/g,
+												''
+											);
+											setAttributes( {
+												height:
+													( num || '48' ) +
+													( heightUnit || 'px' ),
+											} );
+										} }
+									/>
+								) }
+								{ customHeightEnabled && (
+									<SelectControl
+										label={ __( 'Unit', 'icon-library' ) }
+										value={ heightUnit }
+										options={ UNIT_OPTIONS }
+										onChange={ ( unit ) => {
+											setAttributes( {
+												height:
+													( heightNum || '48' ) +
+													unit,
+											} );
+										} }
+									/>
+								) }
 							</div>
 						) }
-					/>
-				</PanelBody>
-				{ /* Link settings moved to toolbar LinkControl */ }
-				<PanelBody
-					title={ __( 'Colors', 'icon-library' ) }
-					initialOpen={ false }
-				>
-					<p className="svg-fragment__label">
-						{ __( 'Fill color (fill)', 'icon-library' ) }
-					</p>
-					<ColorPalette
-						value={ fillColor || '' }
-						onChange={ ( value ) =>
-							setAttributes( { fillColor: value || '' } )
-						}
-					/>
-					<p className="svg-fragment__label">
-						{ __( 'Stroke color (stroke)', 'icon-library' ) }
-					</p>
-					<ColorPalette
-						value={ strokeColor || '' }
-						onChange={ ( value ) =>
-							setAttributes( { strokeColor: value || '' } )
-						}
-					/>
-				</PanelBody>
-				<PanelBody
-					title={ __( 'Size', 'icon-library' ) }
-					initialOpen={ false }
-				>
-					<div
-						style={ {
-							display: 'grid',
-							gridTemplateColumns: '1fr 88px',
-							gap: 8,
-						} }
-					>
-						<TextControl
-							label={ __( 'Width', 'icon-library' ) }
-							value={ widthNum }
-							onChange={ ( val ) => {
-								const num = val.replace( /[^0-9.]/g, '' );
-								setAttributes( {
-									width:
-										( num || '48' ) + ( widthUnit || 'px' ),
-								} );
-							} }
-						/>
-						<SelectControl
-							label={ __( 'Unit', 'icon-library' ) }
-							value={ widthUnit }
-							options={ unitOptions }
-							onChange={ ( unit ) => {
-								setAttributes( {
-									width: ( widthNum || '48' ) + unit,
-								} );
-							} }
-						/>
-						<TextControl
-							label={ __( 'Height', 'icon-library' ) }
-							value={ heightNum }
-							onChange={ ( val ) => {
-								const num = val.replace( /[^0-9.]/g, '' );
-								setAttributes( {
-									height:
-										( num || '48' ) +
-										( heightUnit || 'px' ),
-								} );
-							} }
-						/>
-						<SelectControl
-							label={ __( 'Unit', 'icon-library' ) }
-							value={ heightUnit }
-							options={ unitOptions }
-							onChange={ ( unit ) => {
-								setAttributes( {
-									height: ( heightNum || '48' ) + unit,
-								} );
-							} }
-						/>
-					</div>
-				</PanelBody>
+					</PanelBody>
+				) }
 			</InspectorControls>
+
+			{ isIconPickerOpen && (
+				<Modal
+					title={ __( 'Select symbol', 'icon-library' ) }
+					onRequestClose={ () => setIsIconPickerOpen( false ) }
+					className="svg-fragment__modal"
+					size="large"
+				>
+					<div className="svg-fragment__picker svg-fragment__picker--modal">
+						<div className="svg-fragment__picker-toolbar">
+							{ groupOptions.length > 1 && (
+								<SelectControl
+									className="svg-fragment__group-select"
+									value={ activeGroup }
+									options={ groupOptions }
+									onChange={ setActiveGroup }
+								/>
+							) }
+							<ToggleGroupControl
+								label={ __( 'View', 'icon-library' ) }
+								value={ view }
+								hideLabelFromVision
+								onChange={ ( value ) =>
+									setView(
+										value === 'list' ? 'list' : 'grid'
+									)
+								}
+							>
+								<ToggleGroupControlOptionIcon
+									value="grid"
+									label={ __( 'Grid', 'icon-library' ) }
+									icon={
+										<span className="dashicons dashicons-grid-view" />
+									}
+								/>
+								<ToggleGroupControlOptionIcon
+									value="list"
+									label={ __( 'List', 'icon-library' ) }
+									icon={
+										<span className="dashicons dashicons-list-view" />
+									}
+								/>
+							</ToggleGroupControl>
+						</div>
+						<div
+							className={ `svg-fragment__picker-list svg-fragment__picker-list--${ view }` }
+						>
+							{ filteredOptions.map( ( opt ) => {
+								if ( view === 'grid' ) {
+									return (
+										<button
+											key={ opt.value }
+											type="button"
+											className="svg-fragment__picker-item svg-fragment__picker-item--grid"
+											data-tip={ opt.label }
+											onClick={ () => {
+												setAttributes( {
+													symbolId: opt.value,
+												} );
+												setIsIconPickerOpen( false );
+											} }
+										>
+											<svg
+												className="svg-fragment__picker-icon"
+												aria-hidden="true"
+											>
+												{ opt.value ? (
+													<use
+														href={ `${ SPRITE_URL }#${ opt.value }` }
+													/>
+												) : null }
+											</svg>
+											<span className="screen-reader-text">
+												{ opt.label }
+											</span>
+										</button>
+									);
+								}
+								return (
+									<button
+										key={ opt.value }
+										type="button"
+										className="svg-fragment__picker-item"
+										onClick={ () => {
+											setAttributes( {
+												symbolId: opt.value,
+											} );
+											setIsIconPickerOpen( false );
+										} }
+									>
+										<svg
+											className="svg-fragment__picker-icon"
+											aria-hidden="true"
+										>
+											{ opt.value ? (
+												<use
+													href={ `${ SPRITE_URL }#${ opt.value }` }
+												/>
+											) : null }
+										</svg>
+										<span className="svg-fragment__picker-label">
+											{ opt.label }
+										</span>
+									</button>
+								);
+							} ) }
+						</div>
+					</div>
+				</Modal>
+			) }
 
 			{ isLinkPickerOpen && (
 				<Popover
