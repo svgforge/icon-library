@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       Icon Library
  * Description:       Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            svgforge
@@ -14,10 +14,17 @@
  */
 defined('ABSPATH') || exit;
 
+defined('ICON_LIBRARY_PLUGIN_FILE') || define('ICON_LIBRARY_PLUGIN_FILE', __FILE__);
+
 /**
  * Loads the settings page (SVG upload).
  */
 require_once __DIR__ . '/src/admin/admin.php';
+
+/**
+ * Loads the WordPress 7.1 native icon API integration.
+ */
+require_once __DIR__ . '/src/native/icons.php';
 
 /**
  * Returns the URL of the SVG sprite file.
