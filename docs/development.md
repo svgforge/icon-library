@@ -29,6 +29,16 @@ php vendor/bin/phpunit --no-coverage
 
 Defaults can be overridden via environment variables: `WP_TESTS_DB_NAME`, `WP_TESTS_DB_USER`, `WP_TESTS_DB_PASSWORD`, `WP_TESTS_DB_HOST` and `WP_TESTS_WP_ROOT` (path to the WordPress core checkout). In CI, point these variables at the service MySQL and a WordPress core checkout with the plugin installed there.
 
+### JavaScript unit tests
+
+The block's pure logic (size presets, color detection) is covered by Jest unit tests that run through `wp-scripts` — no browser or E2E runner needed:
+
+```bash
+pnpm test-unit-js
+```
+
+Test files live next to the source (`src/block/*.test.ts`).
+
 ## Translations
 
 See [docs/translations.md](translations.md).

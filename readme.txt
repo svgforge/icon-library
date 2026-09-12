@@ -5,7 +5,7 @@ Tags: svg, icons, sprite, gutenberg
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,17 +76,67 @@ From the central sprite file `ico.svg`. Each icon is a `<symbol id="my-icon" vie
 
 = Why not simply use the native SVG icons of WordPress 7.1? =
 
-WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Integration with the native 7.1 approach is planned so that the same sprite can also feed the native Icon block in the future (see Changelog).
+WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Since 0.2 the plugin can also register every symbol of that sprite as an `icon-library` collection (experimental), so the same sprite feeds the native Icon block and `wp_get_icon()` too — see the "WordPress native icon integration" setting.
 
 = Does it work without JS in the frontend? =
 
 Yes. The frontend markup is generated server-side in `render.php`; the built JS is only needed in the editor.
+
+= How do I disable the color options for the block? =
+
+Put the block's color settings into your theme's `theme.json`:
+
+[sourcecode]
+{
+    "version": 3,
+    "settings": {
+        "blocks": {
+            "icon-library/svg-fragment": {
+                "color": { "custom": false, "palette": [] }
+            }
+        }
+    }
+}
+[/sourcecode]
+
+That removes the fill/stroke Colors panel for the SVG Fragment block. Independent of that, the panel is hidden automatically for multi-color icons (e.g. Tango icon sets); recolorable icons keep separate fill and stroke controls.
+
+= How do I offer preset sizes like font sizes? =
+
+Sizes are standard theme.json `dimensionSizes` presets per block:
+
+[sourcecode]
+{
+    "version": 3,
+    "settings": {
+        "blocks": {
+            "icon-library/svg-fragment": {
+                "dimensions": {
+                    "dimensionSizes": [
+                        { "name": "S", "slug": "s", "size": "32px" },
+                        { "name": "L", "slug": "l", "size": "64px" }
+                    ],
+                    "width": true,
+                    "height": true
+                }
+            }
+        }
+    }
+}
+[/sourcecode]
+
+Each preset applies as a square size (width and height). `width: false` and/or `height: false` hide the custom width/height inputs; with presets and both disabled only the preset buttons remain, and without presets or custom sizes the whole Size panel is hidden.
 
 == Screenshots ==
 
 1. Symbol picker in the Gutenberg editor with a live preview of all icons from the sprite file.
 
 == Changelog ==
+
+= 0.2.0 (unreleased) =
+* WordPress 7.1 native icon integration (experimental): symbols of the configured sprite are registered as an `icon-library` icon collection (setting "WordPress native icon integration", default Off).
+* New setting mode "Off + disable core Icon block" deregisters the built-in Icon block in the editor (including in content) and its frontend rendering.
+* Registration is lazy: it only runs when needed (core Icon block or REST), keeping page-load cost independent of the icon count.
 
 = 0.1.0 =
 * Initial release.
