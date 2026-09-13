@@ -31,6 +31,12 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Lint, typecheck and unit tests
+              run: |
+                  pnpm lint:js
+                  pnpm run typecheck
+                  pnpm run test-unit-js
+
             - name: Build plugin
               run: pnpm run build
 
@@ -38,6 +44,7 @@ jobs:
               uses: 10up/action-wordpress-plugin-deploy@stable
               with:
                   generate-zip: true
+                  dry-run: true
               env:
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
