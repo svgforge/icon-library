@@ -1,0 +1,80 @@
+name: Dev release (main branch)
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    dev-release:
+        name: Build and publish dev release
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: mbstring
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install PHP dependencies (runtime only)
+              run: composer install --no-dev --no-interaction --prefer-dist --no-progress
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Lint, typecheck and unit tests
+              run: |
+                  pnpm lint:js
+                  pnpm run lint:css
+                  pnpm run typecheck
+                  pnpm run test-unit-js
+
+            - name: Build plugin
+              run: pnpm run build
+
+            - name: Build plugin ZIP
+              run: pnpm run plugin-zip
+
+            - name: Rename ZIP for dev release
+              run: mv "$GITHUB_WORKSPACE/$REPO_NAME.zip" "$GITHUB_WORKSPACE/${REPO_NAME}-dev.zip"
+              env:
+                  REPO_NAME: ${{ github.event.repository.name }}
+
+            - name: Remove previous dev release
+              run: gh release delete dev --repo "$REPO" --yes --cleanup-tag >/dev/null 2>&1 || true
+              env:
+                  REPO: ${{ github.repository }}
+                  GH_TOKEN: ${{ github.token }}
+
+            - name: Publish dev release
+              run: |
+                  gh release create dev \
+                      --repo "$REPO" \
+                      --target "$GITHUB_SHA" \
+                      --title "Dev build (${GITHUB_SHA:0:7})" \
+                      --notes "Nightly-style build from \`main\`. **Not** deployed to WordPress.org." \
+                      --prerelease \
+                      "$GITHUB_WORKSPACE/${REPO_NAME}-dev.zip"
+              env:
+                  REPO: ${{ github.repository }}
+                  REPO_NAME: ${{ github.event.repository.name }}
+                  GH_TOKEN: ${{ github.token }}
