@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Icon Library 0.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/icon-library/\n"
+"Project-Id-Version: Icon Library 0.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/icon-library\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-11T11:51:51+02:00\n"
+"POT-Creation-Date: 2026-09-12T21:33:07+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
@@ -17,7 +17,8 @@ msgstr ""
 #: icon-library.php
 #: src/admin/admin.php:49
 #: src/admin/admin.php:50
-#: src/admin/admin.php:265
+#: src/admin/admin.php:293
+#: src/native/icons.php:370
 msgid "Icon Library"
 msgstr ""
 
@@ -31,127 +32,185 @@ msgstr ""
 msgid "svgforge"
 msgstr ""
 
-#: build/block/render.php:21
-#: src/block/render.php:21
-#: build/block/index.js:1
-msgid "Select symbol …"
-msgstr ""
-
 #: src/admin/admin.php:119
-#: src/admin/admin.php:212
+#: src/admin/admin.php:214
+#: src/admin/admin.php:239
 msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
-#: src/admin/admin.php:243
+#: src/admin/admin.php:270
 msgid "Filter icon_library_sprite_url"
 msgstr ""
 
-#: src/admin/admin.php:245
+#: src/admin/admin.php:272
 msgid "Upload (Settings)"
 msgstr ""
 
-#: src/admin/admin.php:247
+#: src/admin/admin.php:274
 msgid "Default (sprite.svg bundled with the plugin)"
 msgstr ""
 
-#: src/admin/admin.php:251
+#: src/admin/admin.php:278
 msgid "The SVG sprite file was uploaded and is now being used."
 msgstr ""
 
-#: src/admin/admin.php:252
+#: src/admin/admin.php:279
 msgid "The uploaded SVG sprite file was removed."
 msgstr ""
 
-#: src/admin/admin.php:253
+#: src/admin/admin.php:280
 msgid "Only .svg or .svgz files can be uploaded."
 msgstr ""
 
-#: src/admin/admin.php:254
+#: src/admin/admin.php:281
 msgid "The file could not be read."
 msgstr ""
 
-#: src/admin/admin.php:255
+#: src/admin/admin.php:282
 msgid "The file is not a valid SVG file."
 msgstr ""
 
-#: src/admin/admin.php:256
+#: src/admin/admin.php:283
 msgid "The file could not be written."
 msgstr ""
 
-#: src/admin/admin.php:257
+#: src/admin/admin.php:284
 msgid "Uploading is disabled because the sprite file is overridden by the icon_library_sprite_url filter."
 msgstr ""
 
-#: src/admin/admin.php:274
+#: src/admin/admin.php:285
+msgid "The native icon integration setting was saved."
+msgstr ""
+
+#: src/admin/admin.php:302
 msgid "The sprite file is currently overridden by the icon_library_sprite_url filter. Uploading a sprite file is disabled while the filter is active."
 msgstr ""
 
-#: src/admin/admin.php:278
+#: src/admin/admin.php:306
 msgid "SVG fragment library"
 msgstr ""
 
-#: src/admin/admin.php:280
-msgid "Upload an SVG sprite file that serves as the central icon library for the SVG Fragment block."
+#: src/admin/admin.php:308
+msgid "Upload an SVG sprite file that serves as the central icon library for the SVG Icon block."
 msgstr ""
 
-#: src/admin/admin.php:281
+#: src/admin/admin.php:309
 msgid "Each icon is a <symbol id=\"my-icon\" viewBox=\"0 0 24 24\">…</symbol> element."
 msgstr ""
 
-#: src/admin/admin.php:287
+#. translators: %d: Number of symbols registered with the native WordPress icon API.
+#: src/admin/admin.php:319
+msgid "WordPress 7.1+ only: this symbol is also registered in the built-in Icon block and the wp/v2 icons REST API."
+msgid_plural "WordPress 7.1+ only: these %d symbols are also registered in the built-in Icon block and the wp/v2 icons REST API."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/admin/admin.php:331
+msgid "WordPress 7.1+ only: the built-in Icon block is disabled. Use the SVG Icon block instead."
+msgstr ""
+
+#: src/admin/admin.php:339
 msgid "Active sprite file"
 msgstr ""
 
 #. translators: %s: Source of the sprite URL (filter, upload, default).
-#: src/admin/admin.php:294
+#: src/admin/admin.php:346
 #, php-format
 msgid "Source: %s"
 msgstr ""
 
-#: src/admin/admin.php:303
+#: src/admin/admin.php:355
 msgid "Uploaded file"
 msgstr ""
 
 #. translators: %1$d: Number of symbol elements, %2$s: Date of the upload.
-#: src/admin/admin.php:311
+#: src/admin/admin.php:363
 #, php-format
 msgid "(%1$d symbols, uploaded on %2$s)"
 msgstr ""
 
-#: src/admin/admin.php:322
+#: src/admin/admin.php:374
 msgid "Remove uploaded file"
 msgstr ""
 
-#: src/admin/admin.php:331
+#: src/admin/admin.php:384
+#: src/admin/admin.php:393
+msgid "WordPress native icon integration (experimental)"
+msgstr ""
+
+#: src/admin/admin.php:386
+msgid "Only relevant on WordPress 7.1+ which ships the built-in Icon block and the wp/v2 icons REST API. Experimental — the API and its behavior may change with core updates."
+msgstr ""
+
+#: src/admin/admin.php:399
+msgid "Off"
+msgstr ""
+
+#: src/admin/admin.php:402
+msgid "Default. The plugin does not touch the WordPress icon API; the built-in Icon block stays as in core."
+msgstr ""
+
+#: src/admin/admin.php:408
+msgid "Off, and hide the built-in Icon block"
+msgstr ""
+
+#: src/admin/admin.php:411
+msgid "Like Off, but the built-in core/icon block is deregistered in the block editor and on the frontend. Use the SVG Icon block instead."
+msgstr ""
+
+#: src/admin/admin.php:417
+msgid "On"
+msgstr ""
+
+#: src/admin/admin.php:420
+msgid "Every symbol of the configured sprite is registered as an icon in the icon-library collection — available in the built-in Icon block picker, the wp/v2 icons REST API and wp_get_icon()."
+msgstr ""
+
+#: src/admin/admin.php:427
+msgid "Save native icon settings"
+msgstr ""
+
+#: src/admin/admin.php:433
 msgid "Upload new file"
 msgstr ""
 
-#: src/admin/admin.php:333
+#: src/admin/admin.php:435
 msgid "An existing uploaded file is replaced by a new upload."
 msgstr ""
 
-#: src/admin/admin.php:342
+#: src/admin/admin.php:444
 msgid "SVG file (ico.svg)"
 msgstr ""
 
-#: src/admin/admin.php:346
+#: src/admin/admin.php:448
 msgid "Only .svg and .svgz files are accepted. svgforge-cli handles full sanitization and svgo optimization; as a safety net, the plugin strips scripts, event handlers and javascript: links on upload."
 msgstr ""
 
-#: src/admin/admin.php:354
+#: src/admin/admin.php:456
 msgid "Upload SVG sprite"
 msgstr ""
 
-#: src/admin/admin.php:359
+#: src/admin/admin.php:461
 msgid "Generate a sprite with svgforge-cli"
 msgstr ""
 
-#: src/admin/admin.php:361
-msgid "Install svgforge-cli and create a symbol sprite from a folder of icons, then upload the generated SVG file."
+#. translators: %1$s: opening link to the svgforge-cli repository; %2$s: closing link tag.
+#: src/admin/admin.php:466
+#, php-format
+msgid "%1$sInstall svgforge-cli%2$s and create a symbol sprite from a folder of icons, then upload the generated SVG file."
 msgstr ""
 
-#: src/admin/admin.php:366
+#: src/admin/admin.php:475
 msgid "SVG files in subdirectories get IDs like directory--filename — each directory is then available as a filter in the icon picker."
+msgstr ""
+
+#: src/block/render.php:19
+#: build/block/index.js:1
+msgid "Select symbol …"
+msgstr ""
+
+#: src/native/icons.php:371
+msgid "Icons from the configured SVG sprite."
 msgstr ""
 
 #: build/block/index.js:1
@@ -160,6 +219,10 @@ msgstr ""
 
 #: build/block/index.js:1
 msgid "All"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "Replace"
 msgstr ""
 
 #: build/block/index.js:1
@@ -183,31 +246,19 @@ msgid "Sets the aria-label on the SVG. For links the aria-label is set on the <a
 msgstr ""
 
 #: build/block/index.js:1
-msgid "View"
-msgstr ""
-
-#: build/block/index.js:1
-msgid "Grid"
-msgstr ""
-
-#: build/block/index.js:1
-msgid "List"
-msgstr ""
-
-#: build/block/index.js:1
-msgid "Colors"
-msgstr ""
-
-#: build/block/index.js:1
-msgid "Fill color (fill)"
-msgstr ""
-
-#: build/block/index.js:1
-msgid "Stroke color (stroke)"
-msgstr ""
-
-#: build/block/index.js:1
 msgid "Size"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "Preset sizes"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "Reset"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "Custom size"
 msgstr ""
 
 #: build/block/index.js:1
@@ -222,31 +273,47 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
-#: build/block/block.json
+#: build/block/index.js:1
+msgid "Select symbol"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "View"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "Grid"
+msgstr ""
+
+#: build/block/index.js:1
+msgid "List"
+msgstr ""
+
 #: src/block/block.json
 msgctxt "block title"
-msgid "SVG Fragment"
+msgid "SVG Icon"
 msgstr ""
 
-#: build/block/block.json
 #: src/block/block.json
 msgctxt "block description"
-msgid "Inserts a <symbol> from the sprite file and can be linked."
+msgid "Inserts an SVG icon from the plugin icon library and can be linked."
 msgstr ""
 
-#: build/block/block.json
-#: src/block/block.json
-msgctxt "block keyword"
-msgid "svg"
-msgstr ""
-
-#: build/block/block.json
 #: src/block/block.json
 msgctxt "block keyword"
 msgid "icon"
 msgstr ""
 
-#: build/block/block.json
+#: src/block/block.json
+msgctxt "block keyword"
+msgid "svg"
+msgstr ""
+
+#: src/block/block.json
+msgctxt "block keyword"
+msgid "symbol"
+msgstr ""
+
 #: src/block/block.json
 msgctxt "block keyword"
 msgid "sprite"
