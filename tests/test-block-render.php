@@ -169,6 +169,53 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
         $this->assertStringNotContainsString('width:42px', $this->wrapper_classes($html));
     }
 
+    public function test_applies_padding_to_the_svg_not_the_wrapper(): void
+    {
+        $html = $this->render_block_html([
+            'symbolId' => 'home',
+            'width' => '24',
+            'height' => '24',
+            'style' => [
+                'spacing' => [
+                    'padding' => [
+                        'top' => 'var:preset|spacing|30',
+                        'right' => '4px',
+                        'bottom' => 'var:preset|spacing|30',
+                        'left' => '4px',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString(
+            'class="svg-icon__svg" style="width:24;height:24;padding-top:var(--wp--preset--spacing--30);padding-right:4px;padding-bottom:var(--wp--preset--spacing--30);padding-left:4px"',
+            $html,
+        );
+        $this->assertStringNotContainsString('padding-top', $this->wrapper_classes($html));
+    }
+
+    public function test_skips_empty_padding_sides(): void
+    {
+        $html = $this->render_block_html([
+            'symbolId' => 'home',
+            'style' => [
+                'spacing' => [
+                    'padding' => [
+                        'top' => '20px',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString(
+            'style="width:48px;height:48px;padding-top:20px"',
+            $html,
+        );
+        $this->assertStringNotContainsString('padding-right', $html);
+        $this->assertStringNotContainsString('padding-bottom', $html);
+        $this->assertStringNotContainsString('padding-left', $html);
+    }
+
     public function test_falls_back_to_legacy_width_height_attributes(): void
     {
         $html = $this->render_block_html([

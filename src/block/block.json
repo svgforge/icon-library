@@ -29,6 +29,7 @@
 		"spacing": {
 			"margin": true,
 			"padding": true,
+			"__experimentalSkipSerialization": [ "padding" ],
 			"__experimentalDefaultControls": {
 				"margin": true,
 				"padding": false
@@ -46,8 +47,7 @@
 		"root": ".wp-block-icon-library-svg-icon .svg-icon__svg",
 		"css": ".wp-block-icon-library-svg-icon",
 		"spacing": {
-			"margin": ".wp-block-icon-library-svg-icon",
-			"padding": ".wp-block-icon-library-svg-icon .svg-icon__svg"
+			"margin": ".wp-block-icon-library-svg-icon"
 		}
 	},
 	"attributes": {

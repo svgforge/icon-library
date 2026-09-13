@@ -53,3 +53,20 @@ export function resolveDimensionValue(
 	}
 	return value;
 }
+
+/**
+ * Resolves a block spacing value to a CSS length.
+ *
+ * `var:preset|spacing|<slug>` references map to the theme spacing CSS custom
+ * property; raw CSS lengths pass through unchanged.
+ *
+ * @param value Raw spacing value from block attributes.
+ * @return The CSS value (e.g. `var(--wp--preset--spacing--30)`).
+ */
+export function resolveSpacingValue( value: string ): string {
+	const prefix = 'var:preset|spacing|';
+	if ( value.startsWith( prefix ) ) {
+		return `var(--wp--preset--spacing--${ value.slice( prefix.length ) })`;
+	}
+	return value;
+}

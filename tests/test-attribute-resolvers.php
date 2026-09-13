@@ -77,4 +77,19 @@ final class Test_Icon_Library_Attribute_Resolvers extends WP_UnitTestCase
 
         $this->assertSame('', icon_library_resolve_dimension('var:preset|dimension|s', $presets));
     }
+
+    public function test_resolve_spacing_maps_preset_reference_to_preset_var(): void
+    {
+        $this->assertSame(
+            'var(--wp--preset--spacing--30)',
+            icon_library_resolve_spacing('var:preset|spacing|30'),
+        );
+    }
+
+    public function test_resolve_spacing_passes_raw_css_through(): void
+    {
+        $this->assertSame('4px', icon_library_resolve_spacing('4px'));
+        $this->assertSame('var(--wp--preset--spacing--10)', icon_library_resolve_spacing('var(--wp--preset--spacing--10)'));
+        $this->assertSame('', icon_library_resolve_spacing(''));
+    }
 }
