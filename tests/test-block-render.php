@@ -127,7 +127,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
         ]);
 
         $this->assertStringContainsString(
-            'class="svg-icon__svg has-text-color has-background" style="width:24;height:24;color:#bada55;background-color:#123456;"',
+            'class="svg-icon__svg has-text-color has-background" style="width:24;height:24;color:#bada55;background-color:#123456"',
             $html,
         );
         $this->assertStringNotContainsString('has-text-color', $this->wrapper_classes($html));
@@ -145,7 +145,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
         ]);
 
         $this->assertStringContainsString(
-            'class="svg-icon__svg has-text-color has-background" style="width:24;height:24;color:var(--wp--preset--color--vivid-red);background-color:var(--wp--preset--color--vivid-purple);"',
+            'class="svg-icon__svg has-text-color has-background" style="width:24;height:24;color:var(--wp--preset--color--vivid-red);background-color:var(--wp--preset--color--vivid-purple)"',
             $html,
         );
         $this->assertStringNotContainsString('has-text-color', $this->wrapper_classes($html));
@@ -163,7 +163,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
         ]);
 
         $this->assertStringContainsString(
-            'class="svg-icon__svg" style="width:42px;height:42px;"',
+            'class="svg-icon__svg" style="width:42px;height:42px"',
             $html,
         );
         $this->assertStringNotContainsString('width:42px', $this->wrapper_classes($html));
@@ -178,7 +178,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
         ]);
 
         $this->assertStringContainsString(
-            'style="width:64px;height:32px;"',
+            'style="width:64px;height:32px"',
             $html,
         );
     }
@@ -190,7 +190,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
         ]);
 
         $this->assertStringContainsString(
-            'style="width:48px;height:48px;"',
+            'style="width:48px;height:48px"',
             $html,
         );
     }

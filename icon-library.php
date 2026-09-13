@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       Icon Library
  * Description:       Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.
- * Version:           0.2.0
+ * Version:           0.2.1
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            svgforge
@@ -199,13 +199,51 @@ function icon_library_register_block()
 add_action('init', 'icon_library_register_block');
 
 /**
- * Loads the plugin translations.
+ * Returns the kses-allowlist for the SVG markup the block renders.
+ *
+ * The render template composes the `<svg>`/`<use>` fragment (and the optional
+ * link) from already escaped values and passes the final markup through
+ * wp_kses() before output.
+ *
+ * @since 0.2.1
+ * @return array<string, array<string, true>>
  */
-function icon_library_load_textdomain()
+function icon_library_allowed_svg_kses()
 {
-    load_plugin_textdomain('icon-library', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    $svg_attrs = [
+        'aria-hidden' => true,
+        'aria-label'  => true,
+        'class'       => true,
+        'focusable'   => true,
+        'role'        => true,
+        'style'       => true,
+        'viewbox'     => true,
+    ];
+
+    return [
+        'a'   => array_merge(
+            [
+                'href'   => true,
+                'target' => true,
+                'rel'    => true,
+                'id'     => true,
+                'style'  => true,
+            ],
+            $svg_attrs,
+        ),
+        'div' => [
+            'class' => true,
+            'id'    => true,
+            'style' => true,
+        ],
+        'svg' => $svg_attrs,
+        'use' => [
+            'href'       => true,
+            'xlink:href' => true,
+            'xlink'      => true,
+        ],
+    ];
 }
-add_action('init', 'icon_library_load_textdomain');
 
 /**
  * Provides the sprite URL to the editor as window.iconLibrarySettings.spriteUrl.
