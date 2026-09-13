@@ -1,0 +1,4 @@
+pnpm lint
+pnpm run typecheck
+pnpm run test-unit-js
+if [ -x vendor/bin/pint ]; then composer lint; fi

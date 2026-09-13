@@ -82,4 +82,63 @@ final class Test_Icon_Library_Sprite_Url extends WP_UnitTestCase
             icon_library_sprite_url(),
         );
     }
+
+    private function bundled_path(): string
+    {
+        return dirname(ICON_LIBRARY_PLUGIN_FILE) . '/sprite.svg';
+    }
+
+    public function test_current_sprite_falls_back_to_the_bundled_sprite(): void
+    {
+        $sprite = icon_library_current_sprite();
+
+        $this->assertSame('default', $sprite['source']);
+        $this->assertSame([], $sprite['data']);
+        $this->assertSame($this->bundled_path(), $sprite['path']);
+        $this->assertStringContainsString('wp-content/plugins', $sprite['url']);
+    }
+
+    public function test_current_sprite_uses_the_filter(): void
+    {
+        add_filter('icon_library_sprite_url', static fn() => 'https://cdn.example.net/icons.svg');
+
+        $sprite = icon_library_current_sprite();
+
+        $this->assertSame('filter', $sprite['source']);
+        $this->assertSame('https://cdn.example.net/icons.svg', $sprite['url']);
+        $this->assertSame('', $sprite['path']);
+        $this->assertSame([], $sprite['data']);
+    }
+
+    public function test_current_sprite_uses_the_uploaded_file(): void
+    {
+        update_option(ICON_LIBRARY_SPRITE_OPTION, [
+            'url' => 'https://example.test/app/uploads/icon-library/ico.svg',
+            'path' => $this->bundled_path(),
+            'name' => 'ico.svg',
+            'time' => 456,
+        ]);
+
+        $sprite = icon_library_current_sprite();
+
+        $this->assertSame('upload', $sprite['source']);
+        $this->assertSame('https://example.test/app/uploads/icon-library/ico.svg?m=456', $sprite['url']);
+        $this->assertSame($this->bundled_path(), $sprite['path']);
+        $this->assertSame(456, $sprite['data']['time']);
+    }
+
+    public function test_current_sprite_does_not_report_an_unreadable_upload_path(): void
+    {
+        update_option(ICON_LIBRARY_SPRITE_OPTION, [
+            'url' => 'https://example.test/app/uploads/icon-library/ico.svg',
+            'path' => '/var/empty/nonexistent/ico.svg',
+            'name' => 'ico.svg',
+            'time' => 456,
+        ]);
+
+        $sprite = icon_library_current_sprite();
+
+        $this->assertSame('upload', $sprite['source']);
+        $this->assertSame('', $sprite['path']);
+    }
 }

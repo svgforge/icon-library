@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       Icon Library
  * Description:       Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            svgforge
@@ -14,13 +14,20 @@
  */
 defined('ABSPATH') || exit;
 
+defined('ICON_LIBRARY_PLUGIN_FILE') || define('ICON_LIBRARY_PLUGIN_FILE', __FILE__);
+
 /**
  * Loads the settings page (SVG upload).
  */
 require_once __DIR__ . '/src/admin/admin.php';
 
 /**
- * Returns the URL of the SVG sprite file.
+ * Loads the WordPress 7.1 native icon API integration.
+ */
+require_once __DIR__ . '/src/native/icons.php';
+
+/**
+ * Resolves the active SVG sprite source.
  *
  * Source order:
  *  1. Filter icon_library_sprite_url (theme override, CDN) — has priority.
@@ -30,29 +37,156 @@ require_once __DIR__ . '/src/admin/admin.php';
  * The filter is the only supported way to override the sprite source and
  * therefore also wins over a backend upload.
  *
+ * @return array{url: string, path: string, source: string, data: array}
+ *               url:    Absolute sprite URL used by consumers (includes the
+ *                       cache-busting m parameter for uploads).
+ *               path:   Local filesystem path when WordPress can read the
+ *                       source itself, otherwise ''.
+ *               source: 'filter', 'upload', 'default' or 'none'.
+ *               data:   Stored upload data (ICON_LIBRARY_SPRITE_OPTION) when
+ *                       source is 'upload', otherwise [].
+ */
+function icon_library_current_sprite()
+{
+    $none = [
+        'url'    => '',
+        'path'   => '',
+        'source' => 'none',
+        'data'   => [],
+    ];
+
+    $filtered = (string) apply_filters('icon_library_sprite_url', '');
+
+    if ($filtered !== '') {
+        return [
+            'url'    => $filtered,
+            'path'   => function_exists('icon_library_url_to_path') ? icon_library_url_to_path($filtered) : '',
+            'source' => 'filter',
+            'data'   => [],
+        ];
+    }
+
+    if (function_exists('icon_library_uploaded_sprite_data')) {
+        $data = icon_library_uploaded_sprite_data();
+
+        if ($data !== []) {
+            $path = (string) ($data['path'] ?? '');
+
+            if (! is_readable($path)) {
+                $path = '';
+            }
+
+            return [
+                'url'    => (int) ($data['time'] ?? 0) > 0
+                    ? add_query_arg('m', (int) $data['time'], $data['url'])
+                    : $data['url'],
+                'path'   => $path,
+                'source' => 'upload',
+                'data'   => $data,
+            ];
+        }
+    }
+
+    $bundled_path = dirname(ICON_LIBRARY_PLUGIN_FILE) . '/sprite.svg';
+    $readable    = is_readable($bundled_path);
+
+    return $readable ? [
+        'url'    => plugins_url('sprite.svg', __FILE__),
+        'path'   => $bundled_path,
+        'source' => 'default',
+        'data'   => [],
+    ] : $none;
+}
+
+/**
+ * Returns the URL of the SVG sprite file.
+ *
  * @return string
  */
 function icon_library_sprite_url()
 {
-    $filtered = (string) apply_filters('icon_library_sprite_url', '');
+    return icon_library_current_sprite()['url'];
+}
 
-    if ($filtered !== '') {
-        return $filtered;
+/**
+ * Resolves a block color value to a usable CSS color.
+ *
+ * Handles the two shapes Gutenberg stores colors in:
+ *  - a preset slug in the `textColor` / `backgroundColor` attributes (e.g. `vivid-red`)
+ *  - a `var:preset|color|<slug>` value or a raw CSS color in `style.color.*`
+ *
+ * Preset slugs are mapped to their theme CSS custom property so the value
+ * always matches the theme palette.
+ *
+ * @param string $value Raw color value from block attributes.
+ * @return string
+ */
+function icon_library_resolve_color($value)
+{
+    $prefix = 'var:preset|color|';
+
+    if (str_starts_with($value, $prefix)) {
+        return 'var(--wp--preset--color--' . substr($value, strlen($prefix)) . ')';
     }
 
-    $uploaded = function_exists('icon_library_uploaded_sprite_url') ? icon_library_uploaded_sprite_url() : '';
+    if (str_starts_with($value, 'var(') || str_starts_with($value, '#') || str_starts_with($value, 'rgb')) {
+        return $value;
+    }
 
-    if ($uploaded !== '') {
-        $data = function_exists('icon_library_uploaded_sprite_data') ? icon_library_uploaded_sprite_data() : [];
+    return 'var(--wp--preset--color--' . $value . ')';
+}
 
-        if (isset($data['time']) && (int) $data['time'] > 0) {
-            return add_query_arg('m', (int) $data['time'], $uploaded);
+/**
+ * Resolves a block dimension value to a usable CSS length.
+ *
+ * Handles the shapes Gutenberg stores dimension values in:
+ *  - a `var:preset|dimension|<slug>` preset reference resolved against the
+ *    theme's `settings.dimensions.dimensionSizes`
+ *  - any raw CSS length (e.g. `42px`, `2em`)
+ *
+ * @param string       $value   Raw dimension value from block attributes.
+ * @param array|null   $presets Optional dimension size presets (origin-keyed).
+ *                              Defaults to the theme settings lookup. Injectable
+ *                              for unit tests.
+ * @return string The resolved size (e.g. `64px`) or an empty string when unknown.
+ */
+function icon_library_resolve_dimension($value, $presets = null)
+{
+    $prefix = 'var:preset|dimension|';
+
+    if (str_starts_with($value, $prefix)) {
+        $slug = substr($value, strlen($prefix));
+
+        if (! is_array($presets)) {
+            // Per-block dimensionSizes first (the usual place for these presets),
+            // then the global settings as a fallback.
+            $presets = wp_get_global_settings(['blocks', 'icon-library/svg-icon', 'dimensions', 'dimensionSizes']);
+            if (! is_array($presets)) {
+                $presets = wp_get_global_settings(['dimensions', 'dimensionSizes']);
+            }
         }
 
-        return $uploaded;
+        if (is_array($presets)) {
+            foreach ($presets as $entries) {
+                if (! is_array($entries)) {
+                    continue;
+                }
+                foreach ($entries as $entry) {
+                    if (! is_array($entry) || ! isset($entry['slug'], $entry['size'])) {
+                        continue;
+                    }
+                    if ($entry['slug'] === $slug) {
+                        $size = is_array($entry['size']) ? reset($entry['size']) : $entry['size'];
+                        return (string) $size;
+                    }
+                }
+            }
+        }
+
+        return '';
     }
 
-    return plugins_url('sprite.svg', __FILE__);
+    return (string) $value;
 }
 
 /**
@@ -77,13 +211,13 @@ add_action('init', 'icon_library_load_textdomain');
  * Provides the sprite URL to the editor as window.iconLibrarySettings.spriteUrl.
  *
  * Runs on enqueue_block_editor_assets so that the editorScript generated by
- * register_block_type (handle: icon-library-svg-fragment-editor-script)
+ * register_block_type (handle: icon-library-svg-icon-editor-script)
  * is already registered.
  */
 function icon_library_editor_assets()
 {
     wp_localize_script(
-        'icon-library-svg-fragment-editor-script',
+        'icon-library-svg-icon-editor-script',
         'iconLibrarySettings',
         ['spriteUrl' => icon_library_sprite_url()],
     );

@@ -5,11 +5,11 @@ Tags: svg, icons, sprite, gutenberg
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-SVG Fragment Block: inserts icons from your own SVG sprite via <use>, can link them. For developers who maintain their sprite file with CLI tools.
+SVG Icon Block: inserts icons from your own SVG sprite via <use>, can link them. For developers who maintain their sprite file with CLI tools.
 
 == Description ==
 
@@ -26,7 +26,7 @@ The fragment approach has advantages when you run a real sprite pipeline:
 * Full SVG via `<use>`: stroke-based icons, gradients, `currentColor`, inline styles and custom `viewBox` values survive. WordPress 7.1's sanitizer only allows `<svg>`, `<path>` and `<polygon>` (no `stroke`, no inline styles) and therefore breaks many stroke-based icon sets.
 * Reuse existing sprites: generate a sprite with svgforge-cli (sanitization + svgo optimization) and upload it — no per-icon PHP code required.
 * One file: the sprite is a single cacheable file that lives in the theme repo and is versioned with Git.
-* Control per block: fill and stroke colours, width/height with units, links with `rel` handling and aria-labels — per icon instance, without touching a stylesheet.
+* Control per block: fill and stroke colours, size (standard Dimensions panel with preset slider + custom input), links with `rel` handling and aria-labels — per icon instance, without touching a stylesheet.
 * Also runs on WordPress versions before 7.1 (from 6.6).
 
 Limitations you should know about:
@@ -41,7 +41,7 @@ Limitations you should know about:
 * Symbol picker in the editor with a live preview of all icons from the sprite; icons from sprite subdirectories (IDs like `directory--filename`) are grouped and selectable via a filter in the dropdown.
 * Icons can be linked (new tab + rel attributes including noopener/noreferrer).
 * Aria-label for screen readers; linked icons are automatically labelled via the link.
-* Fill and stroke colour as well as width/height per block (px, em, rem, %).
+* Fill and stroke colour as well as size per block (square, preset slider + custom input with units).
 * Fully dynamic server-side rendering (render.php) with `get_block_wrapper_attributes()`.
 * Block supports: alignment, anchor, additional CSS classes.
 
@@ -66,7 +66,7 @@ or point it at a CDN:
 1. Upload the plugin folder to `/wp-content/plugins/` (or install the ZIP via Plugins → Add New).
 2. Activate the plugin under "Plugins".
 3. Upload the sprite file (`ico.svg` with `<symbol id="...">` elements) via **Settings → Icon Library** or reference your own file with the `icon_library_sprite_url` filter.
-4. In the editor, add the "SVG Fragment" block and choose an icon.
+4. In the editor, add the "SVG Icon" block and choose an icon.
 
 == Frequently Asked Questions ==
 
@@ -76,17 +76,66 @@ From the central sprite file `ico.svg`. Each icon is a `<symbol id="my-icon" vie
 
 = Why not simply use the native SVG icons of WordPress 7.1? =
 
-WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Integration with the native 7.1 approach is planned so that the same sprite can also feed the native Icon block in the future (see Changelog).
+WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Since 0.2 the plugin can also register every symbol of that sprite as an `icon-library` collection (experimental), so the same sprite feeds the native Icon block and `wp_get_icon()` too — see the "WordPress native icon integration" setting.
 
 = Does it work without JS in the frontend? =
 
 Yes. The frontend markup is generated server-side in `render.php`; the built JS is only needed in the editor.
+
+= How do I disable the color options for the block? =
+
+Put the block's color settings into your theme's `theme.json`:
+
+[sourcecode]
+{
+    "version": 3,
+    "settings": {
+        "blocks": {
+            "icon-library/svg-icon": {
+                "color": { "custom": false, "palette": [] }
+            }
+        }
+    }
+}
+[/sourcecode]
+
+That removes the standard Gutenberg Color/Background panels for the SVG Icon block. As in the core Icon block, multi-color icons (e.g. Tango icon sets) keep their baked-in colors and are not affected by the color controls; monochrome icons follow the chosen color.
+
+= How do I offer preset sizes like font sizes? =
+
+The size is the standard Gutenberg Dimensions panel (`supports.dimensions.width`, like the core Icon block): the block is square, and size presets are standard theme.json `dimensionSizes` per block:
+
+[sourcecode]
+{
+    "version": 3,
+    "settings": {
+        "blocks": {
+            "icon-library/svg-icon": {
+                "dimensions": {
+                    "dimensionSizes": [
+                        { "name": "S", "slug": "s", "size": "32px" },
+                        { "name": "L", "slug": "l", "size": "64px" }
+                    ],
+                    "width": true
+                }
+            }
+        }
+    }
+}
+[/sourcecode]
+
+With presets the panel shows a slider that moves across the preset sizes, like the core Icon block. A toggle next to it switches to a custom value input with a slider, using the allowed units (`spacing.units`). `dimensions.width: false` disables sizing entirely, so the block always renders at its default size.
 
 == Screenshots ==
 
 1. Symbol picker in the Gutenberg editor with a live preview of all icons from the sprite file.
 
 == Changelog ==
+
+= 0.2.0 (unreleased) =
+* WordPress 7.1 native icon integration (experimental): symbols of the configured sprite are registered as an `icon-library` icon collection (setting "WordPress native icon integration", default Off).
+* New setting mode "Off + disable core Icon block" deregisters the built-in Icon block in the editor (including in content) and its frontend rendering.
+* Registration is lazy: it only runs when needed (core Icon block or REST), keeping page-load cost independent of the icon count.
 
 = 0.1.0 =
 * Initial release.

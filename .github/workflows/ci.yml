@@ -111,3 +111,6 @@ jobs:
 
             - name: Typecheck
               run: pnpm run typecheck
+
+            - name: Unit tests (Jest)
+              run: pnpm run test-unit-js

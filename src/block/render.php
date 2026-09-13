@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dynamic frontend render for the SVG Fragment block.
+ * Dynamic frontend render for the SVG Icon block.
  *
  * @var array $attributes Block attributes.
  * @var string $content    Block default content.
@@ -11,14 +11,33 @@ $symbol_id = isset($attributes['symbolId']) ? sanitize_key($attributes['symbolId
 $url = isset($attributes['url']) ? esc_url($attributes['url']) : '';
 $label = isset($attributes['label']) ? $attributes['label'] : '';
 $rel = isset($attributes['rel']) ? $attributes['rel'] : '';
-$fill = isset($attributes['fillColor']) ? sanitize_text_field((string) $attributes['fillColor']) : '';
-$stroke = isset($attributes['strokeColor']) ? sanitize_text_field((string) $attributes['strokeColor']) : '';
-$width = isset($attributes['width']) ? sanitize_text_field((string) $attributes['width']) : '';
+$width = '';
+$dimensions_styles = isset($attributes['style']['dimensions']) && is_array($attributes['style']['dimensions'])
+    ? $attributes['style']['dimensions']
+    : [];
+
+if (isset($dimensions_styles['width']) && $dimensions_styles['width'] !== '') {
+    $width = icon_library_resolve_dimension(sanitize_text_field((string) $dimensions_styles['width']));
+}
+
+// Legacy fallback for blocks saved before the standard Dimensions support:
+// width/height were stored as block attributes.
+if ($width === '') {
+    $width = isset($attributes['width']) ? sanitize_text_field((string) $attributes['width']) : '';
+}
+if ($width === '') {
+    $width = '48px';
+}
+
 $height = isset($attributes['height']) ? sanitize_text_field((string) $attributes['height']) : '';
+if ($height === '') {
+    // The icon is square by default, like the core Icon block.
+    $height = $width;
+}
 $opens_in_new_tab = ! empty($attributes['opensInNewTab']);
 
 if ($symbol_id === '') {
-    echo '<div class="svg-fragment__placeholder">' . esc_html__('Select symbol …', 'icon-library') . '</div>';
+    echo '<div class="svg-icon__placeholder">' . esc_html__('Select symbol …', 'icon-library') . '</div>';
     return '';
 }
 
@@ -34,14 +53,34 @@ if (strpos($sprite_base, '#') === false) {
 }
 
 $style = '';
-if ($fill !== '') {
-    $style .= 'fill:' . esc_attr($fill) . ';';
-}
-if ($stroke !== '') {
-    $style .= 'stroke:' . esc_attr($stroke) . ';';
-}
 $style .= 'width:' . esc_attr($width) . ';height:' . esc_attr($height) . ';';
+
+$svg_classes = ['svg-icon__svg'];
+
+$color = isset($attributes['style']['color']) && is_array($attributes['style']['color'])
+    ? $attributes['style']['color']
+    : [];
+
+$text_color = isset($color['text'])
+    ? (string) $color['text']
+    : (isset($attributes['textColor']) ? (string) $attributes['textColor'] : '');
+
+$background_color = isset($color['background'])
+    ? (string) $color['background']
+    : (isset($attributes['backgroundColor']) ? (string) $attributes['backgroundColor'] : '');
+
+if ($text_color !== '') {
+    $style .= 'color:' . esc_attr(icon_library_resolve_color($text_color)) . ';';
+    $svg_classes[] = 'has-text-color';
+}
+
+if ($background_color !== '') {
+    $style .= 'background-color:' . esc_attr(icon_library_resolve_color($background_color)) . ';';
+    $svg_classes[] = 'has-background';
+}
+
 $style_attr = $style !== '' ? ' style="' . $style . '"' : '';
+$svg_class_attr = ' class="' . esc_attr(implode(' ', $svg_classes)) . '"';
 
 // Accessibility: linked → SVG hidden, aria-label on the link.
 // Otherwise aria-label on the SVG, otherwise aria-hidden.
@@ -49,7 +88,7 @@ $svg_aria = $url !== ''
     ? ' aria-hidden="true"'
     : ($label !== '' ? ' aria-label="' . esc_attr($label) . '"' : ' aria-hidden="true"');
 
-$svg = '<svg' . $svg_aria . ' focusable="false" class="svg-fragment__svg"' . $style_attr . '><use href="' . $svg_href . '"></use></svg>';
+$svg = '<svg' . $svg_aria . ' focusable="false"' . $svg_class_attr . $style_attr . '><use href="' . $svg_href . '"></use></svg>';
 
 if ($url !== '') {
     $aria = $label !== '' ? ' aria-label="' . esc_attr($label) . '"' : '';
@@ -62,13 +101,13 @@ if ($url !== '') {
     }
     $rel_attr = trim((string) $computed_rel) !== '' ? ' rel="' . esc_attr(trim((string) $computed_rel)) . '"' : '';
     $target = $opens_in_new_tab ? ' target="_blank"' : '';
-    $wrapper = get_block_wrapper_attributes(['class' => 'svg-fragment']);
+    $wrapper = get_block_wrapper_attributes(['class' => 'svg-icon']);
 
     echo '<a ' . $wrapper . ' href="' . $url . '"' . $target . $rel_attr . $aria . '>' . $svg . '</a>';
     return '';
 }
 
-$wrapper = get_block_wrapper_attributes(['class' => 'svg-fragment']);
+$wrapper = get_block_wrapper_attributes(['class' => 'svg-icon']);
 
-echo '<span ' . $wrapper . '>' . $svg . '</span>';
+echo '<div ' . $wrapper . '>' . $svg . '</div>';
 return '';
