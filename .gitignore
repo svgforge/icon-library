@@ -12,7 +12,6 @@
 # Local agent/editor tooling
 .agents/
 skills-lock.json
-.vscode/
 
 # Husky
 .husky/_
