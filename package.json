@@ -1,6 +1,6 @@
 {
 	"name": "icon-library",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.",
 	"author": "Felix Müller (https://github.com/joeda1)",
 	"license": "GPL-2.0-or-later",

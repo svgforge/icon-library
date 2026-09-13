@@ -5,7 +5,7 @@ Tags: svg, icons, sprite, gutenberg
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,8 @@ SVG Icon Block: inserts icons from your own SVG sprite via <use>, can link them.
 == Description ==
 
 The Icon Library Block loads a central SVG sprite file (by default the bundled `sprite.svg`), shows all contained `<symbol>` elements in a convenient picker and inserts the selected icon as `<svg><use href="/wp-content/plugins/icon-library/sprite.svg#symbol-id">` into your content.
+
+The SVG fragment is rendered on the server, so visitors receive fast, static HTML with no extra requests and no JavaScript on the frontend. Since you own the sprite file, every icon stays small, cacheable and fully under your control — exactly the way a hand-built icon set should be maintained.
 
 = Who is this plugin for? =
 
@@ -60,6 +62,8 @@ Override with a filter (recommended, versionable with the theme) in the theme's 
 or point it at a CDN:
 
     add_filter( 'icon_library_sprite_url', fn () => 'https://cdn.example.com/icons/ico.svg' );
+
+Icon Library is a developer-focused Gutenberg block that arranges a curated set of SVG icons as one central sprite and reuses them everywhere in your content. It works with any symbol sprite produced by modern build tools, is fully translated, and gives you precise control over colours, size, links and accessibility on every single block instance. The plugin prefers simplicity and performance: no tracking, no external requests, no page-weight overhead, and no vendor lock-in to a particular icon pack or service.
 
 == Installation ==
 
@@ -132,7 +136,11 @@ With presets the panel shows a slider that moves across the preset sizes, like t
 
 == Changelog ==
 
-= 0.2.0 (unreleased) =
+= 0.2.1 =
+* wp.org compliance: escaped SVG output with an input allowlist, direct-access guard in the render template, readme and changelog cleanup.
+* Remove the now-discouraged `load_plugin_textdomain()` call; WordPress loads translations for the plugin slug automatically.
+
+= 0.2.0 =
 * WordPress 7.1 native icon integration (experimental): symbols of the configured sprite are registered as an `icon-library` icon collection (setting "WordPress native icon integration", default Off).
 * New setting mode "Off + disable core Icon block" deregisters the built-in Icon block in the editor (including in content) and its frontend rendering.
 * Registration is lazy: it only runs when needed (core Icon block or REST), keeping page-load cost independent of the icon count.

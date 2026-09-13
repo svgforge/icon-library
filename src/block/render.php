@@ -7,6 +7,15 @@
  * @var string $content    Block default content.
  * @var WP_Block $block      Block instance.
  */
+
+if (! defined('ABSPATH')) {
+    exit;
+}
+
+// PHPCS: render.php is a template executed inside the block's render callback;
+// the plain variable names are part of this template scope, not globals.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 $symbol_id = isset($attributes['symbolId']) ? sanitize_key($attributes['symbolId']) : '';
 $url = isset($attributes['url']) ? esc_url($attributes['url']) : '';
 $label = isset($attributes['label']) ? $attributes['label'] : '';
@@ -103,11 +112,17 @@ if ($url !== '') {
     $target = $opens_in_new_tab ? ' target="_blank"' : '';
     $wrapper = get_block_wrapper_attributes(['class' => 'svg-icon']);
 
-    echo '<a ' . $wrapper . ' href="' . $url . '"' . $target . $rel_attr . $aria . '>' . $svg . '</a>';
+    echo wp_kses(
+        '<a ' . $wrapper . ' href="' . $url . '"' . $target . $rel_attr . $aria . '>' . $svg . '</a>',
+        icon_library_allowed_svg_kses(),
+    );
     return '';
 }
 
 $wrapper = get_block_wrapper_attributes(['class' => 'svg-icon']);
 
-echo '<div ' . $wrapper . '>' . $svg . '</div>';
+echo wp_kses(
+    '<div ' . $wrapper . '>' . $svg . '</div>',
+    icon_library_allowed_svg_kses(),
+);
 return '';

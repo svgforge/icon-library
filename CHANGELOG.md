@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-09-13
+
+- WordPress.org plugin-check compliance: escape the rendered SVG markup through an input allowlist, add a direct-access guard to the render template, and make the readme description detect as standard English.
+- Remove the discouraged `load_plugin_textdomain()` call; translations are loaded by WordPress for the plugin slug.
+
 ## [0.2.0] - 2026-09-12
 
 - WordPress 7.1+ support (experimental): a new setting on the Icon Library settings page controls whether your uploaded sprite icons are also usable in WordPress's built-in Icon block, or only in this plugin's SVG Icon block. Options: `off` (default — icons are only available in the SVG Icon block), `on` (the sprite icons are also registered for the core Icon block), `no_block` (same as `on`, but the core Icon block is additionally fully removed, so the SVG Icon block remains the only icon block).
