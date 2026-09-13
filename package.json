@@ -5,6 +5,15 @@
 	"author": "Felix Müller (https://github.com/joeda1)",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
+	"files": [
+		"build",
+		"languages",
+		"src",
+		"vendor",
+		"sprite.svg",
+		"readme.txt",
+		"icon-library.php"
+	],
 	"packageManager": "pnpm@12.3.4",
 	"scripts": {
 		"build": "wp-scripts build",

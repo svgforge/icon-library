@@ -4,7 +4,6 @@
 /.wordpress-org
 /.git
 /node_modules
-/vendor
 
 /.gitignore
 /.gitattributes

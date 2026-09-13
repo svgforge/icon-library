@@ -17,9 +17,24 @@ defined('ABSPATH') || exit;
 defined('ICON_LIBRARY_PLUGIN_FILE') || define('ICON_LIBRARY_PLUGIN_FILE', __FILE__);
 
 /**
- * Loads the settings page (SVG upload).
+ * Loads the shared sprite helpers (frontend + admin).
  */
-require_once __DIR__ . '/src/admin/admin.php';
+require_once __DIR__ . '/src/sprite.php';
+
+if (is_admin()) {
+    /**
+     * Loads the Composer autoloader (enshrined/svg-sanitize) for the admin
+     * settings page and sanitizer; skipped on frontend requests.
+     */
+    if (is_readable(__DIR__ . '/vendor/autoload.php')) {
+        require_once __DIR__ . '/vendor/autoload.php';
+    }
+
+    /**
+     * Loads the settings page (SVG upload); admin requests only.
+     */
+    require_once __DIR__ . '/src/admin/admin.php';
+}
 
 /**
  * Loads the WordPress 7.1 native icon API integration.
