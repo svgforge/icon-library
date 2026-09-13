@@ -42,3 +42,6 @@ tests_add_filter('muplugins_loaded', '_icon_library_manually_load_plugin');
 
 // Starts up the WordPress testing environment.
 require "{$wp_tests_dir}/bootstrap.php";
+
+// Admin-only module: make it explicit for tests that call upload/sanitizer helpers.
+require_once dirname(__DIR__) . '/src/admin/admin.php';
