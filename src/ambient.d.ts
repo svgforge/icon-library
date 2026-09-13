@@ -8,3 +8,10 @@ declare module '*.svg' {
 	const src: string;
 	export default src;
 }
+
+declare module '@wordpress/block-editor' {
+	export function useSetting(
+		path: string
+	): string | boolean | unknown[] | null;
+	export function useSettings( ...paths: string[] ): unknown[];
+}
