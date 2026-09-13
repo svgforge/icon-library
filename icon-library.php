@@ -190,6 +190,27 @@ function icon_library_resolve_dimension($value, $presets = null)
 }
 
 /**
+ * Resolves a block spacing value to a usable CSS length.
+ *
+ * Spacing presets are stored by Gutenberg as `var:preset|spacing|<slug>`
+ * references and map to the theme spacing CSS custom property; raw CSS values
+ * pass through unchanged.
+ *
+ * @param string $value Raw spacing value from block attributes.
+ * @return string The resolved CSS value (e.g. `var(--wp--preset--spacing--30)`).
+ */
+function icon_library_resolve_spacing($value)
+{
+    $prefix = 'var:preset|spacing|';
+
+    if (str_starts_with($value, $prefix)) {
+        return 'var(--wp--preset--spacing--' . substr($value, strlen($prefix)) . ')';
+    }
+
+    return (string) $value;
+}
+
+/**
  * Registers the block from the block.json in /build/block.
  */
 function icon_library_register_block()

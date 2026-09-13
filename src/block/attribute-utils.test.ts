@@ -7,6 +7,7 @@
 import {
 	resolveColorValue,
 	resolveDimensionValue,
+	resolveSpacingValue,
 	type DimensionSizeMap,
 } from './attribute-utils';
 
@@ -58,5 +59,24 @@ describe( 'resolveDimensionValue', () => {
 		expect( resolveDimensionValue( '2em', presetSizes ) ).toBe( '2em' );
 		expect( resolveDimensionValue( '50%', presetSizes ) ).toBe( '50%' );
 		expect( resolveDimensionValue( '', presetSizes ) ).toBe( '' );
+	} );
+} );
+
+describe( 'resolveSpacingValue', () => {
+	it( 'maps a preset reference to the theme spacing variable', () => {
+		expect( resolveSpacingValue( 'var:preset|spacing|30' ) ).toBe(
+			'var(--wp--preset--spacing--30)'
+		);
+		expect( resolveSpacingValue( 'var:preset|spacing|20' ) ).toBe(
+			'var(--wp--preset--spacing--20)'
+		);
+	} );
+
+	it( 'passes raw CSS lengths through unchanged', () => {
+		expect( resolveSpacingValue( '4px' ) ).toBe( '4px' );
+		expect( resolveSpacingValue( 'var(--wp--preset--spacing--10)' ) ).toBe(
+			'var(--wp--preset--spacing--10)'
+		);
+		expect( resolveSpacingValue( '' ) ).toBe( '' );
 	} );
 } );

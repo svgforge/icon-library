@@ -22,7 +22,11 @@ import {
 } from '@wordpress/components';
 import type { BlockEditProps } from '@wordpress/blocks';
 import type { CSSProperties, SVGProps } from 'react';
-import { resolveColorValue, resolveDimensionValue } from './attribute-utils';
+import {
+	resolveColorValue,
+	resolveDimensionValue,
+	resolveSpacingValue,
+} from './attribute-utils';
 import { toDimensionPresetEntries } from './icon-sizes';
 import { parseSymbols, type SpriteSymbol } from './icon-colors';
 
@@ -41,6 +45,14 @@ export type IconLibraryAttributes = {
 		};
 		dimensions?: {
 			width?: string;
+		};
+		spacing?: {
+			padding?: Partial<
+				Record< 'top' | 'right' | 'bottom' | 'left', string >
+			>;
+			margin?: Partial<
+				Record< 'top' | 'right' | 'bottom' | 'left', string >
+			>;
 		};
 	};
 	textColor?: string;
@@ -212,6 +224,22 @@ export default function Edit( {
 	if ( backgroundColorAttr ) {
 		svgStyle.backgroundColor = resolveColorValue( backgroundColorAttr );
 		svgClasses.push( 'has-background' );
+	}
+
+	const padding = style?.spacing?.padding;
+	if ( padding ) {
+		const spacingSides = [
+			[ 'top', 'paddingTop' ],
+			[ 'right', 'paddingRight' ],
+			[ 'bottom', 'paddingBottom' ],
+			[ 'left', 'paddingLeft' ],
+		] as const;
+		for ( const [ side, cssProp ] of spacingSides ) {
+			const value = padding[ side ];
+			if ( value ) {
+				svgStyle[ cssProp ] = resolveSpacingValue( value );
+			}
+		}
 	}
 
 	const svgProps: SVGProps< SVGSVGElement > = {

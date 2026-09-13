@@ -88,6 +88,18 @@ if ($background_color !== '') {
     $svg_classes[] = 'has-background';
 }
 
+// Spacing padding is applied to the SVG itself (like the core Icon block), so
+// the background covers the padded area; the block wrapper never gets padding.
+$padding = isset($attributes['style']['spacing']['padding']) && is_array($attributes['style']['spacing']['padding'])
+    ? $attributes['style']['spacing']['padding']
+    : [];
+
+foreach (['top', 'right', 'bottom', 'left'] as $side) {
+    if (isset($padding[$side]) && $padding[$side] !== '') {
+        $style .= 'padding-' . $side . ':' . esc_attr(icon_library_resolve_spacing((string) $padding[$side])) . ';';
+    }
+}
+
 $style_attr = $style !== '' ? ' style="' . $style . '"' : '';
 $svg_class_attr = ' class="' . esc_attr(implode(' ', $svg_classes)) . '"';
 
