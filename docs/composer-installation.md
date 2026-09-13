@@ -2,6 +2,8 @@
 
 The plugin is packaged as a `wordpress-plugin` (`composer/installers`). Installable from the GitHub repo (development) or via the **WP Packages** repository once published.
 
+Note: You must build the frontend manually, because the build directory is not in git.
+
 ## From the GitHub repository (development)
 
 ```json
@@ -14,7 +16,7 @@ The plugin is packaged as a `wordpress-plugin` (`composer/installers`). Installa
         }
     ],
     "require": {
-        "svgforge/icon-library": "^0.1"
+        "svgforge/icon-library": "dev-main"
     }
 }
 ```
