@@ -1,1 +1,54 @@
-{"translation-revision-date":"2026-09-11 09:31+0200","generator":"WP-CLI\/2.12.0","source":"build\/block\/index.js","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"de_DE","plural-forms":"nplurals=2; plural=(n != 1);"},"Select symbol \u2026":["Symbol w\u00e4hlen \u2026"],"Could not load the icon sprite":["Icon-Sprite konnte nicht geladen werden"],"All":["Alle"],"Insert\/edit link":["Link einf\u00fcgen\/bearbeiten"],"Remove link":["Link entfernen"],"SVG":["SVG"],"Aria label (for screen readers, when not linked)":["Aria-Label (f\u00fcr Screenreader, wenn nicht verlinkt)"],"Sets the aria-label on the SVG. For links the aria-label is set on the <a>.":["Setzt das aria-label auf dem SVG. Bei Links wird das aria-label auf dem <a> gesetzt."],"View":["Ansicht"],"Grid":["Raster"],"List":["Liste"],"Colors":["Farben"],"Fill color (fill)":["F\u00fcllfarbe (fill)"],"Stroke color (stroke)":["Strichfarbe (stroke)"],"Size":["Gr\u00f6\u00dfe"],"Width":["Breite"],"Unit":["Einheit"],"Height":["H\u00f6he"]}}}
+{
+    "translation-revision-date": "2026-09-11 09:31+0200",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "build\/block\/index.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "de_DE",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "Select symbol \u2026": [
+                "Symbol w\u00e4hlen \u2026"
+            ],
+            "Could not load the icon sprite": [
+                "Icon-Sprite konnte nicht geladen werden"
+            ],
+            "All": [
+                "Alle"
+            ],
+            "Replace": [
+                "Ersetzen"
+            ],
+            "Insert\/edit link": [
+                "Link einf\u00fcgen\/bearbeiten"
+            ],
+            "Remove link": [
+                "Link entfernen"
+            ],
+            "SVG": [
+                "SVG"
+            ],
+            "Aria label (for screen readers, when not linked)": [
+                "Aria-Label (f\u00fcr Screenreader, wenn nicht verlinkt)"
+            ],
+            "Sets the aria-label on the SVG. For links the aria-label is set on the <a>.": [
+                ""
+            ],
+            "Select symbol": [
+                "Symbol w\u00e4hlen"
+            ],
+            "View": [
+                "Ansicht"
+            ],
+            "Grid": [
+                "Raster"
+            ],
+            "List": [
+                "Liste"
+            ]
+        }
+    }
+}

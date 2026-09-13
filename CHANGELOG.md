@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2026-09-12
 
-- WordPress 7.1 native icon integration (experimental): registers every sprite `<symbol>` as an `icon-library` icon collection (powering the core Icon block and `wp_get_icon()`). New 3-state setting on the settings page — default `off`, `on` (lazy registration), or `no_block` (also fully deregisters `core/icon` in editor and frontend).
+- WordPress 7.1+ support (experimental): a new setting on the Icon Library settings page controls whether your uploaded sprite icons are also usable in WordPress's built-in Icon block, or only in this plugin's SVG Icon block. Options: `off` (default — icons are only available in the SVG Icon block), `on` (the sprite icons are also registered for the core Icon block), `no_block` (same as `on`, but the core Icon block is additionally fully removed, so the SVG Icon block remains the only icon block).
 - Icon picker opens as a modal via a new "Replace" toolbar button (like the core Icon block) instead of the sidebar dropdown.
 - Colors panel respects `theme.json` (`color.custom` / `color.palette`) and hides automatically for multi-color icons (e.g. Tango sets); fill and stroke remain separate.
 - SVG Icon (`<use>`) keep rendering unrestricted in the SVG Icon block — the native path applies core's strict sanitizer.
+- Lots of Bugfixes and better tests.
 
 ## [0.1.0] - 2026-09-10
 

@@ -47,7 +47,7 @@
 		"css": ".wp-block-icon-library-svg-icon",
 		"spacing": {
 			"margin": ".wp-block-icon-library-svg-icon",
-			"padding": ".wp-block-icon-library-svg-icon"
+			"padding": ".wp-block-icon-library-svg-icon .svg-icon__svg"
 		}
 	},
 	"attributes": {

@@ -83,19 +83,7 @@ function icon_library_icon_slug($id)
  */
 function icon_library_sprite_source_path()
 {
-    if ((string) apply_filters('icon_library_sprite_url', '') !== '') {
-        return icon_library_url_to_path(icon_library_sprite_url());
-    }
-
-    $data = function_exists('icon_library_uploaded_sprite_data') ? icon_library_uploaded_sprite_data() : [];
-
-    if (isset($data['path']) && is_string($data['path']) && is_readable($data['path'])) {
-        return $data['path'];
-    }
-
-    $default = dirname(ICON_LIBRARY_PLUGIN_FILE) . '/sprite.svg';
-
-    return is_readable($default) ? $default : '';
+    return icon_library_current_sprite()['path'];
 }
 
 /**
@@ -144,14 +132,14 @@ function icon_library_url_to_path($url)
  */
 function icon_library_sprite_content()
 {
-    $path = icon_library_sprite_source_path();
+    $sprite = icon_library_current_sprite();
 
-    if ($path !== '') {
-        return is_readable($path) ? (string) file_get_contents($path) : '';
+    if ($sprite['path'] !== '' && is_readable($sprite['path'])) {
+        return (string) file_get_contents($sprite['path']);
     }
 
-    if ((string) apply_filters('icon_library_sprite_url', '') !== '') {
-        $response = wp_remote_get(icon_library_sprite_url(), ['timeout' => 5]);
+    if ('filter' === $sprite['source'] && $sprite['url'] !== '') {
+        $response = wp_remote_get($sprite['url'], ['timeout' => 5]);
 
         if (! is_wp_error($response)) {
             $body = wp_remote_retrieve_body($response);
@@ -175,15 +163,14 @@ function icon_library_sprite_content()
  */
 function icon_library_sprite_source_signature()
 {
-    $url   = icon_library_sprite_url();
-    $extra = '';
-    $path  = icon_library_sprite_source_path();
+    $sprite = icon_library_current_sprite();
+    $extra  = '';
 
-    if ($path !== '' && is_readable($path)) {
-        $extra = (string) @filemtime($path) . '|' . (string) @filesize($path);
+    if ($sprite['path'] !== '' && is_readable($sprite['path'])) {
+        $extra = (string) @filemtime($sprite['path']) . '|' . (string) @filesize($sprite['path']);
     }
 
-    return md5($url . '|' . $extra);
+    return md5($sprite['url'] . '|' . $extra);
 }
 
 /**
@@ -306,6 +293,57 @@ function icon_library_parse_sprite_icons($svg)
     }
 
     return $icons;
+}
+
+/**
+ * Lists every symbol id of the active sprite.
+ *
+ * Unlike icon_library_sprite_icons(), this enumerates the raw sprite symbols
+ * without applying core's shape allowlist — it is meant for consumers that
+ * render fragments via <use href="sprite.svg#id">, where the browser resolves
+ * the full, unrestricted symbol itself.
+ *
+ * @return string[] Symbol ids, sorted alphabetically.
+ */
+function icon_library_sprite_symbols()
+{
+    $svg = icon_library_sprite_content();
+
+    if (! is_string($svg) || $svg === '' || ! class_exists('DOMDocument')) {
+        return [];
+    }
+
+    $document = new DOMDocument();
+    $previous = libxml_use_internal_errors(true);
+    $loaded   = $document->loadXML($svg, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous);
+
+    if (! $loaded) {
+        return [];
+    }
+
+    $xpath   = new DOMXPath($document);
+    $symbols = $xpath->query('//*[local-name()="symbol"]');
+
+    if (false === $symbols) {
+        return [];
+    }
+
+    $ids = [];
+
+    foreach ($symbols as $symbol) {
+        $id = (string) $symbol->getAttribute('id');
+
+        if ($id !== '') {
+            $ids[$id] = true;
+        }
+    }
+
+    $ids = array_keys($ids);
+    sort($ids);
+
+    return $ids;
 }
 
 /**

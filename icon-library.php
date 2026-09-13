@@ -27,7 +27,7 @@ require_once __DIR__ . '/src/admin/admin.php';
 require_once __DIR__ . '/src/native/icons.php';
 
 /**
- * Returns the URL of the SVG sprite file.
+ * Resolves the active SVG sprite source.
  *
  * Source order:
  *  1. Filter icon_library_sprite_url (theme override, CDN) — has priority.
@@ -37,29 +37,75 @@ require_once __DIR__ . '/src/native/icons.php';
  * The filter is the only supported way to override the sprite source and
  * therefore also wins over a backend upload.
  *
+ * @return array{url: string, path: string, source: string, data: array}
+ *               url:    Absolute sprite URL used by consumers (includes the
+ *                       cache-busting m parameter for uploads).
+ *               path:   Local filesystem path when WordPress can read the
+ *                       source itself, otherwise ''.
+ *               source: 'filter', 'upload', 'default' or 'none'.
+ *               data:   Stored upload data (ICON_LIBRARY_SPRITE_OPTION) when
+ *                       source is 'upload', otherwise [].
+ */
+function icon_library_current_sprite()
+{
+    $none = [
+        'url'    => '',
+        'path'   => '',
+        'source' => 'none',
+        'data'   => [],
+    ];
+
+    $filtered = (string) apply_filters('icon_library_sprite_url', '');
+
+    if ($filtered !== '') {
+        return [
+            'url'    => $filtered,
+            'path'   => function_exists('icon_library_url_to_path') ? icon_library_url_to_path($filtered) : '',
+            'source' => 'filter',
+            'data'   => [],
+        ];
+    }
+
+    if (function_exists('icon_library_uploaded_sprite_data')) {
+        $data = icon_library_uploaded_sprite_data();
+
+        if ($data !== []) {
+            $path = (string) ($data['path'] ?? '');
+
+            if (! is_readable($path)) {
+                $path = '';
+            }
+
+            return [
+                'url'    => (int) ($data['time'] ?? 0) > 0
+                    ? add_query_arg('m', (int) $data['time'], $data['url'])
+                    : $data['url'],
+                'path'   => $path,
+                'source' => 'upload',
+                'data'   => $data,
+            ];
+        }
+    }
+
+    $bundled_path = dirname(ICON_LIBRARY_PLUGIN_FILE) . '/sprite.svg';
+    $readable    = is_readable($bundled_path);
+
+    return $readable ? [
+        'url'    => plugins_url('sprite.svg', __FILE__),
+        'path'   => $bundled_path,
+        'source' => 'default',
+        'data'   => [],
+    ] : $none;
+}
+
+/**
+ * Returns the URL of the SVG sprite file.
+ *
  * @return string
  */
 function icon_library_sprite_url()
 {
-    $filtered = (string) apply_filters('icon_library_sprite_url', '');
-
-    if ($filtered !== '') {
-        return $filtered;
-    }
-
-    $uploaded = function_exists('icon_library_uploaded_sprite_url') ? icon_library_uploaded_sprite_url() : '';
-
-    if ($uploaded !== '') {
-        $data = function_exists('icon_library_uploaded_sprite_data') ? icon_library_uploaded_sprite_data() : [];
-
-        if (isset($data['time']) && (int) $data['time'] > 0) {
-            return add_query_arg('m', (int) $data['time'], $uploaded);
-        }
-
-        return $uploaded;
-    }
-
-    return plugins_url('sprite.svg', __FILE__);
+    return icon_library_current_sprite()['url'];
 }
 
 /**
