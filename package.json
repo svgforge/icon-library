@@ -12,10 +12,12 @@
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
+		"lint": "wp-scripts lint-js && wp-scripts lint-style",
 		"typecheck": "tsc --noEmit",
 		"test-unit-js": "wp-scripts test-unit-js",
 		"check-engines": "wp-scripts check-engines",
-		"plugin-zip": "wp-scripts plugin-zip"
+		"plugin-zip": "wp-scripts plugin-zip",
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@wordpress/block-editor": "^17.1.0",
@@ -30,6 +32,7 @@
 		"@types/react": "^18.3.31",
 		"@types/react-dom": "^18.3.7",
 		"@wordpress/scripts": "^35.0.0",
+		"husky": "^9.1.7",
 		"typescript": "^5.9.3"
 	}
 }
