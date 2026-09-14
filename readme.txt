@@ -134,6 +134,10 @@ With presets the panel shows a slider that moves across the preset sizes, like t
 
 1. Symbol picker in the Gutenberg editor with a live preview of all icons from the sprite file.
 
+== Development ==
+
+Development is done on [GitHub](https://github.com/svgforge/icon-library).
+
 == Changelog ==
 
 = 0.3.0 =
