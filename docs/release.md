@@ -6,6 +6,13 @@ Pushing a tag (e.g. `v0.1.0`) builds the plugin, publishes it to the wp.org dire
 git tag v0.1.0 && git push origin v0.1.0
 ```
 
+The tag only triggers the build and deployment. The changelog is **not** generated
+automatically — update it by hand before tagging:
+
+1. Add a `## [0.x.0] - YYYY-MM-DD` entry to `CHANGELOG.md` (move the current `[Unreleased]` section).
+2. Add the matching `= 0.x.0 =` block to the `== Changelog ==` section of `readme.txt`.
+3. Bump the `Version:` header in `icon-library.php` and the `Stable tag:` in `readme.txt`.
+
 The workflow `.github/workflows/release.yml` uses:
 - `pnpm/action-setup` + `actions/setup-node` (cache: pnpm) → `pnpm install --frozen-lockfile`
 - `pnpm run build` → production-ready `build/`

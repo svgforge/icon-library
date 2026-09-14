@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Short URL `/i.svg` via the `icon_library_short_url` filter (Apache: flush permalinks once; Nginx: small config or symlink).
+- SVG sanitization of uploaded sprites (scripts, event handlers, `javascript:` links).
+- Automated dev releases from `main`.
+- `docs/api.md` API reference.
+
+### Changed
+
+- Type declarations across the source (PHP 8.3+).
+- Padding applies to the SVG element, not the wrapper.
+- Admin code loads only in the backend; plugin ZIP ships vendored dependencies.
+- Settings page shows the short URL under "Active sprite file".
+
 ## [0.2.1] - 2026-09-13
 
 - WordPress.org plugin-check compliance: escape the rendered SVG markup through an input allowlist, add a direct-access guard to the render template, and make the readme description detect as standard English.

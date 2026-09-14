@@ -49,7 +49,7 @@ const ICON_LIBRARY_NATIVE_OPTION = 'icon_library_native';
  *
  * @return string 'off', 'on' or 'no_block'.
  */
-function icon_library_native_setting()
+function icon_library_native_setting(): string
 {
     $value = get_option(ICON_LIBRARY_NATIVE_OPTION, 'off');
 
@@ -65,7 +65,7 @@ function icon_library_native_setting()
  * @param string $id Symbol id from the sprite.
  * @return string Valid icon name suffix, or '' when nothing usable remains.
  */
-function icon_library_icon_slug($id)
+function icon_library_icon_slug(string $id): string
 {
     $slug = strtolower((string) $id);
     $slug = preg_replace('/[^a-z0-9_-]+/', '-', $slug) ?? $slug;
@@ -81,7 +81,7 @@ function icon_library_icon_slug($id)
  *
  * @return string Absolute path, or '' when the source is not a local file.
  */
-function icon_library_sprite_source_path()
+function icon_library_sprite_source_path(): string
 {
     return icon_library_current_sprite()['path'];
 }
@@ -92,7 +92,7 @@ function icon_library_sprite_source_path()
  * @param string $url Sprite URL.
  * @return string Local path, or '' when the URL points elsewhere (e.g. a CDN).
  */
-function icon_library_url_to_path($url)
+function icon_library_url_to_path(string $url): string
 {
     $url = (string) $url;
 
@@ -130,7 +130,7 @@ function icon_library_url_to_path($url)
  *
  * @return string Sprite markup, or '' when the sprite is not readable.
  */
-function icon_library_sprite_content()
+function icon_library_sprite_content(): string
 {
     $sprite = icon_library_current_sprite();
 
@@ -161,7 +161,7 @@ function icon_library_sprite_content()
  *
  * @return string
  */
-function icon_library_sprite_source_signature()
+function icon_library_sprite_source_signature(): string
 {
     $sprite = icon_library_current_sprite();
     $extra  = '';
@@ -178,7 +178,7 @@ function icon_library_sprite_source_signature()
  *
  * @return array[] List of ['name' => string, 'label' => string, 'content' => string].
  */
-function icon_library_sprite_icons()
+function icon_library_sprite_icons(): array
 {
     $signature = icon_library_sprite_source_signature();
     $cached    = get_option(ICON_LIBRARY_ICONS_OPTION, null);
@@ -199,7 +199,7 @@ function icon_library_sprite_icons()
  *
  * @return void
  */
-function icon_library_invalidate_native_icons()
+function icon_library_invalidate_native_icons(): void
 {
     $GLOBALS['icon_library_native_registered'] = false;
     delete_option(ICON_LIBRARY_ICONS_OPTION);
@@ -208,10 +208,13 @@ function icon_library_invalidate_native_icons()
 /**
  * Parses the symbols of a sprite file into native icon definitions.
  *
- * @param string $svg Raw sprite markup.
+ * Defensively accepts any input (e.g. a failed sprite read); non-string values
+ * or unparseable markup produce an empty list.
+ *
+ * @param mixed $svg Raw sprite markup.
  * @return array[] List of ['name' => string, 'label' => string, 'content' => string].
  */
-function icon_library_parse_sprite_icons($svg)
+function icon_library_parse_sprite_icons(mixed $svg): array
 {
     $icons = [];
 
@@ -305,7 +308,7 @@ function icon_library_parse_sprite_icons($svg)
  *
  * @return string[] Symbol ids, sorted alphabetically.
  */
-function icon_library_sprite_symbols()
+function icon_library_sprite_symbols(): array
 {
     $svg = icon_library_sprite_content();
 
@@ -352,7 +355,7 @@ function icon_library_sprite_symbols()
  * @param DOMElement $shape <path> or <polygon> element.
  * @return DOMElement The same element, with disallowed attributes removed.
  */
-function icon_library_icon_shape(DOMElement $shape)
+function icon_library_icon_shape(DOMElement $shape): DOMElement
 {
     $allowed = 'polygon' === $shape->localName
         ? ['points', 'fill', 'fill-rule', 'transform', 'focusable']
@@ -378,7 +381,7 @@ function icon_library_icon_shape(DOMElement $shape)
  *
  * @return void
  */
-function icon_library_register_native_icons()
+function icon_library_register_native_icons(): void
 {
     if (! empty($GLOBALS['icon_library_native_registered'])) {
         return;
@@ -427,7 +430,7 @@ function icon_library_register_native_icons()
  *
  * @return void
  */
-function icon_library_ensure_native_icons()
+function icon_library_ensure_native_icons(): void
 {
     if (! function_exists('wp_register_icon')) {
         return;
@@ -445,7 +448,7 @@ function icon_library_ensure_native_icons()
  * @param array $parsed_block Parsed block data.
  * @return array Unmodified parsed block data.
  */
-function icon_library_ensure_on_icon_block($parsed_block)
+function icon_library_ensure_on_icon_block(array $parsed_block): array
 {
     if (($parsed_block['blockName'] ?? '') === 'core/icon') {
         icon_library_ensure_native_icons();
@@ -465,9 +468,13 @@ add_filter('render_block_data', 'icon_library_ensure_on_icon_block');
  * unregister would re-add it. Running the unregister late in init, during
  * REST setup and right before the block editor renders covers every path.
  *
- * @param string $block_name Block type to deregister. Default 'core/icon'.
+ * The parameter stays untyped on purpose: the function doubles as a hook
+ * callback for rest_api_init, which passes a WP_REST_Server object (never a
+ * block name). The is_string() guard filters such hook arguments.
+ *
+ * @param mixed $block_name Block type to deregister. Default 'core/icon'.
  */
-function icon_library_deregister_native_icon_block($block_name = 'core/icon')
+function icon_library_deregister_native_icon_block($block_name = 'core/icon'): void
 {
     // Hook callbacks receive argument values (e.g. rest_api_init passes the
     // WP_REST_Server); those are never block names.
@@ -499,7 +506,7 @@ add_action('enqueue_block_editor_assets', 'icon_library_deregister_native_icon_b
  * @param array|null $allowed Current allowlist, or null for "all".
  * @return array|null
  */
-function icon_library_deny_native_icon_block_types($allowed)
+function icon_library_deny_native_icon_block_types(?array $allowed): ?array
 {
     if (icon_library_native_setting() !== 'no_block') {
         return $allowed;
@@ -528,7 +535,7 @@ add_filter('allowed_block_types_all', 'icon_library_deny_native_icon_block_types
  * @param array $block Block data.
  * @return string
  */
-function icon_library_strip_native_icon_block($block_content, $block)
+function icon_library_strip_native_icon_block(string $block_content, array $block): string
 {
     if (icon_library_native_setting() !== 'no_block') {
         return $block_content;
@@ -552,7 +559,7 @@ add_filter('render_block', 'icon_library_strip_native_icon_block', PHP_INT_MAX, 
  * block type there as well; domReady runs after the core block library has
  * registered the client-side types.
  */
-function icon_library_native_unregister_block_editor_assets()
+function icon_library_native_unregister_block_editor_assets(): void
 {
     if (icon_library_native_setting() !== 'no_block') {
         return;

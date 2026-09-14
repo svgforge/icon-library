@@ -12,7 +12,7 @@ require_once dirname(__DIR__) . '/sprite.php';
 /**
  * Registers the settings page under Settings → Icon Library.
  */
-function icon_library_register_settings_page()
+function icon_library_register_settings_page(): void
 {
     add_options_page(
         __('Icon Library', 'icon-library'),
@@ -29,7 +29,7 @@ add_action('admin_menu', 'icon_library_register_settings_page');
  *
  * @param string $message Key of the message to display.
  */
-function icon_library_settings_redirect($message)
+function icon_library_settings_redirect(string $message): void
 {
     $url = add_query_arg(
         ['page' => 'icon-library', 'icon_library_message' => $message],
@@ -55,7 +55,7 @@ function icon_library_settings_redirect($message)
  * @param string $svg Raw SVG content.
  * @return string Sanitized SVG content, or '' when no valid <svg> element remains.
  */
-function icon_library_sanitize_svg($svg)
+function icon_library_sanitize_svg(string $svg): string
 {
     $svg = (string) $svg;
 
@@ -94,7 +94,7 @@ function icon_library_sanitize_svg($svg)
 /**
  * Handles the upload of the SVG sprite file.
  */
-function icon_library_handle_sprite_upload()
+function icon_library_handle_sprite_upload(): void
 {
     if (! current_user_can('manage_options')) {
         wp_die(esc_html__('Sorry, you are not allowed to perform this action.', 'icon-library'));
@@ -189,7 +189,7 @@ add_action('admin_post_icon_library_upload_sprite', 'icon_library_handle_sprite_
 /**
  * Deletes the uploaded SVG sprite file and resets the setting.
  */
-function icon_library_handle_sprite_delete()
+function icon_library_handle_sprite_delete(): void
 {
     if (! current_user_can('manage_options')) {
         wp_die(esc_html__('Sorry, you are not allowed to perform this action.', 'icon-library'));
@@ -214,7 +214,7 @@ add_action('admin_post_icon_library_delete_sprite', 'icon_library_handle_sprite_
 /**
  * Handles the native icon integration mode selection.
  */
-function icon_library_handle_native_update()
+function icon_library_handle_native_update(): void
 {
     if (! current_user_can('manage_options')) {
         wp_die(esc_html__('Sorry, you are not allowed to perform this action.', 'icon-library'));
@@ -237,7 +237,7 @@ add_action('admin_post_icon_library_update_native', 'icon_library_handle_native_
 /**
  * Renders the settings page with its tabs (settings and sprite preview).
  */
-function icon_library_settings_page()
+function icon_library_settings_page(): void
 {
     if (! current_user_can('manage_options')) {
         return;
@@ -280,7 +280,7 @@ function icon_library_settings_page()
 /**
  * Renders the settings panel (sprite upload and native icon integration).
  */
-function icon_library_settings_panel()
+function icon_library_settings_panel(): void
 {
     if (! current_user_can('manage_options')) {
         return;
@@ -288,6 +288,9 @@ function icon_library_settings_panel()
 
     $sprite        = icon_library_current_sprite();
     $sprite_url    = $sprite['url'];
+    $short_url     = function_exists('icon_library_short_url_enabled') && icon_library_short_url_enabled()
+        ? icon_library_sprite_url()
+        : '';
     $uploaded      = $sprite['data'];
     $filter_active = 'filter' === $sprite['source'];
 
@@ -369,13 +372,19 @@ function icon_library_settings_panel()
                     <th scope="row"><?php echo esc_html__('Active sprite file', 'icon-library'); ?></th>
                     <td>
                         <code><?php echo esc_html($sprite_url); ?></code>
+                        <?php if ($short_url !== '') : ?>
+                            <p class="description" style="margin-top:.5em">
+                                <?php echo esc_html__('Short URL:', 'icon-library'); ?>
+                                <code><?php echo esc_html($short_url); ?></code>
+                            </p>
+                        <?php endif; ?>
                         <p class="description">
                             <?php
-                    echo esc_html(sprintf(
-                        /* translators: %s: Source of the sprite URL (filter, upload, default). */
-                        __('Source: %s', 'icon-library'),
-                        $source_label,
-                    ));
+                            echo esc_html(sprintf(
+                                /* translators: %s: Source of the sprite URL (filter, upload, default). */
+                                __('Source: %s', 'icon-library'),
+                                $source_label,
+                            ));
     ?>
                         </p>
                     </td>
@@ -406,8 +415,8 @@ function icon_library_settings_panel()
                             </form>
                         </td>
                     </tr>
-                <?php endif; ?>
-            </tbody>
+        <?php endif; ?>
+        </tbody>
         </table>
 
         <?php if (function_exists('wp_register_icon_collection')) : ?>
@@ -531,7 +540,7 @@ function icon_library_settings_panel()
  * @param array[] $icons Icons as returned by icon_library_sprite_icons().
  * @return array[] List of ['prefix' => string, 'icons' => array[]].
  */
-function icon_library_sprite_preview_groups(array $icons)
+function icon_library_sprite_preview_groups(array $icons): array
 {
     $grouped   = [];
     $ungrouped = [];
@@ -581,14 +590,14 @@ function icon_library_sprite_preview_groups(array $icons)
 /**
  * Renders the sprite preview panel: every symbol of the active sprite as a grid.
  */
-function icon_library_sprite_preview_panel()
+function icon_library_sprite_preview_panel(): void
 {
     if (! current_user_can('manage_options')) {
         return;
     }
 
     $sprite     = icon_library_current_sprite();
-    $sprite_url = $sprite['url'];
+    $sprite_url = icon_library_sprite_url();
     $symbols    = function_exists('icon_library_sprite_symbols') ? icon_library_sprite_symbols() : [];
 
     echo '<style>';
