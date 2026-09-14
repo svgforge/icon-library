@@ -26,3 +26,11 @@
 /docs
 /.editorconfig
 /.nvmrc
+
+# Compiled translations are provided by translate.wordpress.org; keep only the .pot template
+/languages/*.po
+/languages/*.mo
+/languages/*.json
+
+# Dev-only dependency (test fixtures); never ship
+/vendor/wp-phpunit
