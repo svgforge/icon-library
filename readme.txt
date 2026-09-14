@@ -5,7 +5,7 @@ Tags: svg, icons, sprite, gutenberg
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.2.1
+Stable tag: 0.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,12 @@ With presets the panel shows a slider that moves across the preset sizes, like t
 1. Symbol picker in the Gutenberg editor with a live preview of all icons from the sprite file.
 
 == Changelog ==
+
+= 0.3.0 =
+* Short URL `/i.svg` for the sprite, opt-in via the `icon_library_short_url` filter.
+* Stricter upload sanitization (allowlist via enshrined/svg-sanitize instead of regex); automated dev releases from `main`; the plugin ZIP ships its vendored dependencies.
+* Type declarations across the source (PHP 8.3+); padding applies to the SVG element, not the wrapper.
+* New `docs/api.md` API reference; settings page shows the short URL under "Active sprite file".
 
 = 0.2.1 =
 * wp.org compliance: escaped SVG output with an input allowlist, direct-access guard in the render template, readme and changelog cleanup.

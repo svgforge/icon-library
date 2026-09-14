@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-14
+
 ### Added
 
 - Short URL `/i.svg` via the `icon_library_short_url` filter (Apache: flush permalinks once; Nginx: small config or symlink).

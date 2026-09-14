@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       Icon Library
  * Description:       Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.
- * Version:           0.2.1
+ * Version:           0.3.0
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            svgforge
