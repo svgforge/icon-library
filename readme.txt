@@ -6,8 +6,8 @@ Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
 Stable tag: 0.3.0
-License: GPL-2.0-or-later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: MIT
+License URI: https://opensource.org/licenses/MIT
 
 SVG Icon Block: inserts icons from your own SVG sprite via <use>, can link them. For developers who maintain their sprite file with CLI tools.
 

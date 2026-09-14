@@ -2,7 +2,7 @@
 	"name": "svgforge/icon-library",
 	"description": "Gutenberg block that inserts SVG icons from a central sprite file (ico.svg) via <use> and links them.",
 	"type": "wordpress-plugin",
-	"license": "GPL-2.0-or-later",
+	"license": "MIT",
 	"authors": [
 		{
 			"name": "Felix Müller",

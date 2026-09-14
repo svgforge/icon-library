@@ -7,8 +7,8 @@
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            svgforge
- * License:           GPL-2.0-or-later
- * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * License:           MIT
+ * License URI:       https://opensource.org/licenses/MIT
  * Text Domain:       icon-library
  * Domain Path:       /languages
  */
