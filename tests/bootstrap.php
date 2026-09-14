@@ -34,7 +34,7 @@ require_once "{$wp_tests_dir}/functions.php";
 /**
  * Manually loads the plugin being tested.
  */
-function _icon_library_manually_load_plugin()
+function _icon_library_manually_load_plugin(): void
 {
     require dirname(__DIR__) . '/icon-library.php';
 }

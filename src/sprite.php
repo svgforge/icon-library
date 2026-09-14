@@ -17,7 +17,7 @@ const ICON_LIBRARY_SPRITE_OPTION = 'icon_library_sprite';
  *
  * @return array{url: string, path: string, name: string, time: int, symbols: int}|array{}
  */
-function icon_library_uploaded_sprite_data()
+function icon_library_uploaded_sprite_data(): array
 {
     $data = get_option(ICON_LIBRARY_SPRITE_OPTION, []);
 
@@ -33,7 +33,7 @@ function icon_library_uploaded_sprite_data()
  *
  * @return string
  */
-function icon_library_uploaded_sprite_url()
+function icon_library_uploaded_sprite_url(): string
 {
     $data = icon_library_uploaded_sprite_data();
 

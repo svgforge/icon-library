@@ -37,6 +37,11 @@ if (is_admin()) {
 }
 
 /**
+ * Loads the short-URL rewrite (/i.svg).
+ */
+require_once __DIR__ . '/src/short-url.php';
+
+/**
  * Loads the WordPress 7.1 native icon API integration.
  */
 require_once __DIR__ . '/src/native/icons.php';
@@ -61,7 +66,7 @@ require_once __DIR__ . '/src/native/icons.php';
  *               data:   Stored upload data (ICON_LIBRARY_SPRITE_OPTION) when
  *                       source is 'upload', otherwise [].
  */
-function icon_library_current_sprite()
+function icon_library_current_sprite(): array
 {
     $none = [
         'url'    => '',
@@ -116,10 +121,21 @@ function icon_library_current_sprite()
 /**
  * Returns the URL of the SVG sprite file.
  *
+ * When the short URL is enabled (icon_library_short_url filter) this returns
+ * the root-relative /i.svg (prefixed with the install path on subdirectory
+ * installs) regardless of the actual sprite source; the server rewrite serves
+ * the file.
+ *
  * @return string
  */
-function icon_library_sprite_url()
+function icon_library_sprite_url(): string
 {
+    if (function_exists('icon_library_short_url_enabled') && icon_library_short_url_enabled()) {
+        $path = (string) wp_parse_url(home_url(), PHP_URL_PATH);
+
+        return ($path !== '' ? untrailingslashit($path) : '') . '/i.svg';
+    }
+
     return icon_library_current_sprite()['url'];
 }
 
@@ -136,7 +152,7 @@ function icon_library_sprite_url()
  * @param string $value Raw color value from block attributes.
  * @return string
  */
-function icon_library_resolve_color($value)
+function icon_library_resolve_color(string $value): string
 {
     $prefix = 'var:preset|color|';
 
@@ -165,7 +181,7 @@ function icon_library_resolve_color($value)
  *                              for unit tests.
  * @return string The resolved size (e.g. `64px`) or an empty string when unknown.
  */
-function icon_library_resolve_dimension($value, $presets = null)
+function icon_library_resolve_dimension(string $value, ?array $presets = null): string
 {
     $prefix = 'var:preset|dimension|';
 
@@ -214,7 +230,7 @@ function icon_library_resolve_dimension($value, $presets = null)
  * @param string $value Raw spacing value from block attributes.
  * @return string The resolved CSS value (e.g. `var(--wp--preset--spacing--30)`).
  */
-function icon_library_resolve_spacing($value)
+function icon_library_resolve_spacing(string $value): string
 {
     $prefix = 'var:preset|spacing|';
 
@@ -228,7 +244,7 @@ function icon_library_resolve_spacing($value)
 /**
  * Registers the block from the block.json in /build/block.
  */
-function icon_library_register_block()
+function icon_library_register_block(): void
 {
     register_block_type(__DIR__ . '/build/block');
 }
@@ -244,7 +260,7 @@ add_action('init', 'icon_library_register_block');
  * @since 0.2.1
  * @return array<string, array<string, true>>
  */
-function icon_library_allowed_svg_kses()
+function icon_library_allowed_svg_kses(): array
 {
     $svg_attrs = [
         'aria-hidden' => true,
@@ -288,7 +304,7 @@ function icon_library_allowed_svg_kses()
  * register_block_type (handle: icon-library-svg-icon-editor-script)
  * is already registered.
  */
-function icon_library_editor_assets()
+function icon_library_editor_assets(): void
 {
     wp_localize_script(
         'icon-library-svg-icon-editor-script',
