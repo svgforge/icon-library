@@ -4,7 +4,7 @@
  * PHPUnit bootstrap: loads Composer, the PHPUnit polyfills, the WordPress
  * test suite (wp-phpunit) and then the plugin under test.
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 
 if (! file_exists($autoload = dirname(__DIR__) . '/vendor/autoload.php')) {
@@ -34,11 +34,11 @@ require_once "{$wp_tests_dir}/functions.php";
 /**
  * Manually loads the plugin being tested.
  */
-function _icon_library_manually_load_plugin(): void
+function _sfim_manually_load_plugin(): void
 {
-    require dirname(__DIR__) . '/icon-library.php';
+    require dirname(__DIR__) . '/sf-icon-manager.php';
 }
-tests_add_filter('muplugins_loaded', '_icon_library_manually_load_plugin');
+tests_add_filter('muplugins_loaded', '_sfim_manually_load_plugin');
 
 // Starts up the WordPress testing environment.
 require "{$wp_tests_dir}/bootstrap.php";

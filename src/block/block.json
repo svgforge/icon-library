@@ -1,14 +1,14 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "icon-library/svg-icon",
+	"name": "sf-icon-manager/svg-icon",
 	"version": "0.2.0",
 	"title": "SVG Icon",
 	"category": "widgets",
 	"icon": "format-image",
 	"description": "Inserts an SVG icon from the plugin icon library and can be linked.",
 	"keywords": [ "icon", "svg", "symbol", "sprite" ],
-	"textdomain": "svg-forge-icon-manager",
+	"textdomain": "sf-icon-manager",
 	"supports": {
 		"html": false,
 		"align": [ "left", "center", "right" ],
@@ -44,10 +44,10 @@
 		}
 	},
 	"selectors": {
-		"root": ".wp-block-icon-library-svg-icon .svg-icon__svg",
-		"css": ".wp-block-icon-library-svg-icon",
+		"root": ".wp-block-sf-icon-manager-svg-icon .svg-icon__svg",
+		"css": ".wp-block-sf-icon-manager-svg-icon",
 		"spacing": {
-			"margin": ".wp-block-icon-library-svg-icon"
+			"margin": ".wp-block-sf-icon-manager-svg-icon"
 		}
 	},
 	"attributes": {

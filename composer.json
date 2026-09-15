@@ -1,5 +1,5 @@
 {
-	"name": "svgforge/icon-library",
+	"name": "svgforge/sf-icon-manager",
 	"description": "Gutenberg block that inserts SVG icons from a central sprite file (ico.svg) via <use> and links them.",
 	"type": "wordpress-plugin",
 	"license": "MIT",

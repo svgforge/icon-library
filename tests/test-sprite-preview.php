@@ -3,22 +3,22 @@
 /**
  * Tests for the sprite preview grouping helper.
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 
 /**
- * Tests for icon_library_sprite_preview_groups().
+ * Tests for sfim_sprite_preview_groups().
  */
 final class Test_Icon_Library_Sprite_Preview extends WP_UnitTestCase
 {
     private function icon(string $id): array
     {
-        return ['name' => 'icon-library/' . $id, 'label' => $id, 'content' => '<svg></svg>'];
+        return ['name' => 'sf-icon-manager/' . $id, 'label' => $id, 'content' => '<svg></svg>'];
     }
 
     public function test_groups_icons_by_directory_prefix(): void
     {
-        $groups = icon_library_sprite_preview_groups([
+        $groups = sfim_sprite_preview_groups([
             $this->icon('actions--add_circle'),
             $this->icon('people--user'),
             $this->icon('actions--check'),
@@ -31,7 +31,7 @@ final class Test_Icon_Library_Sprite_Preview extends WP_UnitTestCase
 
     public function test_group_order_is_alphabetical(): void
     {
-        $groups = icon_library_sprite_preview_groups([
+        $groups = sfim_sprite_preview_groups([
             $this->icon('zeta--a'),
             $this->icon('alpha--b'),
         ]);
@@ -41,7 +41,7 @@ final class Test_Icon_Library_Sprite_Preview extends WP_UnitTestCase
 
     public function test_icons_without_prefix_form_a_trailing_group(): void
     {
-        $groups = icon_library_sprite_preview_groups([
+        $groups = sfim_sprite_preview_groups([
             $this->icon('plain_icon'),
             $this->icon('actions--check'),
         ]);
@@ -53,7 +53,7 @@ final class Test_Icon_Library_Sprite_Preview extends WP_UnitTestCase
 
     public function test_icons_within_a_group_are_sorted_by_id(): void
     {
-        $groups = icon_library_sprite_preview_groups([
+        $groups = sfim_sprite_preview_groups([
             $this->icon('actions--zeta'),
             $this->icon('actions--alpha'),
         ]);
@@ -63,6 +63,6 @@ final class Test_Icon_Library_Sprite_Preview extends WP_UnitTestCase
 
     public function test_empty_input_yields_empty_result(): void
     {
-        $this->assertSame([], icon_library_sprite_preview_groups([]));
+        $this->assertSame([], sfim_sprite_preview_groups([]));
     }
 }

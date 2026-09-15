@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Short URL `/i.svg` via the `icon_library_short_url` filter (Apache: flush permalinks once; Nginx: small config or symlink).
+- Short URL `/i.svg` via the `sfim_short_url` filter (Apache: flush permalinks once; Nginx: small config or symlink).
 - SVG sanitization of uploaded sprites (scripts, event handlers, `javascript:` links).
 - Automated dev releases from `main`.
 - `docs/api.md` API reference.
@@ -44,6 +44,6 @@ Initial release.
 - Symbol picker in the block editor with live preview, grid/list view and group filter.
 - Icon linking with new-tab, rel attributes and aria-label.
 - Per-block fill/stroke colours and width/height with unit selection.
-- Sprite override via the `icon_library_sprite_url` filter.
+- Sprite override via the `sfim_sprite_url` filter.
 - SVG sanitization on upload (scripts, event handlers, `javascript:` links).
 - Server-side rendering with `get_block_wrapper_attributes()`.

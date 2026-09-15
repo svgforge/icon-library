@@ -1,8 +1,8 @@
 /**
  * Pure helpers resolving Gutenberg block attribute values to CSS values.
  *
- * These mirror the PHP resolvers in icon-library.php
- * (icon_library_resolve_color() / icon_library_resolve_dimension()).
+ * These mirror the PHP resolvers in sf-icon-manager.php
+ * (sfim_resolve_color() / sfim_resolve_dimension()).
  *
  * @package
  */

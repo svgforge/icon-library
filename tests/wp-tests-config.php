@@ -5,12 +5,12 @@
  *
  * Environment variables override the defaults.
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 
 $table_prefix = 'wptests_';
 
-define('WP_TESTS_DOMAIN', getenv('WP_TESTS_DOMAIN') ?: 'icon-library.test');
+define('WP_TESTS_DOMAIN', getenv('WP_TESTS_DOMAIN') ?: 'sf-icon-manager.test');
 define('WP_TESTS_EMAIL', 'admin@example.test');
 define('WP_TESTS_TITLE', 'Icon Library Tests');
 define('WP_TESTS_NETWORK_TITLE', 'Icon Library Tests Network');

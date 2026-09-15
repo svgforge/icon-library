@@ -3,9 +3,9 @@
 /**
  * Short URL: rewrite /i.svg to serve the active sprite.
  *
- * Opt-in via the `icon_library_short_url` filter:
+ * Opt-in via the `sfim_short_url` filter:
  *
- *     add_filter('icon_library_short_url', '__return_true');
+ *     add_filter('sfim_short_url', '__return_true');
  *
  * When enabled the plugin registers a custom rewrite rule so that /i.svg
  * always resolves to the current sprite file — regardless of its actual
@@ -15,7 +15,7 @@
  * flushed once (Settings → Permalinks → Save, or `wp rewrite flush`);
  * Nginx needs a one-line include or symlink (see docs/nginx.md).
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 defined('ABSPATH') || exit;
 
@@ -27,9 +27,9 @@ defined('ABSPATH') || exit;
  *
  * @return bool
  */
-function icon_library_short_url_enabled(): bool
+function sfim_short_url_enabled(): bool
 {
-    return (bool) apply_filters('icon_library_short_url', false);
+    return (bool) apply_filters('sfim_short_url', false);
 }
 
 /**
@@ -39,24 +39,24 @@ function icon_library_short_url_enabled(): bool
  * .htaccess (Apache) contains the rule; disabling (removing the filter) then
  * removes it again after the next flush.
  */
-function icon_library_short_url_init(): void
+function sfim_short_url_init(): void
 {
-    if (icon_library_short_url_enabled()) {
-        add_rewrite_rule('^i\.svg/?$', 'index.php?icon_library_svg=1', 'top');
+    if (sfim_short_url_enabled()) {
+        add_rewrite_rule('^i\.svg/?$', 'index.php?sfim_svg=1', 'top');
     }
 }
-add_action('init', 'icon_library_short_url_init');
+add_action('init', 'sfim_short_url_init');
 
 /**
  * Registers the custom query variable so WordPress passes it through.
  */
-function icon_library_short_url_query_vars(array $vars): array
+function sfim_short_url_query_vars(array $vars): array
 {
-    $vars[] = 'icon_library_svg';
+    $vars[] = 'sfim_svg';
 
     return $vars;
 }
-add_filter('query_vars', 'icon_library_short_url_query_vars');
+add_filter('query_vars', 'sfim_short_url_query_vars');
 
 /**
  * Intercepts the request before WordPress resolves rewrite rules.
@@ -67,7 +67,7 @@ add_filter('query_vars', 'icon_library_short_url_query_vars');
  *
  * The path check runs before the filter so regular requests never evaluate it.
  */
-function icon_library_short_url_request(array $query): array
+function sfim_short_url_request(array $query): array
 {
     $path = wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 
@@ -75,30 +75,30 @@ function icon_library_short_url_request(array $query): array
         return $query;
     }
 
-    if (! icon_library_short_url_enabled()) {
+    if (! sfim_short_url_enabled()) {
         return $query;
     }
 
-    $query['icon_library_svg'] = 1;
+    $query['sfim_svg'] = 1;
 
     return $query;
 }
-add_filter('request', 'icon_library_short_url_request');
+add_filter('request', 'sfim_short_url_request');
 
 /**
  * Serves the sprite file when the short-URL query variable is present.
  */
-function icon_library_short_url_serve(): void
+function sfim_short_url_serve(): void
 {
-    if (! get_query_var('icon_library_svg')) {
+    if (! get_query_var('sfim_svg')) {
         return;
     }
 
-    if (! icon_library_short_url_enabled()) {
+    if (! sfim_short_url_enabled()) {
         return;
     }
 
-    $sprite = icon_library_current_sprite();
+    $sprite = sfim_current_sprite();
 
     // Local file — most common case (uploads directory, bundled fallback).
     if ($sprite['path'] !== '' && is_readable($sprite['path'])) {
@@ -140,4 +140,4 @@ function icon_library_short_url_serve(): void
     nocache_headers();
     exit;
 }
-add_action('template_redirect', 'icon_library_short_url_serve', 1);
+add_action('template_redirect', 'sfim_short_url_serve', 1);

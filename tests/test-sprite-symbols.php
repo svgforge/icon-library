@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Tests for icon_library_sprite_symbols().
+ * Tests for sfim_sprite_symbols().
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 
 /**
@@ -16,10 +16,10 @@ final class Test_Icon_Library_Sprite_Symbols extends WP_UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        delete_option(ICON_LIBRARY_SPRITE_OPTION);
-        remove_all_filters('icon_library_sprite_url');
+        delete_option(SFIM_SPRITE_OPTION);
+        remove_all_filters('sfim_sprite_url');
 
-        $this->temp = (string) tempnam(sys_get_temp_dir(), 'icon-library-sprite') . '.svg';
+        $this->temp = (string) tempnam(sys_get_temp_dir(), 'sf-icon-manager-sprite') . '.svg';
     }
 
     protected function tearDown(): void
@@ -35,7 +35,7 @@ final class Test_Icon_Library_Sprite_Symbols extends WP_UnitTestCase
     {
         file_put_contents($this->temp, $svg);
 
-        update_option(ICON_LIBRARY_SPRITE_OPTION, [
+        update_option(SFIM_SPRITE_OPTION, [
             'url' => 'https://example.test/tmp/sprite.svg',
             'path' => $this->temp,
             'time' => 1,
@@ -51,7 +51,7 @@ final class Test_Icon_Library_Sprite_Symbols extends WP_UnitTestCase
             . '<symbol id="zeta"/></svg>',
         );
 
-        $this->assertSame(['alpha', 'zeta'], icon_library_sprite_symbols());
+        $this->assertSame(['alpha', 'zeta'], sfim_sprite_symbols());
     }
 
     public function test_returns_symbols_without_core_shape_filter(): void
@@ -63,7 +63,7 @@ final class Test_Icon_Library_Sprite_Symbols extends WP_UnitTestCase
             . '<symbol id="path-only"><path d="M0 0"/></symbol></svg>',
         );
 
-        $this->assertSame(['circle-only', 'no-shape', 'path-only'], icon_library_sprite_symbols());
+        $this->assertSame(['circle-only', 'no-shape', 'path-only'], sfim_sprite_symbols());
     }
 
     public function test_ignores_symbols_without_id(): void
@@ -74,13 +74,13 @@ final class Test_Icon_Library_Sprite_Symbols extends WP_UnitTestCase
             . '<symbol id="ok"><path d="M0 0"/></symbol></svg>',
         );
 
-        $this->assertSame(['ok'], icon_library_sprite_symbols());
+        $this->assertSame(['ok'], sfim_sprite_symbols());
     }
 
     public function test_returns_empty_for_invalid_svg(): void
     {
         $this->set_sprite('<svg xmlns="http://www.w3.org/2000/svg"><symbol id="broken">');
 
-        $this->assertSame([], icon_library_sprite_symbols());
+        $this->assertSame([], sfim_sprite_symbols());
     }
 }

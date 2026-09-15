@@ -3,23 +3,23 @@
 /**
  * Shared SVG sprite option helpers (frontend + admin).
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 defined('ABSPATH') || exit;
 
 /**
  * Options key for the uploaded SVG sprite file.
  */
-const ICON_LIBRARY_SPRITE_OPTION = 'icon_library_sprite';
+const SFIM_SPRITE_OPTION = 'sfim_sprite';
 
 /**
  * Returns the stored data of the uploaded SVG sprite file.
  *
  * @return array{url: string, path: string, name: string, time: int, symbols: int}|array{}
  */
-function icon_library_uploaded_sprite_data(): array
+function sfim_uploaded_sprite_data(): array
 {
-    $data = get_option(ICON_LIBRARY_SPRITE_OPTION, []);
+    $data = get_option(SFIM_SPRITE_OPTION, []);
 
     if (! is_array($data) || ! isset($data['url'], $data['path'])) {
         return [];
@@ -33,9 +33,9 @@ function icon_library_uploaded_sprite_data(): array
  *
  * @return string
  */
-function icon_library_uploaded_sprite_url(): string
+function sfim_uploaded_sprite_url(): string
 {
-    $data = icon_library_uploaded_sprite_data();
+    $data = sfim_uploaded_sprite_data();
 
     return $data['url'] ?? '';
 }

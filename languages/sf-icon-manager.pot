@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Icon Library 0.2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/icon-library\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sf-icon-manager\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
-#: icon-library.php
+#: sf-icon-manager.php
 #: src/admin/admin.php:49
 #: src/admin/admin.php:50
 #: src/admin/admin.php:277
@@ -23,12 +23,12 @@ msgid "Icon Library"
 msgstr ""
 
 #. Description of the plugin
-#: icon-library.php
+#: sf-icon-manager.php
 msgid "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them."
 msgstr ""
 
 #. Author of the plugin
-#: icon-library.php
+#: sf-icon-manager.php
 msgid "svgforge"
 msgstr ""
 
@@ -48,7 +48,7 @@ msgid "Sprite preview"
 msgstr ""
 
 #: src/admin/admin.php:315
-msgid "Filter icon_library_sprite_url"
+msgid "Filter sfim_sprite_url"
 msgstr ""
 
 #: src/admin/admin.php:319
@@ -84,7 +84,7 @@ msgid "The file could not be written."
 msgstr ""
 
 #: src/admin/admin.php:335
-msgid "Uploading is disabled because the sprite file is overridden by the icon_library_sprite_url filter."
+msgid "Uploading is disabled because the sprite file is overridden by the sfim_sprite_url filter."
 msgstr ""
 
 #: src/admin/admin.php:336
@@ -92,7 +92,7 @@ msgid "The native icon integration setting was saved."
 msgstr ""
 
 #: src/admin/admin.php:351
-msgid "The sprite file is currently overridden by the icon_library_sprite_url filter. Uploading a sprite file is disabled while the filter is active."
+msgid "The sprite file is currently overridden by the sfim_sprite_url filter. Uploading a sprite file is disabled while the filter is active."
 msgstr ""
 
 #: src/admin/admin.php:355
@@ -176,7 +176,7 @@ msgid "On"
 msgstr ""
 
 #: src/admin/admin.php:472
-msgid "Every symbol of the configured sprite is registered as an icon in the icon-library collection — available in the built-in Icon block picker, the wp/v2 icons REST API and wp_get_icon()."
+msgid "Every symbol of the configured sprite is registered as an icon in the sf-icon-manager collection — available in the built-in Icon block picker, the wp/v2 icons REST API and wp_get_icon()."
 msgstr ""
 
 #: src/admin/admin.php:479

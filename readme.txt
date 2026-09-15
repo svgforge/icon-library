@@ -1,4 +1,4 @@
-=== Icon Library ===
+=== SVG Forge Icon Manager ===
 Authors: wpdynamics
 Contributors: wpdynamics
 Tags: svg, icons, sprite, gutenberg
@@ -13,7 +13,7 @@ SVG Icon Block: inserts icons from your own SVG sprite via <use>, can link them.
 
 == Description ==
 
-The Icon Library Block loads a central SVG sprite file (by default the bundled `sprite.svg`), shows all contained `<symbol>` elements in a convenient picker and inserts the selected icon as `<svg><use href="/wp-content/plugins/icon-library/sprite.svg#symbol-id">` into your content.
+The Icon Library Block loads a central SVG sprite file (by default the bundled `sprite.svg`), shows all contained `<symbol>` elements in a convenient picker and inserts the selected icon as `<svg><use href="/wp-content/plugins/sf-icon-manager/sprite.svg#symbol-id">` into your content.
 
 The SVG fragment is rendered on the server, so visitors receive fast, static HTML with no extra requests and no JavaScript on the frontend. Since you own the sprite file, every icon stays small, cacheable and fully under your control — exactly the way a hand-built icon set should be maintained.
 
@@ -39,7 +39,7 @@ Limitations you should know about:
 = Features =
 
 * Settings page (Settings → Icon Library) to upload the SVG sprite file — svgforge-cli handles full sanitization and svgo optimization, the plugin strips scripts, event handlers and `javascript:` links as a safety net.
-* Theme override via the `icon_library_sprite_url` filter (e.g. `get_theme_file_uri()`) – the filter has priority over everything.
+* Theme override via the `sfim_sprite_url` filter (e.g. `get_theme_file_uri()`) – the filter has priority over everything.
 * Symbol picker in the editor with a live preview of all icons from the sprite; icons from sprite subdirectories (IDs like `directory--filename`) are grouped and selectable via a filter in the dropdown.
 * Icons can be linked (new tab + rel attributes including noopener/noreferrer).
 * Aria-label for screen readers; linked icons are automatically labelled via the link.
@@ -51,17 +51,17 @@ Limitations you should know about:
 
 The SVG sprite file is resolved in this order (first existing source wins):
 
-1. Filter `icon_library_sprite_url` – the canonical override (has priority).
+1. Filter `sfim_sprite_url` – the canonical override (has priority).
 2. Uploaded file from Settings → Icon Library (backend upload).
 3. Fallback: `sprite.svg` in the plugin directory.
 
 Override with a filter (recommended, versionable with the theme) in the theme's `functions.php`:
 
-    add_filter( 'icon_library_sprite_url', fn () => get_theme_file_uri( 'assets/ico.svg' ) );
+    add_filter( 'sfim_sprite_url', fn () => get_theme_file_uri( 'assets/ico.svg' ) );
 
 or point it at a CDN:
 
-    add_filter( 'icon_library_sprite_url', fn () => 'https://cdn.example.com/icons/ico.svg' );
+    add_filter( 'sfim_sprite_url', fn () => 'https://cdn.example.com/icons/ico.svg' );
 
 Icon Library is a developer-focused Gutenberg block that arranges a curated set of SVG icons as one central sprite and reuses them everywhere in your content. It works with any symbol sprite produced by modern build tools, is fully translated, and gives you precise control over colours, size, links and accessibility on every single block instance. The plugin prefers simplicity and performance: no tracking, no external requests, no page-weight overhead, and no vendor lock-in to a particular icon pack or service.
 
@@ -69,7 +69,7 @@ Icon Library is a developer-focused Gutenberg block that arranges a curated set 
 
 1. Upload the plugin folder to `/wp-content/plugins/` (or install the ZIP via Plugins → Add New).
 2. Activate the plugin under "Plugins".
-3. Upload the sprite file (`ico.svg` with `<symbol id="...">` elements) via **Settings → Icon Library** or reference your own file with the `icon_library_sprite_url` filter.
+3. Upload the sprite file (`ico.svg` with `<symbol id="...">` elements) via **Settings → Icon Library** or reference your own file with the `sfim_sprite_url` filter.
 4. In the editor, add the "SVG Icon" block and choose an icon.
 
 == Frequently Asked Questions ==
@@ -80,7 +80,7 @@ From the central sprite file `ico.svg`. Each icon is a `<symbol id="my-icon" vie
 
 = Why not simply use the native SVG icons of WordPress 7.1? =
 
-WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Since 0.2 the plugin can also register every symbol of that sprite as an `icon-library` collection (experimental), so the same sprite feeds the native Icon block and `wp_get_icon()` too — see the "WordPress native icon integration" setting.
+WordPress 7.1 offers a native icon system with `wp_register_icon_collection()` / `wp_register_icon()` / `wp_get_icon()` — that is enough if you register a few icons directly in code. This plugin complements that where a central SVG sprite is used: full SVG freedom (including stroke icons), existing sprites without per-icon PHP code, a single cacheable file and per-instance block styling. Since 0.2 the plugin can also register every symbol of that sprite as an `sf-icon-manager` collection (experimental), so the same sprite feeds the native Icon block and `wp_get_icon()` too — see the "WordPress native icon integration" setting.
 
 = Does it work without JS in the frontend? =
 
@@ -95,7 +95,7 @@ Put the block's color settings into your theme's `theme.json`:
     "version": 3,
     "settings": {
         "blocks": {
-            "icon-library/svg-icon": {
+            "sf-icon-manager/svg-icon": {
                 "color": { "custom": false, "palette": [] }
             }
         }
@@ -114,7 +114,7 @@ The size is the standard Gutenberg Dimensions panel (`supports.dimensions.width`
     "version": 3,
     "settings": {
         "blocks": {
-            "icon-library/svg-icon": {
+            "sf-icon-manager/svg-icon": {
                 "dimensions": {
                     "dimensionSizes": [
                         { "name": "S", "slug": "s", "size": "32px" },
@@ -136,12 +136,12 @@ With presets the panel shows a slider that moves across the preset sizes, like t
 
 == Development ==
 
-Development is done on [GitHub](https://github.com/svgforge/icon-library).
+Development is done on [GitHub](https://github.com/svgforge/sf-icon-manager).
 
 == Changelog ==
 
 = 0.3.0 =
-* Short URL `/i.svg` for the sprite, opt-in via the `icon_library_short_url` filter.
+* Short URL `/i.svg` for the sprite, opt-in via the `sfim_short_url` filter.
 * Stricter upload sanitization (allowlist via enshrined/svg-sanitize instead of regex); automated dev releases from `main`; the plugin ZIP ships its vendored dependencies.
 * Type declarations across the source (PHP 8.3+); padding applies to the SVG element, not the wrapper.
 * New `docs/api.md` API reference; settings page shows the short URL under "Active sprite file".
@@ -151,7 +151,7 @@ Development is done on [GitHub](https://github.com/svgforge/icon-library).
 * Remove the now-discouraged `load_plugin_textdomain()` call; WordPress loads translations for the plugin slug automatically.
 
 = 0.2.0 =
-* WordPress 7.1 native icon integration (experimental): symbols of the configured sprite are registered as an `icon-library` icon collection (setting "WordPress native icon integration", default Off).
+* WordPress 7.1 native icon integration (experimental): symbols of the configured sprite are registered as an `sf-icon-manager` icon collection (setting "WordPress native icon integration", default Off).
 * New setting mode "Off + disable core Icon block" deregisters the built-in Icon block in the editor (including in content) and its frontend rendering.
 * Registration is lazy: it only runs when needed (core Icon block or REST), keeping page-load cost independent of the icon count.
 

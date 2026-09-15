@@ -26,7 +26,7 @@ $dimensions_styles = isset($attributes['style']['dimensions']) && is_array($attr
     : [];
 
 if (isset($dimensions_styles['width']) && $dimensions_styles['width'] !== '') {
-    $width = icon_library_resolve_dimension(sanitize_text_field((string) $dimensions_styles['width']));
+    $width = sfim_resolve_dimension(sanitize_text_field((string) $dimensions_styles['width']));
 }
 
 // Legacy fallback for blocks saved before the standard Dimensions support:
@@ -46,14 +46,14 @@ if ($height === '') {
 $opens_in_new_tab = ! empty($attributes['opensInNewTab']);
 
 if ($symbol_id === '') {
-    echo '<div class="svg-icon__placeholder">' . esc_html__('Select symbol …', 'svg-forge-icon-manager') . '</div>';
+    echo '<div class="svg-icon__placeholder">' . esc_html__('Select symbol …', 'sf-icon-manager') . '</div>';
     return '';
 }
 
 // Sprite URL: filter, upload, or fallback.
-$sprite_base = function_exists('icon_library_sprite_url')
-    ? icon_library_sprite_url()
-    : plugins_url('sprite.svg', dirname(__DIR__, 2) . '/svg-forge-icon-manager.php');
+$sprite_base = function_exists('sfim_sprite_url')
+    ? sfim_sprite_url()
+    : plugins_url('sprite.svg', dirname(__DIR__, 2) . '/sf-icon-manager.php');
 
 if (strpos($sprite_base, '#') === false) {
     $svg_href = esc_url(rtrim($sprite_base, '#') . '#' . $symbol_id);
@@ -79,12 +79,12 @@ $background_color = isset($color['background'])
     : (isset($attributes['backgroundColor']) ? (string) $attributes['backgroundColor'] : '');
 
 if ($text_color !== '') {
-    $style .= 'color:' . esc_attr(icon_library_resolve_color($text_color)) . ';';
+    $style .= 'color:' . esc_attr(sfim_resolve_color($text_color)) . ';';
     $svg_classes[] = 'has-text-color';
 }
 
 if ($background_color !== '') {
-    $style .= 'background-color:' . esc_attr(icon_library_resolve_color($background_color)) . ';';
+    $style .= 'background-color:' . esc_attr(sfim_resolve_color($background_color)) . ';';
     $svg_classes[] = 'has-background';
 }
 
@@ -96,7 +96,7 @@ $padding = isset($attributes['style']['spacing']['padding']) && is_array($attrib
 
 foreach (['top', 'right', 'bottom', 'left'] as $side) {
     if (isset($padding[$side]) && $padding[$side] !== '') {
-        $style .= 'padding-' . $side . ':' . esc_attr(icon_library_resolve_spacing((string) $padding[$side])) . ';';
+        $style .= 'padding-' . $side . ':' . esc_attr(sfim_resolve_spacing((string) $padding[$side])) . ';';
     }
 }
 
@@ -126,7 +126,7 @@ if ($url !== '') {
 
     echo wp_kses(
         '<a ' . $wrapper . ' href="' . $url . '"' . $target . $rel_attr . $aria . '>' . $svg . '</a>',
-        icon_library_allowed_svg_kses(),
+        sfim_allowed_svg_kses(),
     );
     return '';
 }
@@ -135,6 +135,6 @@ $wrapper = get_block_wrapper_attributes(['class' => 'svg-icon']);
 
 echo wp_kses(
     '<div ' . $wrapper . '>' . $svg . '</div>',
-    icon_library_allowed_svg_kses(),
+    sfim_allowed_svg_kses(),
 );
 return '';

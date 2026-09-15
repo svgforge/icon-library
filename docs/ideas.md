@@ -21,7 +21,7 @@ fragment renders nothing. `<img>` therefore needs one of:
 - a second `view`-based sprite (viewBox clipping; collision-prone when icons
   have heterogeneous sizes), or
 - one standalone SVG per icon, e.g. an endpoint `/icon/<slug>.svg` generated
-  from `icon_library_parse_sprite_icons()` / `icon_library_icon_shape()`, served
+  from `sfim_parse_sprite_icons()` / `sfim_icon_shape()`, served
   with `immutable` cache headers and the same rewrite/serve infrastructure as
   the short URL — or
 - an `svgView(viewBox(...))` fragment (comma escaping in URLs is awkward).

@@ -65,8 +65,8 @@ interface SymbolOption {
 }
 
 const SPRITE_URL =
-	window.iconLibrarySettings?.spriteUrl ||
-	'/wp-content/plugins/svg-forge-icon-manager/sprite.svg';
+	window.sfimSettings?.spriteUrl ||
+	'/wp-content/plugins/sf-icon-manager/sprite.svg';
 
 export default function Edit( {
 	attributes,
@@ -130,7 +130,7 @@ export default function Edit( {
 					setError(
 						__(
 							'Could not load the icon sprite',
-							'svg-forge-icon-manager'
+							'sf-icon-manager'
 						)
 					);
 				}
@@ -161,7 +161,7 @@ export default function Edit( {
 
 	const groupOptions = useMemo< SymbolOption[] >( () => {
 		const opts: SymbolOption[] = [
-			{ value: 'all', label: __( 'All', 'svg-forge-icon-manager' ) },
+			{ value: 'all', label: __( 'All', 'sf-icon-manager' ) },
 		];
 		[ ...groups.keys() ]
 			.filter( Boolean )
@@ -282,34 +282,28 @@ export default function Edit( {
 							setIsIconPickerOpen( true );
 						} }
 					>
-						{ __( 'Replace', 'svg-forge-icon-manager' ) }
+						{ __( 'Replace', 'sf-icon-manager' ) }
 					</ToolbarButton>
 					<ToolbarButton
 						icon="admin-links"
-						label={ __(
-							'Insert/edit link',
-							'svg-forge-icon-manager'
-						) }
+						label={ __( 'Insert/edit link', 'sf-icon-manager' ) }
 						onClick={ () => setIsLinkPickerOpen( ( v ) => ! v ) }
 					/>
 					{ url ? (
 						<ToolbarButton
 							icon="editor-unlink"
-							label={ __(
-								'Remove link',
-								'svg-forge-icon-manager'
-							) }
+							label={ __( 'Remove link', 'sf-icon-manager' ) }
 							onClick={ () => setAttributes( { url: '' } ) }
 						/>
 					) : null }
 				</ToolbarGroup>
 			</BlockControls>
 			<InspectorControls>
-				<PanelBody title={ __( 'SVG', 'svg-forge-icon-manager' ) }>
+				<PanelBody title={ __( 'SVG', 'sf-icon-manager' ) }>
 					<TextControl
 						label={ __(
 							'Aria label (for screen readers, when not linked)',
-							'svg-forge-icon-manager'
+							'sf-icon-manager'
 						) }
 						value={ label || '' }
 						onChange={ ( val ) =>
@@ -317,7 +311,7 @@ export default function Edit( {
 						}
 						help={ __(
 							'Sets the aria-label on the SVG. For links the aria-label is set on the <a>.',
-							'svg-forge-icon-manager'
+							'sf-icon-manager'
 						) }
 					/>
 				</PanelBody>
@@ -326,7 +320,7 @@ export default function Edit( {
 
 			{ isIconPickerOpen && (
 				<Modal
-					title={ __( 'Select symbol', 'svg-forge-icon-manager' ) }
+					title={ __( 'Select symbol', 'sf-icon-manager' ) }
 					onRequestClose={ () => setIsIconPickerOpen( false ) }
 					className="svg-icon__modal"
 					size="large"
@@ -342,7 +336,7 @@ export default function Edit( {
 								/>
 							) }
 							<ToggleGroupControl
-								label={ __( 'View', 'svg-forge-icon-manager' ) }
+								label={ __( 'View', 'sf-icon-manager' ) }
 								value={ view }
 								hideLabelFromVision
 								onChange={ ( value ) =>
@@ -353,20 +347,14 @@ export default function Edit( {
 							>
 								<ToggleGroupControlOptionIcon
 									value="grid"
-									label={ __(
-										'Grid',
-										'svg-forge-icon-manager'
-									) }
+									label={ __( 'Grid', 'sf-icon-manager' ) }
 									icon={
 										<span className="dashicons dashicons-grid-view" />
 									}
 								/>
 								<ToggleGroupControlOptionIcon
 									value="list"
-									label={ __(
-										'List',
-										'svg-forge-icon-manager'
-									) }
+									label={ __( 'List', 'sf-icon-manager' ) }
 									icon={
 										<span className="dashicons dashicons-list-view" />
 									}
@@ -509,7 +497,7 @@ export default function Edit( {
 					</div>
 				) : (
 					<div className="svg-icon__placeholder">
-						{ __( 'Select symbol …', 'svg-forge-icon-manager' ) }
+						{ __( 'Select symbol …', 'sf-icon-manager' ) }
 					</div>
 				) }
 			</div>

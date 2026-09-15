@@ -1,4 +1,4 @@
-# Icon Library
+# SVG Forge Icon Manager
 
 Gutenberg plugin that inserts SVG icons from a central SVG sprite file (`ico.svg`) via `<use>` and links them. The sprite file can be uploaded directly from a settings page as an SVG fragment library or [theme override](#override-with-a-filter-recommended-git-versionable).
 
@@ -58,33 +58,33 @@ npm install --global @svgforge/svgforge-cli
 svgforge --symbol --dest=out 'assets/./**/*.svg'
 ```
 
-svgforge-cli sanitizes the SVG (stripping scripts, event handlers and `javascript:` links) and optimizes the output with svgo. The `./` keeps the relative paths, so files in subdirectories become `directory--filename` IDs — each directory is then a filter group in the icon picker. The generated sprite can be uploaded via the settings page or referenced from the theme via the `icon_library_sprite_url` filter, see below.
+svgforge-cli sanitizes the SVG (stripping scripts, event handlers and `javascript:` links) and optimizes the output with svgo. The `./` keeps the relative paths, so files in subdirectories become `directory--filename` IDs — each directory is then a filter group in the icon picker. The generated sprite can be uploaded via the settings page or referenced from the theme via the `sfim_sprite_url` filter, see below.
 
 The SVG sprite file is resolved in this order (the first existing source wins):
 
-1. **Filter `icon_library_sprite_url`** – the canonical override (theme file, CDN). **Has priority.**
+1. **Filter `sfim_sprite_url`** – the canonical override (theme file, CDN). **Has priority.**
 2. **Upload from settings** – file uploaded via the settings page.
-3. **Fallback `sprite.svg`** bundled with the plugin (`wp-content/plugins/icon-library/sprite.svg`).
+3. **Fallback `sprite.svg`** bundled with the plugin (`wp-content/plugins/sf-icon-manager/sprite.svg`).
 
 ### Override with a filter (recommended, Git-versionable)
 
 In your theme's `functions.php`, return the URL of your own sprite file — the file then lives in the theme repo and is versioned with the theme:
 
 ```php
-add_filter( 'icon_library_sprite_url', fn () => get_theme_file_uri( 'assets/ico.svg' ) );
+add_filter( 'sfim_sprite_url', fn () => get_theme_file_uri( 'assets/ico.svg' ) );
 ```
 
 or point it at a CDN:
 
 ```php
-add_filter( 'icon_library_sprite_url', fn () => 'https://cdn.example.com/icons/ico.svg' );
+add_filter( 'sfim_sprite_url', fn () => 'https://cdn.example.com/icons/ico.svg' );
 ```
 
 The filter is the only supported override mechanism and wins over everything, including a backend upload.
 
 ## WordPress 7.1 native icon integration (experimental)
 
-On WordPress >= 7.1 the plugin can register every `<symbol>` of the configured sprite as an `icon-library` collection via `wp_register_icon()`. The same sprite then also powers the **core Icon block** and `wp_get_icon()`, in addition to the SVG Icon block.
+On WordPress >= 7.1 the plugin can register every `<symbol>` of the configured sprite as an `sf-icon-manager` collection via `wp_register_icon()`. The same sprite then also powers the **core Icon block** and `wp_get_icon()`, in addition to the SVG Icon block.
 
 > **Experimental:** this integration relies on the brand-new WordPress 7.1 icon API and core's strict sanitizer. The behavior may change as that API evolves; treat it as opt-in and test carefully.
 
@@ -107,7 +107,7 @@ Colors follow the standard Gutenberg block color controls (`supports.color`, lik
 	"version": 3,
 	"settings": {
 		"blocks": {
-			"icon-library/svg-icon": {
+			"sf-icon-manager/svg-icon": {
 				"color": { "custom": false, "palette": [] }
 			}
 		}
@@ -124,7 +124,7 @@ The **Size** is the standard Gutenberg Dimensions panel (`supports.dimensions.wi
 	"version": 3,
 	"settings": {
 		"blocks": {
-			"icon-library/svg-icon": {
+			"sf-icon-manager/svg-icon": {
 				"dimensions": {
 					"dimensionSizes": [
 						{ "name": "S", "slug": "s", "size": "32px" },
