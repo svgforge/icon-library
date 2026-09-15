@@ -8,7 +8,10 @@
 	"files": [
 		"build",
 		"languages/*.pot",
-		"src",
+		"src/admin",
+		"src/native",
+		"src/sprite.php",
+		"src/short-url.php",
 		"vendor/autoload.php",
 		"vendor/composer/autoload_real.php",
 		"vendor/composer/autoload_static.php",
