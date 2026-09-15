@@ -9,7 +9,12 @@
 		"build",
 		"languages/*.pot",
 		"src",
-		"vendor",
+		"vendor/autoload.php",
+		"vendor/composer/autoload_real.php",
+		"vendor/composer/autoload_static.php",
+		"vendor/composer/ClassLoader.php",
+		"vendor/composer/platform_check.php",
+		"vendor/enshrined",
 		"sprite.svg",
 		"readme.txt",
 		"sf-icon-manager.php"
@@ -25,7 +30,7 @@
 		"typecheck": "tsc --noEmit",
 		"test-unit-js": "wp-scripts test-unit-js",
 		"check-engines": "wp-scripts check-engines",
-		"plugin-zip": "wp-scripts plugin-zip",
+		"plugin-zip": "composer install --no-dev --no-interaction --quiet && wp-scripts plugin-zip && composer install --no-interaction --quiet",
 		"prepare": "husky"
 	},
 	"dependencies": {

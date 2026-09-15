@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/i.svg` (short URL) was served as `Cache-Control: public, max-age=31536000, immutable`, so browsers kept a stale sprite for a year and the admin preview showed no icons until a hard refresh. The local-file branch now revalidates on every request (`no-cache, must-revalidate`) with actual `304 Not Modified` responses for matching `ETag`/`Last-Modified`, so a sprite change is picked up immediately.
+
 ## [0.3.0] - 2026-09-14
 
 ### Added
