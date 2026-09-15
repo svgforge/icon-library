@@ -140,14 +140,18 @@ Varnish/HTTP caching:
 | Header | Local file | Remote (proxied) |
 |--------|------------|-------------------|
 | `Content-Type` | `image/svg+xml; charset=utf-8` | `image/svg+xml; charset=utf-8` |
-| `Cache-Control` | `public, max-age=31536000, immutable` | `public, max-age=300` |
+| `Cache-Control` | `public, no-cache, must-revalidate` | `public, max-age=300` |
 | `ETag` | `md5(path + filemtime)` | — |
 | `Last-Modified` | file mtime | — |
 | `Vary` | `Accept-Encoding` | `Accept-Encoding` |
 
-**Cache invalidation:** the `ETag`/`Last-Modified` pair is derived from the
-file's modification time, so a new sprite upload immediately invalidates
-every cache — no manual purge of the sprite URL is required.
+**Cache invalidation:** `/i.svg` is a stable pointer to the *active* sprite,
+so it must revalidate on every request. The `ETag`/`Last-Modified` pair is
+derived from the file's modification time; a matching `If-None-Match` /
+`If-Modified-Since` request gets a `304 Not Modified`, and a new sprite
+upload (which changes the mtime) is picked up automatically — no manual
+purge is required. Serving `immutable` here would wrongly pin the sprite
+for a year and show stale icons until a hard refresh.
 
 **Error handling:** returns a `404` (with `nocache_headers()`) when no
 sprite is available.

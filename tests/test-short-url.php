@@ -88,4 +88,31 @@ final class Test_Icon_Library_Short_Url extends WP_UnitTestCase
 
         $this->assertSame(1, $query['sfim_svg'] ?? null);
     }
+
+    public function test_validator_hit_on_matching_strong_etag(): void
+    {
+        $this->assertTrue(sfim_short_url_validator_hit('"abc"', '"abc"', '', ''));
+    }
+
+    public function test_validator_hit_on_matching_weak_etag(): void
+    {
+        $this->assertTrue(sfim_short_url_validator_hit('W/"abc"', '"abc"', '', ''));
+    }
+
+    public function test_validator_hit_on_matching_last_modified(): void
+    {
+        $modified = 'Mon, 14 Sep 2026 09:00:00 GMT';
+
+        $this->assertTrue(sfim_short_url_validator_hit('', '"abc"', $modified, $modified));
+    }
+
+    public function test_validator_miss_on_other_etag(): void
+    {
+        $this->assertFalse(sfim_short_url_validator_hit('"other"', '"abc"', '', ''));
+    }
+
+    public function test_validator_miss_without_any_validator(): void
+    {
+        $this->assertFalse(sfim_short_url_validator_hit('', '"abc"', '', ''));
+    }
 }

@@ -86,6 +86,31 @@ function sfim_short_url_request(array $query): array
 add_filter('request', 'sfim_short_url_request');
 
 /**
+ * Returns whether the client's cached copy is still valid.
+ *
+ * Compares the `If-None-Match` ETag and the `If-Modified-Since` date against
+ * the validators of the current sprite file. Accepts a weak `W/` prefix on the
+ * ETag: browsers echo back whatever validator they last stored, and origins
+ * weaken strong tags (e.g. nginx gzip turns `"…"` into `W/"…"`).
+ */
+function sfim_short_url_validator_hit(
+    string $if_none_match,
+    string $etag,
+    string $if_modified,
+    string $modified,
+): bool {
+    if ($if_modified !== '' && $if_modified === $modified) {
+        return true;
+    }
+
+    if ($if_none_match === '') {
+        return false;
+    }
+
+    return preg_replace('/^W\//', '', $if_none_match) === $etag;
+}
+
+/**
  * Serves the sprite file when the short-URL query variable is present.
  */
 function sfim_short_url_serve(): void
@@ -104,13 +129,30 @@ function sfim_short_url_serve(): void
     if ($sprite['path'] !== '' && is_readable($sprite['path'])) {
         $mtime = @filemtime($sprite['path']);
 
+        // /i.svg is a stable pointer to the ACTIVE sprite: its content changes
+        // whenever the source or file changes (upload, filter override, plugin
+        // update). It must therefore be revalidated, not cached immutably — a
+        // long-lived or immutable entry would keep serving a stale sprite
+        // (blank previews, missing symbols) until a hard refresh. The
+        // ETag/Last-Modified validators make each revalidation cheap (304).
         header('Content-Type: image/svg+xml; charset=utf-8');
-        header('Cache-Control: public, max-age=31536000, immutable');
+        header('Cache-Control: public, no-cache, must-revalidate');
         header('Vary: Accept-Encoding');
 
         if ($mtime) {
-            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $mtime) . ' GMT');
-            header('ETag: "' . md5($sprite['path'] . $mtime) . '"');
+            $etag     = '"' . md5($sprite['path'] . $mtime) . '"';
+            $modified = gmdate('D, d M Y H:i:s', $mtime) . ' GMT';
+
+            header('ETag: ' . $etag);
+            header('Last-Modified: ' . $modified);
+
+            $if_none_match = (string) sanitize_text_field(wp_unslash($_SERVER['HTTP_IF_NONE_MATCH'] ?? ''));
+            $if_modified   = (string) sanitize_text_field(wp_unslash($_SERVER['HTTP_IF_MODIFIED_SINCE'] ?? ''));
+
+            if (sfim_short_url_validator_hit($if_none_match, $etag, $if_modified, $modified)) {
+                status_header(304);
+                exit;
+            }
         }
 
         status_header(200);
