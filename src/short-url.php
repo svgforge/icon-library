@@ -69,7 +69,7 @@ add_filter('query_vars', 'sfim_short_url_query_vars');
  */
 function sfim_short_url_request(array $query): array
 {
-    $path = wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    $path = wp_parse_url(sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'] ?? '')), PHP_URL_PATH);
 
     if (preg_match('#(^|/)i\.svg/?$#', (string) $path) !== 1) {
         return $query;
@@ -114,6 +114,7 @@ function sfim_short_url_serve(): void
         }
 
         status_header(200);
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Streams the sprite file without buffering it into memory.
         readfile($sprite['path']);
         exit;
     }
@@ -130,6 +131,7 @@ function sfim_short_url_serve(): void
                 header('Cache-Control: public, max-age=300');
                 header('Vary: Accept-Encoding');
                 status_header(200);
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Raw SVG document served with text/xml headers; escaping would corrupt the markup.
                 echo $body;
                 exit;
             }

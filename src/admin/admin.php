@@ -10,13 +10,13 @@ defined('ABSPATH') || exit;
 require_once dirname(__DIR__) . '/sprite.php';
 
 /**
- * Registers the settings page under Settings → Icon Library.
+ * Registers the settings page under Settings → SVG Forge Icon Manager.
  */
 function sfim_register_settings_page(): void
 {
     add_options_page(
-        __('Icon Library', 'sf-icon-manager'),
-        __('Icon Library', 'sf-icon-manager'),
+        __('SVG Forge Icon Manager', 'sf-icon-manager'),
+        __('SVG Forge Icon Manager', 'sf-icon-manager'),
         'manage_options',
         'sf-icon-manager',
         'sfim_settings_page',
@@ -110,6 +110,7 @@ function sfim_handle_sprite_upload(): void
         sfim_settings_redirect('error_upload');
     }
 
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every $_FILES field is validated below (wp_unslash + sanitize_file_name; tmp_name as string with is_readable()).
     $file = $_FILES['sfim_sprite'];
     $tmp = (string) $file['tmp_name'];
 
@@ -245,6 +246,7 @@ function sfim_settings_page(): void
 
     $tab = 'settings';
 
+    // phpcs:disable WordPress.Security.NonceVerification -- Read-only display state (tab). Values are sanitized with sanitize_key() and change nothing.
     if (isset($_GET['tab'])) {
         $requested = sanitize_key(wp_unslash($_GET['tab']));
 
@@ -252,10 +254,11 @@ function sfim_settings_page(): void
             $tab = $requested;
         }
     }
+    // phpcs:enable WordPress.Security.NonceVerification
 
     ?>
     <div class="wrap">
-        <h1><?php echo esc_html__('Icon Library', 'sf-icon-manager'); ?></h1>
+        <h1><?php echo esc_html__('SVG Forge Icon Manager', 'sf-icon-manager'); ?></h1>
 
         <nav class="nav-tab-wrapper">
             <a class="nav-tab<?php echo 'settings' === $tab ? ' nav-tab-active' : ''; ?>" href="<?php echo esc_url(admin_url('options-general.php?page=sf-icon-manager')); ?>">
@@ -320,9 +323,11 @@ function sfim_settings_panel(): void
         'native_updated' => ['success', __('The native icon integration setting was saved.', 'sf-icon-manager')],
     ];
 
+    // phpcs:disable WordPress.Security.NonceVerification -- Read-only display state (action message). The key is sanitized with sanitize_key() and looked up against a fixed allowlist.
     $message = isset($_GET['sfim_message'], $messages[$_GET['sfim_message']])
         ? $messages[sanitize_key($_GET['sfim_message'])]
         : null;
+    // phpcs:enable WordPress.Security.NonceVerification
     ?>
 
         <?php if ($message) : ?>
@@ -348,10 +353,10 @@ function sfim_settings_panel(): void
                 <p class="description" style="margin-top:.5em">
                     <?php
                     echo esc_html(sprintf(
-                        /* translators: %d: Number of symbols registered with the native WordPress icon API. */
+                        /* translators: %1$d: Number of symbols registered with the native WordPress icon API. */
                         _n(
-                            'WordPress 7.1+ only: this symbol is also registered in the built-in Icon block and the wp/v2 icons REST API.',
-                            'WordPress 7.1+ only: these %d symbols are also registered in the built-in Icon block and the wp/v2 icons REST API.',
+                            'WordPress 7.1+ only: %1$d symbol is also registered in the built-in Icon block and the wp/v2 icons REST API.',
+                            'WordPress 7.1+ only: these %1$d symbols are also registered in the built-in Icon block and the wp/v2 icons REST API.',
                             $native_icon_count,
                             'sf-icon-manager',
                         ),

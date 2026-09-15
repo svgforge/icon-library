@@ -408,7 +408,7 @@ function sfim_register_native_icons(): void
     }
 
     wp_register_icon_collection('sf-icon-manager', [
-        'label' => __('Icon Library', 'sf-icon-manager'),
+        'label' => __('SVG Forge Icon Manager', 'sf-icon-manager'),
         'description' => __('Icons from the configured SVG sprite.', 'sf-icon-manager'),
     ]);
 
