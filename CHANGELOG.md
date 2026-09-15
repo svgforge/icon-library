@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.1] - 2026-09-15
+
+### Changed
+
+- Admin UI is branded as "SVG Forge Icon Manager" (settings menu, page title, native icons collection label) and translations were regenerated.
 
 ### Fixed
 
 - `/i.svg` (short URL) was served as `Cache-Control: public, max-age=31536000, immutable`, so browsers kept a stale sprite for a year and the admin preview showed no icons until a hard refresh. The local-file branch now revalidates on every request (`no-cache, must-revalidate`) with actual `304 Not Modified` responses for matching `ETag`/`Last-Modified`, so a sprite change is picked up immediately.
+- TypeScript sources, test files and type declarations no longer end up in the production plugin ZIP.
 
 ## [0.3.0] - 2026-09-14
 

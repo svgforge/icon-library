@@ -1,6 +1,6 @@
 {
 	"name": "sf-icon-manager",
-	"version": "0.2.1",
+	"version": "0.3.1",
 	"description": "Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.",
 	"author": "Felix Müller (https://github.com/joeda1)",
 	"license": "MIT",
@@ -8,7 +8,10 @@
 	"files": [
 		"build",
 		"languages/*.pot",
-		"src",
+		"src/admin",
+		"src/native",
+		"src/sprite.php",
+		"src/short-url.php",
 		"vendor/autoload.php",
 		"vendor/composer/autoload_real.php",
 		"vendor/composer/autoload_static.php",
