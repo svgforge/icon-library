@@ -20,7 +20,7 @@ Requirements: Node.js LTS (>= 20.19, recommended 24 — see `.nvmrc`) and [pnpm]
 
 PHPUnit unit tests run against the [WordPress test suite](https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/) (`wp-phpunit`) with the maintained [yoast/phpunit-polyfills](https://github.com/Yoast/PHPUnit-Polyfills). Test cases live in `tests/` (`tests/wp-tests-config.php` holds DB + core defaults, overridable via `WP_TESTS_DB_NAME`, `WP_TESTS_DB_USER`, `WP_TESTS_DB_PASSWORD`, `WP_TESTS_DB_HOST`, `WP_TESTS_WP_ROOT`).
 
-The test suite needs a MySQL database (default `wordpress_test`) and a WordPress core checkout with the plugin available under `wp-content/plugins/icon-library`. Create the database, then run the tests from the plugin directory:
+The test suite needs a MySQL database (default `wordpress_test`) and a WordPress core checkout with the plugin available under `wp-content/plugins/sf-icon-manager`. Create the database, then run the tests from the plugin directory:
 
 ```bash
 mysql -u root -e 'CREATE DATABASE IF NOT EXISTS wordpress_test'
@@ -50,8 +50,8 @@ See [docs/release.md](release.md).
 ## Structure
 
 ```
-icon-library/
-├── icon-library.php      Plugin bootstrap (block registration, sprite URL, i18n)
+sf-icon-manager/
+├── sf-icon-manager.php      Plugin bootstrap (block registration, sprite URL, i18n)
 ├── docs/                  Documentation (this directory)
 ├── src/
 │   ├── admin/admin.php    Settings page (SVG upload), not part of the build

@@ -67,11 +67,11 @@ jobs:
             - name: Symlink plugin into WordPress
               run: |
                   mkdir -p /tmp/wordpress/wp-content/plugins
-                  ln -s "$GITHUB_WORKSPACE" /tmp/wordpress/wp-content/plugins/icon-library
+                  ln -s "$GITHUB_WORKSPACE" /tmp/wordpress/wp-content/plugins/sf-icon-manager
 
             - name: Run PHPUnit
               run: vendor/bin/phpunit --no-coverage
-              working-directory: /tmp/wordpress/wp-content/plugins/icon-library
+              working-directory: /tmp/wordpress/wp-content/plugins/sf-icon-manager
               env:
                   WP_TESTS_DB_NAME: wordpress_test
                   WP_TESTS_DB_USER: root
@@ -81,7 +81,7 @@ jobs:
 
             - name: Pint lint
               run: composer run lint
-              working-directory: /tmp/wordpress/wp-content/plugins/icon-library
+              working-directory: /tmp/wordpress/wp-content/plugins/sf-icon-manager
 
     js-quality:
         name: JS quality

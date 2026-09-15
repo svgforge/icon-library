@@ -12,17 +12,17 @@ The plugin is packaged as a `wordpress-plugin` (`composer/installers`). Installa
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/svgforge/icon-library.git"
+            "url": "https://github.com/svgforge/sf-icon-manager.git"
         }
     ],
     "require": {
-        "svgforge/icon-library": "dev-main"
+        "svgforge/sf-icon-manager": "dev-main"
     }
 }
 ```
 
 ```bash
-composer require svgforge/icon-library
+composer require svgforge/sf-icon-manager
 ```
 
 ## Via WP Packages (once published on WordPress.org)
@@ -39,16 +39,16 @@ composer require svgforge/icon-library
         }
     ],
     "require": {
-        "wp-plugin/icon-library": "^0.1"
+        "wp-plugin/sf-icon-manager": "^0.1"
     }
 }
 ```
 
 ```bash
-composer require wp-plugin/icon-library
+composer require wp-plugin/sf-icon-manager
 ```
 
-`composer/installers` places the plugin under `wp-content/plugins/icon-library/` automatically when your project has `"type": "wordpress-plugin"` paths configured (e.g. via `extra.installer-paths`).
+`composer/installers` places the plugin under `wp-content/plugins/sf-icon-manager/` automatically when your project has `"type": "wordpress-plugin"` paths configured (e.g. via `extra.installer-paths`).
 
 > Note: even with Composer installation, the build must be present or checked into Git before release — the release workflow builds `build/` automatically.
 

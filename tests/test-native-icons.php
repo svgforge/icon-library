@@ -3,7 +3,7 @@
 /**
  * Tests for the WordPress 7.1 native icon API integration.
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 
 /**
@@ -37,10 +37,10 @@ XML;
     protected function setUp(): void
     {
         parent::setUp();
-        icon_library_invalidate_native_icons();
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'on');
-        remove_all_filters('icon_library_sprite_url');
-        remove_all_filters('icon_library_register_native_icons');
+        sfim_invalidate_native_icons();
+        update_option(SFIM_NATIVE_OPTION, 'on');
+        remove_all_filters('sfim_sprite_url');
+        remove_all_filters('sfim_register_native_icons');
         $this->reset_icon_registries();
     }
 
@@ -53,14 +53,14 @@ XML;
         if (class_exists('WP_Icon_Collections_Registry') && class_exists('WP_Icons_Registry')) {
             $collections = WP_Icon_Collections_Registry::get_instance();
 
-            if (function_exists('wp_unregister_icon_collection') && $collections->is_registered('icon-library')) {
-                wp_unregister_icon_collection('icon-library');
+            if (function_exists('wp_unregister_icon_collection') && $collections->is_registered('sf-icon-manager')) {
+                wp_unregister_icon_collection('sf-icon-manager');
             }
 
             foreach (WP_Icons_Registry::get_instance()->get_registered_icons() as $icon) {
                 $name = $icon['name'] ?? '';
 
-                if (is_string($name) && str_starts_with($name, 'icon-library/')) {
+                if (is_string($name) && str_starts_with($name, 'sf-icon-manager/')) {
                     wp_unregister_icon($name);
                 }
             }
@@ -69,22 +69,22 @@ XML;
 
     public function test_icon_slug_normalizes_symbol_ids(): void
     {
-        $this->assertSame('add--circle', icon_library_icon_slug('Add--Circle'));
-        $this->assertSame('a-b-c-d', icon_library_icon_slug('a.b/c d'));
-        $this->assertSame('123', icon_library_icon_slug('123'));
-        $this->assertSame('foo', icon_library_icon_slug('--foo--'));
-        $this->assertSame('upper', icon_library_icon_slug('UPPER'));
-        $this->assertSame('', icon_library_icon_slug('é'));
-        $this->assertSame('', icon_library_icon_slug(''));
+        $this->assertSame('add--circle', sfim_icon_slug('Add--Circle'));
+        $this->assertSame('a-b-c-d', sfim_icon_slug('a.b/c d'));
+        $this->assertSame('123', sfim_icon_slug('123'));
+        $this->assertSame('foo', sfim_icon_slug('--foo--'));
+        $this->assertSame('upper', sfim_icon_slug('UPPER'));
+        $this->assertSame('', sfim_icon_slug('é'));
+        $this->assertSame('', sfim_icon_slug(''));
     }
 
     public function test_parse_extracts_path_and_polygon_symbols_only(): void
     {
-        $icons = icon_library_parse_sprite_icons($this->sprite_fixture());
+        $icons = sfim_parse_sprite_icons($this->sprite_fixture());
 
         $names = array_column($icons, 'name');
 
-        $this->assertSame(['icon-library/home', 'icon-library/mixed-viewbox'], $names);
+        $this->assertSame(['sf-icon-manager/home', 'sf-icon-manager/mixed-viewbox'], $names);
 
         $home = $icons[0];
         $this->assertSame('home', $home['label']);
@@ -100,7 +100,7 @@ XML;
 
     public function test_parse_prunes_disallowed_shape_attributes(): void
     {
-        $icons = icon_library_parse_sprite_icons($this->sprite_fixture());
+        $icons = sfim_parse_sprite_icons($this->sprite_fixture());
 
         $home = $icons[0]['content'];
         $this->assertStringNotContainsString('stroke', $home);
@@ -116,77 +116,77 @@ XML;
 
     public function test_parse_deduplicates_colliding_slugs(): void
     {
-        $icons = icon_library_parse_sprite_icons($this->sprite_fixture());
+        $icons = sfim_parse_sprite_icons($this->sprite_fixture());
 
         $names = array_column($icons, 'name');
 
-        $this->assertCount(1, array_filter($names, static fn($n) => 'icon-library/home' === $n));
+        $this->assertCount(1, array_filter($names, static fn($n) => 'sf-icon-manager/home' === $n));
 
         foreach ($names as $name) {
-            $this->assertSame(1, preg_match('/^icon-library\/[a-z0-9_-]+$/', $name));
+            $this->assertSame(1, preg_match('/^sf-icon-manager\/[a-z0-9_-]+$/', $name));
         }
     }
 
     public function test_parse_invalid_or_empty_input_returns_empty(): void
     {
-        $this->assertSame([], icon_library_parse_sprite_icons(''));
-        $this->assertSame([], icon_library_parse_sprite_icons('not xml'));
-        $this->assertSame([], icon_library_parse_sprite_icons(null));
+        $this->assertSame([], sfim_parse_sprite_icons(''));
+        $this->assertSame([], sfim_parse_sprite_icons('not xml'));
+        $this->assertSame([], sfim_parse_sprite_icons(null));
     }
 
     public function test_sprite_icons_parses_and_caches_the_bundled_sprite(): void
     {
-        $icons = icon_library_sprite_icons();
+        $icons = sfim_sprite_icons();
 
         $this->assertNotEmpty($icons);
 
         foreach ($icons as $icon) {
-            $this->assertSame(1, preg_match('/^icon-library\/[a-z0-9_-]+$/', $icon['name']));
+            $this->assertSame(1, preg_match('/^sf-icon-manager\/[a-z0-9_-]+$/', $icon['name']));
             $this->assertStringStartsWith('<svg', $icon['content']);
             $this->assertStringContainsString('<path', $icon['content']);
         }
 
-        $cached = get_option(ICON_LIBRARY_ICONS_OPTION);
+        $cached = get_option(SFIM_ICONS_OPTION);
         $this->assertNotFalse($cached);
-        $this->assertSame(icon_library_sprite_source_signature(), $cached['signature']);
+        $this->assertSame(sfim_sprite_source_signature(), $cached['signature']);
     }
 
     public function test_sprite_icons_serves_the_cached_list_without_rewriting(): void
     {
-        $fixture = ['name' => 'icon-library/fixture', 'label' => 'fixture', 'content' => '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1z" /></svg>'];
+        $fixture = ['name' => 'sf-icon-manager/fixture', 'label' => 'fixture', 'content' => '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1z" /></svg>'];
 
-        update_option(ICON_LIBRARY_ICONS_OPTION, [
-            'signature' => icon_library_sprite_source_signature(),
+        update_option(SFIM_ICONS_OPTION, [
+            'signature' => sfim_sprite_source_signature(),
             'icons' => [$fixture],
         ], false);
 
-        $icons = icon_library_sprite_icons();
+        $icons = sfim_sprite_icons();
 
         $this->assertSame([$fixture], $icons);
     }
 
     public function test_sprite_icons_rebuilds_when_the_signature_changes(): void
     {
-        update_option(ICON_LIBRARY_ICONS_OPTION, [
+        update_option(SFIM_ICONS_OPTION, [
             'signature' => 'stale-signature',
             'icons' => [],
         ], false);
 
-        $icons = icon_library_sprite_icons();
+        $icons = sfim_sprite_icons();
 
         $this->assertNotEmpty($icons);
 
-        $cached = get_option(ICON_LIBRARY_ICONS_OPTION);
-        $this->assertSame(icon_library_sprite_source_signature(), $cached['signature']);
+        $cached = get_option(SFIM_ICONS_OPTION);
+        $this->assertSame(sfim_sprite_source_signature(), $cached['signature']);
     }
 
     public function test_invalidate_native_icons_clears_the_cache(): void
     {
-        icon_library_sprite_icons();
-        $this->assertNotFalse(get_option(ICON_LIBRARY_ICONS_OPTION));
+        sfim_sprite_icons();
+        $this->assertNotFalse(get_option(SFIM_ICONS_OPTION));
 
-        icon_library_invalidate_native_icons();
-        $this->assertFalse(get_option(ICON_LIBRARY_ICONS_OPTION));
+        sfim_invalidate_native_icons();
+        $this->assertFalse(get_option(SFIM_ICONS_OPTION));
     }
 
     public function test_registration_is_idempotent_on_wp_71(): void
@@ -195,11 +195,11 @@ XML;
             $this->markTestSkipped('WordPress 7.1 icon API not available in this test environment.');
         }
 
-        icon_library_register_native_icons();
+        sfim_register_native_icons();
 
         $ours = array_values(array_filter(
             WP_Icons_Registry::get_instance()->get_registered_icons(),
-            static fn($icon) => str_starts_with((string) ($icon['name'] ?? ''), 'icon-library/'),
+            static fn($icon) => str_starts_with((string) ($icon['name'] ?? ''), 'sf-icon-manager/'),
         ));
 
         $this->assertNotEmpty($ours);
@@ -216,61 +216,61 @@ XML;
             $this->markTestSkipped('WordPress 7.1 icon API not available in this test environment.');
         }
 
-        icon_library_register_native_icons();
-        icon_library_register_native_icons();
+        sfim_register_native_icons();
+        sfim_register_native_icons();
 
         $slugs = array_column(WP_Icon_Collections_Registry::get_instance()->get_all_registered(), 'slug');
-        $this->assertEquals(1, count(array_keys($slugs, 'icon-library', true)));
+        $this->assertEquals(1, count(array_keys($slugs, 'sf-icon-manager', true)));
     }
 
     public function test_registration_is_lazy(): void
     {
-        $this->assertSame(10, has_action('rest_api_init', 'icon_library_ensure_native_icons'));
-        $this->assertSame(10, has_filter('render_block_data', 'icon_library_ensure_on_icon_block'));
-        $this->assertSame(PHP_INT_MAX, has_action('init', 'icon_library_deregister_native_icon_block'));
-        $this->assertFalse(has_action('init', 'icon_library_register_native_icons'));
+        $this->assertSame(10, has_action('rest_api_init', 'sfim_ensure_native_icons'));
+        $this->assertSame(10, has_filter('render_block_data', 'sfim_ensure_on_icon_block'));
+        $this->assertSame(PHP_INT_MAX, has_action('init', 'sfim_deregister_native_icon_block'));
+        $this->assertFalse(has_action('init', 'sfim_register_native_icons'));
     }
 
     public function test_ensure_on_icon_block_triggers_registration(): void
     {
-        icon_library_invalidate_native_icons();
+        sfim_invalidate_native_icons();
 
-        icon_library_ensure_on_icon_block(['blockName' => 'core/icon']);
+        sfim_ensure_on_icon_block(['blockName' => 'core/icon']);
 
-        $this->assertTrue($GLOBALS['icon_library_native_registered'] ?? false);
+        $this->assertTrue($GLOBALS['sfim_native_registered'] ?? false);
     }
 
     public function test_ensure_on_other_blocks_does_not_register(): void
     {
-        icon_library_invalidate_native_icons();
+        sfim_invalidate_native_icons();
 
-        icon_library_ensure_on_icon_block(['blockName' => 'core/paragraph']);
+        sfim_ensure_on_icon_block(['blockName' => 'core/paragraph']);
 
-        $this->assertFalse($GLOBALS['icon_library_native_registered'] ?? false);
-        $this->assertFalse(get_option(ICON_LIBRARY_ICONS_OPTION));
+        $this->assertFalse($GLOBALS['sfim_native_registered'] ?? false);
+        $this->assertFalse(get_option(SFIM_ICONS_OPTION));
     }
 
     public function test_native_setting_defaults_to_off_and_falls_back(): void
     {
-        delete_option(ICON_LIBRARY_NATIVE_OPTION);
-        $this->assertSame('off', icon_library_native_setting());
+        delete_option(SFIM_NATIVE_OPTION);
+        $this->assertSame('off', sfim_native_setting());
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'garbage');
-        $this->assertSame('off', icon_library_native_setting());
+        update_option(SFIM_NATIVE_OPTION, 'garbage');
+        $this->assertSame('off', sfim_native_setting());
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
-        $this->assertSame('no_block', icon_library_native_setting());
+        update_option(SFIM_NATIVE_OPTION, 'no_block');
+        $this->assertSame('no_block', sfim_native_setting());
     }
 
     public function test_registration_is_disabled_when_mode_is_off(): void
     {
-        delete_option(ICON_LIBRARY_NATIVE_OPTION);
-        icon_library_invalidate_native_icons();
+        delete_option(SFIM_NATIVE_OPTION);
+        sfim_invalidate_native_icons();
 
-        icon_library_register_native_icons();
+        sfim_register_native_icons();
 
-        $this->assertFalse($GLOBALS['icon_library_native_registered'] ?? false);
-        $this->assertFalse(get_option(ICON_LIBRARY_ICONS_OPTION));
+        $this->assertFalse($GLOBALS['sfim_native_registered'] ?? false);
+        $this->assertFalse(get_option(SFIM_ICONS_OPTION));
     }
 
     public function test_deregister_hides_block_only_in_no_block_mode(): void
@@ -280,22 +280,22 @@ XML;
         }
 
         $registry = WP_Block_Type_Registry::get_instance();
-        $dummy = 'icon-library/dummy';
+        $dummy = 'sf-icon-manager/dummy';
 
         if (! $registry->is_registered($dummy)) {
             $registry->register($dummy, ['title' => 'Dummy']);
         }
 
-        delete_option(ICON_LIBRARY_NATIVE_OPTION);
-        icon_library_deregister_native_icon_block($dummy);
+        delete_option(SFIM_NATIVE_OPTION);
+        sfim_deregister_native_icon_block($dummy);
         $this->assertTrue($registry->is_registered($dummy));
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
-        icon_library_deregister_native_icon_block($dummy);
+        update_option(SFIM_NATIVE_OPTION, 'no_block');
+        sfim_deregister_native_icon_block($dummy);
         $this->assertFalse($registry->is_registered($dummy));
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'on');
-        icon_library_deregister_native_icon_block($dummy);
+        update_option(SFIM_NATIVE_OPTION, 'on');
+        sfim_deregister_native_icon_block($dummy);
         $this->assertFalse($registry->is_registered($dummy));
     }
 
@@ -305,42 +305,47 @@ XML;
             $this->markTestSkipped('WordPress block type registry not available in this test environment.');
         }
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
+        update_option(SFIM_NATIVE_OPTION, 'no_block');
 
         // rest_api_init passes the WP_REST_Server as the first callback
         // argument; it must not break the deregistration or be treated as
         // a block name.
-        icon_library_deregister_native_icon_block(new stdClass());
-        icon_library_deregister_native_icon_block(null);
+        sfim_deregister_native_icon_block(new stdClass());
+        sfim_deregister_native_icon_block(null);
 
         $this->assertFalse(WP_Block_Type_Registry::get_instance()->is_registered('core/icon'));
     }
 
     public function test_editor_unregister_script_enqueued_only_in_no_block_mode(): void
     {
-        delete_option(ICON_LIBRARY_NATIVE_OPTION);
-        icon_library_native_unregister_block_editor_assets();
-        $this->assertFalse(wp_script_is('icon-library-unregister-icon-block', 'registered'));
+        delete_option(SFIM_NATIVE_OPTION);
+        sfim_native_unregister_block_editor_assets();
+        $this->assertFalse(wp_script_is('sf-icon-manager-unregister-icon-block', 'registered'));
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
-        icon_library_native_unregister_block_editor_assets();
-        $this->assertTrue(wp_script_is('icon-library-unregister-icon-block', 'registered'));
-        $this->assertTrue(wp_script_is('icon-library-unregister-icon-block', 'enqueued'));
+        update_option(SFIM_NATIVE_OPTION, 'no_block');
+        sfim_native_unregister_block_editor_assets();
+        $this->assertTrue(wp_script_is('sf-icon-manager-unregister-icon-block', 'registered'));
+        $this->assertTrue(wp_script_is('sf-icon-manager-unregister-icon-block', 'enqueued'));
 
         // The static asset must exist and be served from the plugin.
-        $data = wp_scripts()->registered['icon-library-unregister-icon-block'];
-        $this->assertFileExists(dirname(ICON_LIBRARY_PLUGIN_FILE) . '/assets/js/unregister-icon-block.js');
+        $data = wp_scripts()->registered['sf-icon-manager-unregister-icon-block'];
+        $this->assertFileExists(dirname(SFIM_PLUGIN_FILE) . '/assets/js/unregister-icon-block.js');
         $this->assertSame(['wp-dom-ready', 'wp-blocks'], $data->deps);
     }
 
     public function test_deny_removes_icon_block_from_allowlist_only_in_no_block_mode(): void
     {
-        delete_option(ICON_LIBRARY_NATIVE_OPTION);
-        $this->assertSame(['core/icon', 'core/paragraph'], icon_library_deny_native_icon_block_types(['core/icon', 'core/paragraph']));
+        delete_option(SFIM_NATIVE_OPTION);
+        $this->assertSame(['core/icon', 'core/paragraph'], sfim_deny_native_icon_block_types(['core/icon', 'core/paragraph']));
+        $this->assertTrue(sfim_deny_native_icon_block_types(true));
+        $this->assertFalse(sfim_deny_native_icon_block_types(false));
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
-        $this->assertSame(['core/paragraph'], icon_library_deny_native_icon_block_types(['core/icon', 'core/paragraph']));
-        $this->assertSame(['core/paragraph'], icon_library_deny_native_icon_block_types(['core/paragraph']));
+        update_option(SFIM_NATIVE_OPTION, 'no_block');
+        $this->assertSame(['core/paragraph'], sfim_deny_native_icon_block_types(['core/icon', 'core/paragraph']));
+        $this->assertSame(['core/paragraph'], sfim_deny_native_icon_block_types(['core/paragraph']));
+        $this->assertFalse(sfim_deny_native_icon_block_types(false));
+        $this->assertIsArray(sfim_deny_native_icon_block_types(true));
+        $this->assertNotContains('core/icon', sfim_deny_native_icon_block_types(true));
     }
 
     public function test_render_strip_removes_core_icon_output_only_in_no_block_mode(): void
@@ -348,16 +353,16 @@ XML;
         $content = '<svg class="icon"><use href="#home"/></svg>';
         $block = ['blockName' => 'core/icon'];
 
-        delete_option(ICON_LIBRARY_NATIVE_OPTION);
-        $this->assertSame($content, icon_library_strip_native_icon_block($content, $block));
+        delete_option(SFIM_NATIVE_OPTION);
+        $this->assertSame($content, sfim_strip_native_icon_block($content, $block));
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'on');
-        $this->assertSame($content, icon_library_strip_native_icon_block($content, $block));
+        update_option(SFIM_NATIVE_OPTION, 'on');
+        $this->assertSame($content, sfim_strip_native_icon_block($content, $block));
 
-        update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
-        $this->assertSame('', icon_library_strip_native_icon_block($content, $block));
+        update_option(SFIM_NATIVE_OPTION, 'no_block');
+        $this->assertSame('', sfim_strip_native_icon_block($content, $block));
 
         $other = ['blockName' => 'core/paragraph'];
-        $this->assertSame($content, icon_library_strip_native_icon_block($content, $other));
+        $this->assertSame($content, sfim_strip_native_icon_block($content, $other));
     }
 }

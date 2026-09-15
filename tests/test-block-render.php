@@ -3,7 +3,7 @@
 /**
  * Tests for the server-side block rendering (src/block/render.php).
  *
- * @package icon-library
+ * @package sf-icon-manager
  */
 
 /**
@@ -13,14 +13,14 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
 {
     public function test_block_is_registered(): void
     {
-        $this->assertInstanceOf('WP_Block_Type', $block = WP_Block_Type_Registry::get_instance()->get_registered('icon-library/svg-icon'));
+        $this->assertInstanceOf('WP_Block_Type', $block = WP_Block_Type_Registry::get_instance()->get_registered('sf-icon-manager/svg-icon'));
         $this->assertNotNull($block->render_callback);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        remove_all_filters('icon_library_sprite_url');
+        remove_all_filters('sfim_sprite_url');
     }
 
     /**
@@ -29,7 +29,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
     private function render_block_html(array $attrs): string
     {
         return render_block([
-            'blockName' => 'icon-library/svg-icon',
+            'blockName' => 'sf-icon-manager/svg-icon',
             'attrs' => $attrs,
             'innerBlocks' => [],
             'innerHTML' => '',
@@ -75,7 +75,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
 
     public function test_uses_filtered_sprite_url_without_fragment(): void
     {
-        add_filter('icon_library_sprite_url', static fn() => 'https://cdn.example.net/icons.svg');
+        add_filter('sfim_sprite_url', static fn() => 'https://cdn.example.net/icons.svg');
 
         $html = $this->render_block_html(['symbolId' => 'home']);
 
@@ -84,7 +84,7 @@ final class Test_Icon_Library_Block_Render extends WP_UnitTestCase
 
     public function test_uses_filtered_sprite_url_with_fragment_as_is(): void
     {
-        add_filter('icon_library_sprite_url', static fn() => 'https://cdn.example.net/icons.svg#brand');
+        add_filter('sfim_sprite_url', static fn() => 'https://cdn.example.net/icons.svg#brand');
 
         $html = $this->render_block_html(['symbolId' => 'home']);
 

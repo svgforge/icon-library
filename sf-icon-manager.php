@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Plugin Name:       Icon Library
+ * Plugin Name:       SVG Forge Icon Manager
  * Description:       Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.
  * Version:           0.3.0
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            svgforge
- * License:           GPL-2.0-or-later
- * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       icon-library
+ * License:           MIT
+ * License URI:       https://opensource.org/licenses/MIT
+ * Text Domain:       sf-icon-manager
  * Domain Path:       /languages
  */
 defined('ABSPATH') || exit;
 
-defined('ICON_LIBRARY_PLUGIN_FILE') || define('ICON_LIBRARY_PLUGIN_FILE', __FILE__);
+defined('SFIM_PLUGIN_FILE') || define('SFIM_PLUGIN_FILE', __FILE__);
 
 /**
  * Loads the shared sprite helpers (frontend + admin).
@@ -50,7 +50,7 @@ require_once __DIR__ . '/src/native/icons.php';
  * Resolves the active SVG sprite source.
  *
  * Source order:
- *  1. Filter icon_library_sprite_url (theme override, CDN) — has priority.
+ *  1. Filter sfim_sprite_url (theme override, CDN) — has priority.
  *  2. Uploaded file from the settings (backend upload).
  *  3. Fallback: sprite.svg bundled with the plugin.
  *
@@ -63,10 +63,10 @@ require_once __DIR__ . '/src/native/icons.php';
  *               path:   Local filesystem path when WordPress can read the
  *                       source itself, otherwise ''.
  *               source: 'filter', 'upload', 'default' or 'none'.
- *               data:   Stored upload data (ICON_LIBRARY_SPRITE_OPTION) when
+ *               data:   Stored upload data (SFIM_SPRITE_OPTION) when
  *                       source is 'upload', otherwise [].
  */
-function icon_library_current_sprite(): array
+function sfim_current_sprite(): array
 {
     $none = [
         'url'    => '',
@@ -75,19 +75,19 @@ function icon_library_current_sprite(): array
         'data'   => [],
     ];
 
-    $filtered = (string) apply_filters('icon_library_sprite_url', '');
+    $filtered = (string) apply_filters('sfim_sprite_url', '');
 
     if ($filtered !== '') {
         return [
             'url'    => $filtered,
-            'path'   => function_exists('icon_library_url_to_path') ? icon_library_url_to_path($filtered) : '',
+            'path'   => function_exists('sfim_url_to_path') ? sfim_url_to_path($filtered) : '',
             'source' => 'filter',
             'data'   => [],
         ];
     }
 
-    if (function_exists('icon_library_uploaded_sprite_data')) {
-        $data = icon_library_uploaded_sprite_data();
+    if (function_exists('sfim_uploaded_sprite_data')) {
+        $data = sfim_uploaded_sprite_data();
 
         if ($data !== []) {
             $path = (string) ($data['path'] ?? '');
@@ -107,7 +107,7 @@ function icon_library_current_sprite(): array
         }
     }
 
-    $bundled_path = dirname(ICON_LIBRARY_PLUGIN_FILE) . '/sprite.svg';
+    $bundled_path = dirname(SFIM_PLUGIN_FILE) . '/sprite.svg';
     $readable    = is_readable($bundled_path);
 
     return $readable ? [
@@ -121,22 +121,22 @@ function icon_library_current_sprite(): array
 /**
  * Returns the URL of the SVG sprite file.
  *
- * When the short URL is enabled (icon_library_short_url filter) this returns
+ * When the short URL is enabled (sfim_short_url filter) this returns
  * the root-relative /i.svg (prefixed with the install path on subdirectory
  * installs) regardless of the actual sprite source; the server rewrite serves
  * the file.
  *
  * @return string
  */
-function icon_library_sprite_url(): string
+function sfim_sprite_url(): string
 {
-    if (function_exists('icon_library_short_url_enabled') && icon_library_short_url_enabled()) {
+    if (function_exists('sfim_short_url_enabled') && sfim_short_url_enabled()) {
         $path = (string) wp_parse_url(home_url(), PHP_URL_PATH);
 
         return ($path !== '' ? untrailingslashit($path) : '') . '/i.svg';
     }
 
-    return icon_library_current_sprite()['url'];
+    return sfim_current_sprite()['url'];
 }
 
 /**
@@ -152,7 +152,7 @@ function icon_library_sprite_url(): string
  * @param string $value Raw color value from block attributes.
  * @return string
  */
-function icon_library_resolve_color(string $value): string
+function sfim_resolve_color(string $value): string
 {
     $prefix = 'var:preset|color|';
 
@@ -181,7 +181,7 @@ function icon_library_resolve_color(string $value): string
  *                              for unit tests.
  * @return string The resolved size (e.g. `64px`) or an empty string when unknown.
  */
-function icon_library_resolve_dimension(string $value, ?array $presets = null): string
+function sfim_resolve_dimension(string $value, ?array $presets = null): string
 {
     $prefix = 'var:preset|dimension|';
 
@@ -191,7 +191,7 @@ function icon_library_resolve_dimension(string $value, ?array $presets = null): 
         if (! is_array($presets)) {
             // Per-block dimensionSizes first (the usual place for these presets),
             // then the global settings as a fallback.
-            $presets = wp_get_global_settings(['blocks', 'icon-library/svg-icon', 'dimensions', 'dimensionSizes']);
+            $presets = wp_get_global_settings(['blocks', 'sf-icon-manager/svg-icon', 'dimensions', 'dimensionSizes']);
             if (! is_array($presets)) {
                 $presets = wp_get_global_settings(['dimensions', 'dimensionSizes']);
             }
@@ -230,7 +230,7 @@ function icon_library_resolve_dimension(string $value, ?array $presets = null): 
  * @param string $value Raw spacing value from block attributes.
  * @return string The resolved CSS value (e.g. `var(--wp--preset--spacing--30)`).
  */
-function icon_library_resolve_spacing(string $value): string
+function sfim_resolve_spacing(string $value): string
 {
     $prefix = 'var:preset|spacing|';
 
@@ -244,11 +244,11 @@ function icon_library_resolve_spacing(string $value): string
 /**
  * Registers the block from the block.json in /build/block.
  */
-function icon_library_register_block(): void
+function sfim_register_block(): void
 {
     register_block_type(__DIR__ . '/build/block');
 }
-add_action('init', 'icon_library_register_block');
+add_action('init', 'sfim_register_block');
 
 /**
  * Returns the kses-allowlist for the SVG markup the block renders.
@@ -260,7 +260,7 @@ add_action('init', 'icon_library_register_block');
  * @since 0.2.1
  * @return array<string, array<string, true>>
  */
-function icon_library_allowed_svg_kses(): array
+function sfim_allowed_svg_kses(): array
 {
     $svg_attrs = [
         'aria-hidden' => true,
@@ -298,18 +298,18 @@ function icon_library_allowed_svg_kses(): array
 }
 
 /**
- * Provides the sprite URL to the editor as window.iconLibrarySettings.spriteUrl.
+ * Provides the sprite URL to the editor as window.sfimSettings.spriteUrl.
  *
  * Runs on enqueue_block_editor_assets so that the editorScript generated by
- * register_block_type (handle: icon-library-svg-icon-editor-script)
+ * register_block_type (handle: sf-icon-manager-svg-icon-editor-script)
  * is already registered.
  */
-function icon_library_editor_assets(): void
+function sfim_editor_assets(): void
 {
     wp_localize_script(
-        'icon-library-svg-icon-editor-script',
-        'iconLibrarySettings',
-        ['spriteUrl' => icon_library_sprite_url()],
+        'sf-icon-manager-svg-icon-editor-script',
+        'sfimSettings',
+        ['spriteUrl' => sfim_sprite_url()],
     );
 }
-add_action('enqueue_block_editor_assets', 'icon_library_editor_assets');
+add_action('enqueue_block_editor_assets', 'sfim_editor_assets');
