@@ -46,14 +46,14 @@ if ($height === '') {
 $opens_in_new_tab = ! empty($attributes['opensInNewTab']);
 
 if ($symbol_id === '') {
-    echo '<div class="svg-icon__placeholder">' . esc_html__('Select symbol …', 'icon-library') . '</div>';
+    echo '<div class="svg-icon__placeholder">' . esc_html__('Select symbol …', 'svg-forge-icon-manager') . '</div>';
     return '';
 }
 
 // Sprite URL: filter, upload, or fallback.
 $sprite_base = function_exists('icon_library_sprite_url')
     ? icon_library_sprite_url()
-    : plugins_url('sprite.svg', dirname(__DIR__, 2) . '/icon-library.php');
+    : plugins_url('sprite.svg', dirname(__DIR__, 2) . '/svg-forge-icon-manager.php');
 
 if (strpos($sprite_base, '#') === false) {
     $svg_href = esc_url(rtrim($sprite_base, '#') . '#' . $symbol_id);

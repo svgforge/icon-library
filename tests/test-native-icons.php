@@ -337,10 +337,15 @@ XML;
     {
         delete_option(ICON_LIBRARY_NATIVE_OPTION);
         $this->assertSame(['core/icon', 'core/paragraph'], icon_library_deny_native_icon_block_types(['core/icon', 'core/paragraph']));
+        $this->assertTrue(icon_library_deny_native_icon_block_types(true));
+        $this->assertFalse(icon_library_deny_native_icon_block_types(false));
 
         update_option(ICON_LIBRARY_NATIVE_OPTION, 'no_block');
         $this->assertSame(['core/paragraph'], icon_library_deny_native_icon_block_types(['core/icon', 'core/paragraph']));
         $this->assertSame(['core/paragraph'], icon_library_deny_native_icon_block_types(['core/paragraph']));
+        $this->assertFalse(icon_library_deny_native_icon_block_types(false));
+        $this->assertIsArray(icon_library_deny_native_icon_block_types(true));
+        $this->assertNotContains('core/icon', icon_library_deny_native_icon_block_types(true));
     }
 
     public function test_render_strip_removes_core_icon_output_only_in_no_block_mode(): void

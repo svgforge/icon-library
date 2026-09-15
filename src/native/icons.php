@@ -408,8 +408,8 @@ function icon_library_register_native_icons(): void
     }
 
     wp_register_icon_collection('icon-library', [
-        'label' => __('Icon Library', 'icon-library'),
-        'description' => __('Icons from the configured SVG sprite.', 'icon-library'),
+        'label' => __('Icon Library', 'svg-forge-icon-manager'),
+        'description' => __('Icons from the configured SVG sprite.', 'svg-forge-icon-manager'),
     ]);
 
     foreach ($icons as $icon) {
@@ -503,16 +503,21 @@ add_action('enqueue_block_editor_assets', 'icon_library_deregister_native_icon_b
  * Falls back to the full registry when no explicit allowlist was set so the
  * block never appears in the inserter, without losing the current selection.
  *
- * @param array|null $allowed Current allowlist, or null for "all".
- * @return array|null
+ * @param bool|array|null $allowed Current allowlist, or a boolean to
+ *                                 enable/disable all block types.
+ * @return bool|array|null
  */
-function icon_library_deny_native_icon_block_types(?array $allowed): ?array
+function icon_library_deny_native_icon_block_types(mixed $allowed): bool|array|null
 {
     if (icon_library_native_setting() !== 'no_block') {
-        return $allowed;
+        return is_bool($allowed) || is_array($allowed) ? $allowed : null;
     }
 
     $exclude = ['core/icon'];
+
+    if (false === $allowed) {
+        return false;
+    }
 
     if (is_array($allowed)) {
         return array_values(array_diff($allowed, $exclude));

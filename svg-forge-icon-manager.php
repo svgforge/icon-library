@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       Icon Library
+ * Plugin Name:       SVG Forge Icon Manager
  * Description:       Gutenberg block that inserts SVG icons from a sprite file (ico.svg) via <use> and links them.
  * Version:           0.3.0
  * Requires at least: 6.6
@@ -9,7 +9,7 @@
  * Author:            svgforge
  * License:           MIT
  * License URI:       https://opensource.org/licenses/MIT
- * Text Domain:       icon-library
+ * Text Domain:       svg-forge-icon-manager
  * Domain Path:       /languages
  */
 defined('ABSPATH') || exit;

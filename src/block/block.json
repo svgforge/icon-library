@@ -8,7 +8,7 @@
 	"icon": "format-image",
 	"description": "Inserts an SVG icon from the plugin icon library and can be linked.",
 	"keywords": [ "icon", "svg", "symbol", "sprite" ],
-	"textdomain": "icon-library",
+	"textdomain": "svg-forge-icon-manager",
 	"supports": {
 		"html": false,
 		"align": [ "left", "center", "right" ],
